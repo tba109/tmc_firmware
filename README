@@ -2,4 +2,4 @@ Fri Jan 29 15:53:23 EST 2016
 
 This is firmware for the temperature sensor readout on the TMC 2N2222 readout board. 
 
-The first revision is design to work with the development board. 
+The first revision is design to work with the development board which has the 10M08SAE144C8GES

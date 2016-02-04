@@ -19,11 +19,92 @@
 
 module tmc_firmware_top
   (
-   input R_CLK, // pin 27
-   output LED1 // pin 132
+   input  R_CLK, // pin 27
+	  
+   // The A temp board
+   input  live_a, // pin 60
+   input  miso_a, // pin 59
+   output mosi_a, // pin 56
+   output sclk_a, // pin 55
+   output csan_a, // pin 47
+   output csbn_a, // pin 46
+   output cscn_a, // pin 43
+
+   // The B temp board
+   input  live_b, // pin 58
+   input  miso_b, // pin 57
+   output mosi_b, // pin 52
+   output sclk_b, // pin 50
+   output csan_b, // pin 45
+   output csbn_b, // pin 44
+   output cscn_b, // pin 39
+
+   // The C temp board
+   input  live_c, // pin 88
+   input  miso_c, // pin 89
+   output mosi_c, // pin 92
+   output sclk_c, // pin 93
+   output csan_c, // pin 99
+   output csbn_c, // pin 101
+   output cscn_c, // pin 105 
+   
+   // The D temp board
+   input  live_d, // pin 90
+   input  miso_d, // pin 91
+   output mosi_d, // pin 96
+   output sclk_d, // pin 98
+   output csan_d, // pin 100
+   output csbn_d, // pin 102
+   output cscn_d, // pin 118
+
+   // Serial port
+   input  rxd,   // pin 86
+   output txd,   // pin 84
+   output rts_n, // pin 81
+   input  cts_n, // pin 79
+   
+   output LED1  // pin 132
    );
 
+   // The PLL
+   wire   logic_clk;
+   wire   logic_clk_rst_n;
+   tmc_pll TMC_PLL0 
+     (
+      .areset(1'b0),
+      .inclk0(R_CLK),
+      .c0(logic_clk),
+      .locked(logic_clk_rst_n)
+      );
+	   
    // Configuraiton indicator
-   config_ind CONFIG_IND0(.clk(R_CLK),.rst_n(1'b1),.blink_configed(LED1));
+   config_ind CONFIG_IND0(.clk(logic_clk),.rst_n(logic_clk_rst_n),.blink_configed(LED1));
+
+   // The processor (most everything is in here)
+   wire        qsys_miso;
+   wire        qsys_mosi;
+   wire        qsys_sclk;
+   wire [11:0] qsys_csn;
+   wire [7:0]  pio_in;
+   wire [7:0]  pio_out;
+   
+   tmc_nios2 u0 (
+		 .clk_clk(logic_clk), 
+		 .reset_reset_n(logic_clk_rst_n),
+		 .spi_0_external_MISO(qsys_miso),
+		 .spi_0_external_MOSI(qsys_mosi),
+		 .spi_0_external_SCLK(qsys_sclk),
+		 .spi_0_external_SS_n(qsys_csn),
+		 .uart_0_external_connection_rxd(rxd),
+		 .uart_0_external_connection_txd(txd),
+		 .uart_0_external_connection_cts_n(cts_n),
+		 .uart_0_external_connection_rts_n(rts_n),
+		 .pio_1_external_connection_export(pio_in),
+		 .pio_0_external_connection_export(pio_out)
+		 );
+
+   // A bit of glue logic
+   
+   
    
 endmodule

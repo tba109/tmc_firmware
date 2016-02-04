@@ -1,18 +1,18 @@
-Fitter Status : Successful - Fri Jan 29 17:48:31 2016
+Fitter Status : Successful - Thu Feb  4 14:21:48 2016
 Quartus Prime Version : 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 Revision Name : tmc_firmware
 Top-level Entity Name : tmc_firmware_top
 Family : MAX 10
 Device : 10M08SAE144C8GES
 Timing Models : Final
-Total logic elements : 47 / 8,064 ( < 1 % )
-    Total combinational functions : 47 / 8,064 ( < 1 % )
-    Dedicated logic registers : 26 / 8,064 ( < 1 % )
-Total registers : 26
-Total pins : 2 / 101 ( 2 % )
+Total logic elements : 2,084 / 8,064 ( 26 % )
+    Total combinational functions : 1,900 / 8,064 ( 24 % )
+    Dedicated logic registers : 1,195 / 8,064 ( 15 % )
+Total registers : 1195
+Total pins : 34 / 101 ( 34 % )
 Total virtual pins : 0
-Total memory bits : 0 / 387,072 ( 0 % )
+Total memory bits : 273,408 / 387,072 ( 71 % )
 Embedded Multiplier 9-bit elements : 0 / 48 ( 0 % )
-Total PLLs : 0 / 1 ( 0 % )
+Total PLLs : 1 / 1 ( 100 % )
 UFM blocks : 0 / 1 ( 0 % )
 ADC blocks : 0 / 1 ( 0 % )

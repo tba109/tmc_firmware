@@ -47,8 +47,6 @@ set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
-set_global_assignment -name VERILOG_FILE tmc_firmware_top.v
-set_global_assignment -name VERILOG_FILE config_ind.v
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name FLOW_ENABLE_POWER_ANALYZER ON
@@ -59,6 +57,43 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 set_location_assignment PIN_27 -to R_CLK
 set_location_assignment PIN_132 -to LED1
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name VERILOG_FILE tmc_nios2/synthesis/tmc_nios2.v
+set_global_assignment -name QIP_FILE tmc_nios2/synthesis/tmc_nios2.qip
+set_global_assignment -name VERILOG_FILE tmc_firmware_top.v
+set_global_assignment -name VERILOG_FILE config_ind.v
 set_global_assignment -name CDF_FILE output_files/Chain1.cdf
 set_global_assignment -name CDF_FILE output_files/Chain2.cdf
+set_global_assignment -name QIP_FILE tmc_pll.qip
+set_location_assignment PIN_47 -to csan_a
+set_location_assignment PIN_45 -to csan_b
+set_location_assignment PIN_99 -to csan_c
+set_location_assignment PIN_100 -to csan_d
+set_location_assignment PIN_46 -to csbn_a
+set_location_assignment PIN_44 -to csbn_b
+set_location_assignment PIN_101 -to csbn_c
+set_location_assignment PIN_102 -to csbn_d
+set_location_assignment PIN_43 -to cscn_a
+set_location_assignment PIN_39 -to cscn_b
+set_location_assignment PIN_105 -to cscn_c
+set_location_assignment PIN_118 -to cscn_d
+set_location_assignment PIN_79 -to cts_n
+set_location_assignment PIN_60 -to live_a
+set_location_assignment PIN_58 -to live_b
+set_location_assignment PIN_88 -to live_c
+set_location_assignment PIN_90 -to live_d
+set_location_assignment PIN_59 -to miso_a
+set_location_assignment PIN_57 -to miso_b
+set_location_assignment PIN_89 -to miso_c
+set_location_assignment PIN_91 -to miso_d
+set_location_assignment PIN_56 -to mosi_a
+set_location_assignment PIN_52 -to mosi_b
+set_location_assignment PIN_92 -to mosi_c
+set_location_assignment PIN_96 -to mosi_d
+set_location_assignment PIN_81 -to rts_n
+set_location_assignment PIN_86 -to rxd
+set_location_assignment PIN_55 -to sclk_a
+set_location_assignment PIN_50 -to sclk_b
+set_location_assignment PIN_93 -to sclk_c
+set_location_assignment PIN_98 -to sclk_d
+set_location_assignment PIN_84 -to txd
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

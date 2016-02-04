@@ -1,5 +1,5 @@
 Flow report for tmc_firmware
-Fri Jan 29 17:48:53 2016
+Thu Feb  4 14:22:22 2016
 Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 
 
@@ -41,22 +41,22 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Fri Jan 29 17:48:47 2016       ;
+; Flow Status                        ; Successful - Thu Feb  4 14:22:08 2016       ;
 ; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
 ; Revision Name                      ; tmc_firmware                                ;
 ; Top-level Entity Name              ; tmc_firmware_top                            ;
 ; Family                             ; MAX 10                                      ;
 ; Device                             ; 10M08SAE144C8GES                            ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 47 / 8,064 ( < 1 % )                        ;
-;     Total combinational functions  ; 47 / 8,064 ( < 1 % )                        ;
-;     Dedicated logic registers      ; 26 / 8,064 ( < 1 % )                        ;
-; Total registers                    ; 26                                          ;
-; Total pins                         ; 2 / 101 ( 2 % )                             ;
+; Total logic elements               ; 2,084 / 8,064 ( 26 % )                      ;
+;     Total combinational functions  ; 1,900 / 8,064 ( 24 % )                      ;
+;     Dedicated logic registers      ; 1,195 / 8,064 ( 15 % )                      ;
+; Total registers                    ; 1195                                        ;
+; Total pins                         ; 34 / 101 ( 34 % )                           ;
 ; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 0 / 387,072 ( 0 % )                         ;
+; Total memory bits                  ; 273,408 / 387,072 ( 71 % )                  ;
 ; Embedded Multiplier 9-bit elements ; 0 / 48 ( 0 % )                              ;
-; Total PLLs                         ; 0 / 1 ( 0 % )                               ;
+; Total PLLs                         ; 1 / 1 ( 100 % )                             ;
 ; UFM blocks                         ; 0 / 1 ( 0 % )                               ;
 ; ADC blocks                         ; 0 / 1 ( 0 % )                               ;
 +------------------------------------+---------------------------------------------+
@@ -67,30 +67,39 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 01/29/2016 17:48:09 ;
+; Start date & time ; 02/04/2016 14:20:43 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; tmc_firmware        ;
 +-------------------+---------------------+
 
 
-+-----------------------------------------------------------------------------------------------------------------------------+
-; Flow Non-Default Global Settings                                                                                            ;
-+-------------------------------------+---------------------------------------+---------------+------------------+------------+
-; Assignment Name                     ; Value                                 ; Default Value ; Entity Name      ; Section Id ;
-+-------------------------------------+---------------------------------------+---------------+------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 207732451923946.145410768914471       ; --            ; --               ; --         ;
-; FLOW_ENABLE_POWER_ANALYZER          ; On                                    ; Off           ; --               ; --         ;
-; MAX_CORE_JUNCTION_TEMP              ; 85                                    ; --            ; --               ; --         ;
-; MIN_CORE_JUNCTION_TEMP              ; 0                                     ; --            ; --               ; --         ;
-; PARTITION_COLOR                     ; 16764057                              ; --            ; tmc_firmware_top ; Top        ;
-; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                 ; --            ; tmc_firmware_top ; Top        ;
-; PARTITION_NETLIST_TYPE              ; SOURCE                                ; --            ; tmc_firmware_top ; Top        ;
-; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                   ; --            ; --               ; --         ;
-; POWER_DEFAULT_INPUT_IO_TOGGLE_RATE  ; 12.5 %                                ; 12.5%         ; --               ; --         ;
-; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW ; --            ; --               ; --         ;
-; PROJECT_OUTPUT_DIRECTORY            ; output_files                          ; --            ; --               ; --         ;
-; TOP_LEVEL_ENTITY                    ; tmc_firmware_top                      ; tmc_firmware  ; --               ; --         ;
-+-------------------------------------+---------------------------------------+---------------+------------------+------------+
++---------------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                                  ;
++-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
+; Assignment Name                     ; Value                                                       ; Default Value ; Entity Name      ; Section Id ;
++-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
+; COMPILER_SIGNATURE_ID               ; 207732451923946.145461364329178                             ; --            ; --               ; --         ;
+; FLOW_ENABLE_POWER_ANALYZER          ; On                                                          ; Off           ; --               ; --         ;
+; MAX_CORE_JUNCTION_TEMP              ; 85                                                          ; --            ; --               ; --         ;
+; MIN_CORE_JUNCTION_TEMP              ; 0                                                           ; --            ; --               ; --         ;
+; MISC_FILE                           ; tmc_nios2/synthesis/../tmc_nios2.cmp                        ; --            ; --               ; --         ;
+; MISC_FILE                           ; tmc_nios2/synthesis/../../tmc_nios2.qsys                    ; --            ; --               ; --         ;
+; MISC_FILE                           ; tmc_pll_bb.v                                                ; --            ; --               ; --         ;
+; MISC_FILE                           ; tmc_pll.ppf                                                 ; --            ; --               ; --         ;
+; PARTITION_COLOR                     ; 16764057                                                    ; --            ; tmc_firmware_top ; Top        ;
+; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                                       ; --            ; tmc_firmware_top ; Top        ;
+; PARTITION_NETLIST_TYPE              ; SOURCE                                                      ; --            ; tmc_firmware_top ; Top        ;
+; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                                         ; --            ; --               ; --         ;
+; POWER_DEFAULT_INPUT_IO_TOGGLE_RATE  ; 12.5 %                                                      ; 12.5%         ; --               ; --         ;
+; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW                       ; --            ; --               ; --         ;
+; PROJECT_OUTPUT_DIRECTORY            ; output_files                                                ; --            ; --               ; --         ;
+; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.regmap                        ; --            ; --               ; --         ;
+; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.debuginfo                     ; --            ; --               ; --         ;
+; SLD_INFO                            ; QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1454613610 ; --            ; tmc_nios2        ; --         ;
+; SOPCINFO_FILE                       ; tmc_nios2/synthesis/../../tmc_nios2.sopcinfo                ; --            ; --               ; --         ;
+; SYNTHESIS_ONLY_QIP                  ; On                                                          ; --            ; --               ; --         ;
+; TOP_LEVEL_ENTITY                    ; tmc_firmware_top                                            ; tmc_firmware  ; --               ; --         ;
++-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
 
 
 +-------------------------------------------------------------------------------------------------------------------------------+
@@ -98,12 +107,12 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:13     ; 1.0                     ; 1114 MB             ; 00:00:31                           ;
-; Fitter                    ; 00:00:04     ; 1.0                     ; 1354 MB             ; 00:00:05                           ;
-; Assembler                 ; 00:00:01     ; 1.0                     ; 1007 MB             ; 00:00:01                           ;
-; PowerPlay Power Analyzer  ; 00:00:04     ; 1.0                     ; 1091 MB             ; 00:00:04                           ;
-; TimeQuest Timing Analyzer ; 00:00:01     ; 1.0                     ; 1027 MB             ; 00:00:02                           ;
-; Total                     ; 00:00:23     ; --                      ; --                  ; 00:00:43                           ;
+; Analysis & Synthesis      ; 00:00:34     ; 1.0                     ; 1327 MB             ; 00:01:10                           ;
+; Fitter                    ; 00:00:23     ; 1.0                     ; 1393 MB             ; 00:00:23                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 1022 MB             ; 00:00:01                           ;
+; PowerPlay Power Analyzer  ; 00:00:08     ; 1.0                     ; 1093 MB             ; 00:00:08                           ;
+; TimeQuest Timing Analyzer ; 00:00:09     ; 1.0                     ; 1064 MB             ; 00:00:08                           ;
+; Total                     ; 00:01:15     ; --                      ; --                  ; 00:01:50                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

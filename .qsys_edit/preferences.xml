@@ -5,9 +5,10 @@
   <columns>
    <connections preferredWidth="143" />
    <irq preferredWidth="34" />
+   <name preferredWidth="270" />
   </columns>
  </systemtable>
- <library
-   expandedCategories="Library/Basic Functions,Project,Library,Library/Basic Functions/Simulation; Debug and Verification,Library/Basic Functions/Simulation; Debug and Verification/Debug and Performance" />
- <window width="1301" height="744" x="1431" y="24" />
+ <library expandedCategories="Library,Project" />
+ <window width="1301" height="744" x="65" y="24" />
+ <hdlexample language="VERILOG" />
 </preferences>

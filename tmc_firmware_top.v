@@ -58,12 +58,21 @@ module tmc_firmware_top
    output cscn_d, // pin 118
 
    // Serial port
-   input  rxd,   // pin 86
-   output txd,   // pin 84
-   output rts_n, // pin 81
+   // Thu Feb  4 15:53:35 EST 2016
+   // Ugh! Got me again. TXD in the FT2232 datasheet is the RXD of this board, and
+   // vice versa. Here's the correct mapping:
+   // RXD on FT232 is 81, so that's TXD
+   // TXD on FT232 is 84, so that's RXD
+   // CTS# on FT232 is 86, so that's RTS#
+   // RTS# on FT232 is 79, so that's CTS#
+   input  rxd, // pin 84
+   output txd, // pin 81
+   output rts_n, // pin 86
    input  cts_n, // pin 79
    
+   output LED2, // pin 134
    output LED1  // pin 132
+  
    );
 
    // The PLL
@@ -87,7 +96,9 @@ module tmc_firmware_top
    wire [11:0] qsys_csn;
    wire [7:0]  pio_in;
    wire [7:0]  pio_out;
-   
+
+   assign LED2 = pio_out[0];
+
    tmc_nios2 u0 (
 		 .clk_clk(logic_clk), 
 		 .reset_reset_n(logic_clk_rst_n),
@@ -99,12 +110,9 @@ module tmc_firmware_top
 		 .uart_0_external_connection_txd(txd),
 		 .uart_0_external_connection_cts_n(cts_n),
 		 .uart_0_external_connection_rts_n(rts_n),
-		 .pio_1_external_connection_export(pio_in),
-		 .pio_0_external_connection_export(pio_out)
+		 .pio_1_external_connection_export(pio_out),
+		 .pio_0_external_connection_export(pio_in)
 		 );
 
-   // A bit of glue logic
-   
-   
    
 endmodule

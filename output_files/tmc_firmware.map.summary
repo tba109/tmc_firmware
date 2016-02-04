@@ -1,13 +1,13 @@
-Analysis & Synthesis Status : Successful - Thu Feb  4 14:21:20 2016
+Analysis & Synthesis Status : Successful - Thu Feb  4 16:05:00 2016
 Quartus Prime Version : 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 Revision Name : tmc_firmware
 Top-level Entity Name : tmc_firmware_top
 Family : MAX 10
-Total logic elements : 2,208
-    Total combinational functions : 1,896
-    Dedicated logic registers : 1,203
-Total registers : 1203
-Total pins : 34
+Total logic elements : 2,213
+    Total combinational functions : 1,901
+    Dedicated logic registers : 1,211
+Total registers : 1211
+Total pins : 35
 Total virtual pins : 0
 Total memory bits : 273,408
 Embedded Multiplier 9-bit elements : 0

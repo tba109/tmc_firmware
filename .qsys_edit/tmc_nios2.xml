@@ -720,11 +720,6 @@
 															<placeholder>dock.single.Details</placeholder>
 														</key>
 													</entry>
-													<entry>
-														<key shared="false">
-															<placeholder>dock.single.Parameters</placeholder>
-														</key>
-													</entry>
 												</item>
 												<item key="item" type="b">true</item>
 												<item key="item-keys" type="a">
@@ -833,12 +828,6 @@
 											</entry>
 											<entry>
 												<key shared="false">
-													<placeholder>dock.single.Interconnect\ Requirements</placeholder>
-												</key>
-											</entry>
-											<entry>
-												<key shared="false">
-													<placeholder>dock.single.Parameters</placeholder>
 													<placeholder>dock.single.Details</placeholder>
 												</key>
 												<item key="convert" type="b">true</item>
@@ -846,11 +835,45 @@
 													<item type="s">size</item>
 													<item type="s">index</item>
 													<item type="s">id</item>
+													<item type="s">placeholder</item>
 													<item type="s">hold</item>
 												</item>
 												<item key="dock.size" type="i">400</item>
 												<item key="dock.index" type="i">2</item>
 												<item key="dock.id" type="i">2</item>
+												<item key="dock.placeholder" type="s">dock.single.Details</item>
+												<item key="dock.hold" type="b">false</item>
+											</entry>
+											<entry>
+												<key shared="false">
+													<placeholder>dock.single.Interconnect\ Requirements</placeholder>
+												</key>
+											</entry>
+											<entry>
+												<key shared="false">
+													<placeholder>dock.single.Parameters</placeholder>
+												</key>
+												<item key="map" type="p">
+													<version>0</version>
+													<format>dock.PlaceholderList</format>
+													<entry>
+														<key shared="false">
+															<placeholder>dock.single.Parameters</placeholder>
+														</key>
+													</entry>
+												</item>
+												<item key="convert" type="b">true</item>
+												<item key="convert-keys" type="a">
+													<item type="s">size</item>
+													<item type="s">index</item>
+													<item type="s">id</item>
+													<item type="s">placeholder</item>
+													<item type="s">hold</item>
+												</item>
+												<item key="dock.size" type="i">400</item>
+												<item key="dock.index" type="i">3</item>
+												<item key="dock.id" type="i">3</item>
+												<item key="dock.placeholder" type="s">dock.single.Parameters</item>
 												<item key="dock.hold" type="b">false</item>
 											</entry>
 										</placeholders>
@@ -933,63 +956,24 @@
 									<children ignore="false"/>
 								</child>
 								<child>
-									<layout factory="delegate_StackDockStationFactory">
-										<selected>1</selected>
-										<placeholders>
-											<version>0</version>
-											<format>dock.PlaceholderList</format>
-											<entry>
-												<key shared="false">
-													<placeholder>dock.single.Details</placeholder>
-												</key>
-												<item key="convert" type="b">true</item>
-												<item key="convert-keys" type="a">
-													<item type="s">index</item>
-													<item type="s">id</item>
-													<item type="s">placeholder</item>
-												</item>
-												<item key="dock.index" type="i">0</item>
-												<item key="dock.id" type="i">0</item>
-												<item key="dock.placeholder" type="s">dock.single.Details</item>
-											</entry>
-											<entry>
-												<key shared="false">
-													<placeholder>dock.single.Parameters</placeholder>
-												</key>
-												<item key="convert" type="b">true</item>
-												<item key="convert-keys" type="a">
-													<item type="s">index</item>
-													<item type="s">id</item>
-													<item type="s">placeholder</item>
-												</item>
-												<item key="dock.index" type="i">1</item>
-												<item key="dock.id" type="i">1</item>
-												<item key="dock.placeholder" type="s">dock.single.Parameters</item>
-											</entry>
-										</placeholders>
+									<layout factory="predefined" placeholder="dock.single.Details">
+										<replacement id="dockablesingle Details"/>
+										<delegate id="delegate_ccontrol backup factory id">
+											<id>Details</id>
+											<area/>
+										</delegate>
 									</layout>
-									<children ignore="false">
-										<child>
-											<layout factory="predefined" placeholder="dock.single.Details">
-												<replacement id="dockablesingle Details"/>
-												<delegate id="delegate_ccontrol backup factory id">
-													<id>Details</id>
-													<area/>
-												</delegate>
-											</layout>
-											<children ignore="false"/>
-										</child>
-										<child>
-											<layout factory="predefined" placeholder="dock.single.Parameters">
-												<replacement id="dockablesingle Parameters"/>
-												<delegate id="delegate_ccontrol backup factory id">
-													<id>Parameters</id>
-													<area/>
-												</delegate>
-											</layout>
-											<children ignore="false"/>
-										</child>
-									</children>
+									<children ignore="false"/>
+								</child>
+								<child>
+									<layout factory="predefined" placeholder="dock.single.Parameters">
+										<replacement id="dockablesingle Parameters"/>
+										<delegate id="delegate_ccontrol backup factory id">
+											<id>Parameters</id>
+											<area/>
+										</delegate>
+									</layout>
+									<children ignore="false"/>
 								</child>
 							</children>
 						</root>
@@ -1739,10 +1723,6 @@
 											<size>400</size>
 											<placeholder>dock.single.Parameters</placeholder>
 										</property>
-										<property factory="StackDockPropertyFactory">
-											<index>1</index>
-											<placeholder>dock.single.Parameters</placeholder>
-										</property>
 									</location>
 								</property>
 								<property id="dock.mode.externalized">
@@ -1755,10 +1735,6 @@
 											<width>1291</width>
 											<height>405</height>
 											<fullscreen>false</fullscreen>
-											<placeholder>dock.single.Parameters</placeholder>
-										</property>
-										<property factory="StackDockPropertyFactory">
-											<index>1</index>
 											<placeholder>dock.single.Parameters</placeholder>
 										</property>
 									</location>

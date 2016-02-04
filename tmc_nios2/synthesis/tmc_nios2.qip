@@ -2,7 +2,7 @@ set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_TOOL_NAM
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_TOOL_VERSION "15.1"
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_TOOL_ENV "Qsys"
 set_global_assignment -library "tmc_nios2" -name SOPCINFO_FILE [file join $::quartus(qip_path) "../../tmc_nios2.sopcinfo"]
-set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name SLD_INFO "QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1454613610"
+set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name SLD_INFO "QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1454616726"
 set_global_assignment -library "tmc_nios2" -name MISC_FILE [file join $::quartus(qip_path) "../tmc_nios2.cmp"]
 set_global_assignment -library "tmc_nios2" -name SLD_FILE [file join $::quartus(qip_path) "tmc_nios2.regmap"]
 set_global_assignment -library "tmc_nios2" -name SLD_FILE [file join $::quartus(qip_path) "tmc_nios2.debuginfo"]
@@ -16,7 +16,7 @@ set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONEN
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_REPORT_HIERARCHY "On"
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_INTERNAL "Off"
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_VERSION "MS4w"
-set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTQ1NDYxMzYxMA==::QXV0byBHRU5FUkFUSU9OX0lE"
+set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "QVVUT19HRU5FUkFUSU9OX0lE::MTQ1NDYxNjcyNg==::QXV0byBHRU5FUkFUSU9OX0lE"
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfRkFNSUxZ::TUFYIDEw::QXV0byBERVZJQ0VfRkFNSUxZ"
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0U=::MTBNMDhTQUUxNDRDOEdFUw==::QXV0byBERVZJQ0U="
 set_global_assignment -entity "tmc_nios2" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "QVVUT19ERVZJQ0VfU1BFRURHUkFERQ==::OA==::QXV0byBERVZJQ0VfU1BFRURHUkFERQ=="
@@ -617,7 +617,7 @@ set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_C
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_INTERNAL "Off"
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_AUTHOR "QWx0ZXJhIENvcnBvcmF0aW9u"
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_VERSION "MTUuMQ=="
-set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "YmF1ZA==::MTE1MjAw::QmF1ZCByYXRlIChicHMp"
+set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "YmF1ZA==::OTYwMA==::QmF1ZCByYXRlIChicHMp"
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "ZGF0YUJpdHM=::OA==::RGF0YSBiaXRz"
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "Zml4ZWRCYXVk::dHJ1ZQ==::Rml4ZWQgYmF1ZCByYXRl"
 set_global_assignment -entity "tmc_nios2_uart_0" -library "tmc_nios2" -name IP_COMPONENT_PARAMETER "cGFyaXR5::Tk9ORQ==::UGFyaXR5"

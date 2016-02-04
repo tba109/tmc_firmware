@@ -16,12 +16,17 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include "altera_avalon_pio_regs.h"
+#include "system.h"
 int main()
 {
+  unsigned short x = 0xFFFF;
   while(1)
     {
       usleep(1000*1000);
       printf("Hello, I've done it again!\n");
+      IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
+      x = ~x;
     }
   return 0;
 }

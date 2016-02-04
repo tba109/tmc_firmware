@@ -1,5 +1,5 @@
 Flow report for tmc_firmware
-Thu Feb  4 14:22:22 2016
+Thu Feb  4 16:06:04 2016
 Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 
 
@@ -41,18 +41,18 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Thu Feb  4 14:22:08 2016       ;
+; Flow Status                        ; Successful - Thu Feb  4 16:05:50 2016       ;
 ; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
 ; Revision Name                      ; tmc_firmware                                ;
 ; Top-level Entity Name              ; tmc_firmware_top                            ;
 ; Family                             ; MAX 10                                      ;
 ; Device                             ; 10M08SAE144C8GES                            ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 2,084 / 8,064 ( 26 % )                      ;
-;     Total combinational functions  ; 1,900 / 8,064 ( 24 % )                      ;
-;     Dedicated logic registers      ; 1,195 / 8,064 ( 15 % )                      ;
-; Total registers                    ; 1195                                        ;
-; Total pins                         ; 34 / 101 ( 34 % )                           ;
+; Total logic elements               ; 2,082 / 8,064 ( 26 % )                      ;
+;     Total combinational functions  ; 1,905 / 8,064 ( 24 % )                      ;
+;     Dedicated logic registers      ; 1,203 / 8,064 ( 15 % )                      ;
+; Total registers                    ; 1203                                        ;
+; Total pins                         ; 35 / 101 ( 35 % )                           ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 273,408 / 387,072 ( 71 % )                  ;
 ; Embedded Multiplier 9-bit elements ; 0 / 48 ( 0 % )                              ;
@@ -67,7 +67,7 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/04/2016 14:20:43 ;
+; Start date & time ; 02/04/2016 16:04:26 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; tmc_firmware        ;
 +-------------------+---------------------+
@@ -78,7 +78,7 @@ agreement for further details.
 +-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
 ; Assignment Name                     ; Value                                                       ; Default Value ; Entity Name      ; Section Id ;
 +-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 207732451923946.145461364329178                             ; --            ; --               ; --         ;
+; COMPILER_SIGNATURE_ID               ; 207732451923946.145461986606530                             ; --            ; --               ; --         ;
 ; FLOW_ENABLE_POWER_ANALYZER          ; On                                                          ; Off           ; --               ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                                          ; --            ; --               ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                                           ; --            ; --               ; --         ;
@@ -95,7 +95,7 @@ agreement for further details.
 ; PROJECT_OUTPUT_DIRECTORY            ; output_files                                                ; --            ; --               ; --         ;
 ; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.regmap                        ; --            ; --               ; --         ;
 ; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.debuginfo                     ; --            ; --               ; --         ;
-; SLD_INFO                            ; QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1454613610 ; --            ; tmc_nios2        ; --         ;
+; SLD_INFO                            ; QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1454616726 ; --            ; tmc_nios2        ; --         ;
 ; SOPCINFO_FILE                       ; tmc_nios2/synthesis/../../tmc_nios2.sopcinfo                ; --            ; --               ; --         ;
 ; SYNTHESIS_ONLY_QIP                  ; On                                                          ; --            ; --               ; --         ;
 ; TOP_LEVEL_ENTITY                    ; tmc_firmware_top                                            ; tmc_firmware  ; --               ; --         ;
@@ -107,12 +107,12 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:34     ; 1.0                     ; 1327 MB             ; 00:01:10                           ;
-; Fitter                    ; 00:00:23     ; 1.0                     ; 1393 MB             ; 00:00:23                           ;
-; Assembler                 ; 00:00:01     ; 1.0                     ; 1022 MB             ; 00:00:01                           ;
-; PowerPlay Power Analyzer  ; 00:00:08     ; 1.0                     ; 1093 MB             ; 00:00:08                           ;
-; TimeQuest Timing Analyzer ; 00:00:09     ; 1.0                     ; 1064 MB             ; 00:00:08                           ;
-; Total                     ; 00:01:15     ; --                      ; --                  ; 00:01:50                           ;
+; Analysis & Synthesis      ; 00:00:32     ; 1.0                     ; 1328 MB             ; 00:01:06                           ;
+; Fitter                    ; 00:00:23     ; 1.0                     ; 1394 MB             ; 00:00:23                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 1021 MB             ; 00:00:01                           ;
+; PowerPlay Power Analyzer  ; 00:00:09     ; 1.0                     ; 1092 MB             ; 00:00:08                           ;
+; TimeQuest Timing Analyzer ; 00:00:09     ; 1.0                     ; 1069 MB             ; 00:00:09                           ;
+; Total                     ; 00:01:14     ; --                      ; --                  ; 00:01:47                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

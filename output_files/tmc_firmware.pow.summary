@@ -1,12 +1,12 @@
-PowerPlay Power Analyzer Status : Successful - Thu Feb  4 18:06:23 2016
+PowerPlay Power Analyzer Status : Successful - Fri Feb  5 16:33:41 2016
 Quartus Prime Version : 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 Revision Name : tmc_firmware
 Top-level Entity Name : tmc_firmware_top
 Family : MAX 10
 Device : 10M08SAE144C8GES
 Power Models : Final
-Total Thermal Power Dissipation : 158.03 mW
-Core Dynamic Thermal Power Dissipation : 1.45 mW
+Total Thermal Power Dissipation : 157.98 mW
+Core Dynamic Thermal Power Dissipation : 1.54 mW
 Core Static Thermal Power Dissipation : 121.07 mW
-I/O Thermal Power Dissipation : 35.51 mW
+I/O Thermal Power Dissipation : 35.37 mW
 Power Estimation Confidence : Low: user provided insufficient toggle rate data

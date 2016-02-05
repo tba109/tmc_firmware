@@ -90,16 +90,67 @@ module tmc_firmware_top
    config_ind CONFIG_IND0(.clk(logic_clk),.rst_n(logic_clk_rst_n),.blink_configed(LED1));
 
    // The processor (most everything is in here)
-   wire        qsys_miso;
+   reg         qsys_miso;
    wire        qsys_mosi;
    wire        qsys_sclk;
    wire [11:0] qsys_csn;
    wire [7:0]  pio_in;
    wire [7:0]  pio_out;
 
-   assign LED2 = pio_out[0];
+   // Troubleshooting assignments
+   assign LED2 = pio_out[7];
 
-   tmc_nios2 u0 (
+   // Temperature readout board A
+   assign pio_in[0] = live_a;
+   assign mosi_a = pio_out[0] ? qsys_mosi    : 1'bz;
+   assign sclk_a = pio_out[0] ? qsys_sclk    : 1'bz;
+   assign csan_a = pio_out[0] ? qsys_csn[0]  : 1'bz;
+   assign csbn_a = pio_out[0] ? qsys_csn[1]  : 1'bz;
+   assign cscn_a = pio_out[0] ? qsys_csn[2]  : 1'bz;
+   
+   // Temperature readout board B
+   assign pio_in[1] = live_b;
+   assign mosi_b = pio_out[1] ? qsys_mosi    : 1'bz;
+   assign sclk_b = pio_out[1] ? qsys_sclk    : 1'bz;
+   assign csan_b = pio_out[1] ? qsys_csn[3]  : 1'bz;
+   assign csbn_b = pio_out[1] ? qsys_csn[4]  : 1'bz;
+   assign cscn_b = pio_out[1] ? qsys_csn[5]  : 1'bz;
+   
+   // Temperature readout board C
+   assign pio_in[2] = live_c;
+   assign mosi_c = pio_out[2] ? qsys_mosi    : 1'bz;
+   assign sclk_c = pio_out[2] ? qsys_sclk    : 1'bz;
+   assign csan_c = pio_out[2] ? qsys_csn[6]  : 1'bz;
+   assign csbn_c = pio_out[2] ? qsys_csn[7]  : 1'bz;
+   assign cscn_c = pio_out[2] ? qsys_csn[8]  : 1'bz;
+   
+   // Temperature readout board D
+   assign pio_in[3] = live_d;
+   assign mosi_d = pio_out[3] ? qsys_mosi    : 1'bz;
+   assign sclk_d = pio_out[3] ? qsys_sclk    : 1'bz;
+   assign csan_d = pio_out[3] ? qsys_csn[9]  : 1'bz;
+   assign csbn_d = pio_out[3] ? qsys_csn[10] : 1'bz;
+   assign cscn_d = pio_out[3] ? qsys_csn[11] : 1'bz;
+   
+   // MISO input is shared between all boards. De-mux as follows:
+   always@(*)
+     case(qsys_csn)
+       ~12'h001: qsys_miso <= miso_a;
+       ~12'h002: qsys_miso <= miso_a;
+       ~12'h004: qsys_miso <= miso_a;
+       ~12'h008: qsys_miso <= miso_b;
+       ~12'h010: qsys_miso <= miso_b;
+       ~12'h020: qsys_miso <= miso_b;
+       ~12'h040: qsys_miso <= miso_c;
+       ~12'h080: qsys_miso <= miso_c;
+       ~12'h100: qsys_miso <= miso_c;
+       ~12'h200: qsys_miso <= miso_d;
+       ~12'h400: qsys_miso <= miso_d;
+       ~12'h800: qsys_miso <= miso_d;
+       default:  qsys_miso <= 1'b0;
+     endcase
+   
+       tmc_nios2 u0 (
 		 .clk_clk(logic_clk), 
 		 .reset_reset_n(logic_clk_rst_n),
 		 .spi_0_external_MISO(qsys_miso),

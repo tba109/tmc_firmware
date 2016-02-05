@@ -4,6 +4,86 @@
 			"name" : "Top",
 			"pins" : [
 				{
+					"name" : "mosi_a",
+					"strict" : false
+				},
+				{
+					"name" : "sclk_a",
+					"strict" : false
+				},
+				{
+					"name" : "csan_a",
+					"strict" : false
+				},
+				{
+					"name" : "csbn_a",
+					"strict" : false
+				},
+				{
+					"name" : "cscn_a",
+					"strict" : false
+				},
+				{
+					"name" : "mosi_b",
+					"strict" : false
+				},
+				{
+					"name" : "sclk_b",
+					"strict" : false
+				},
+				{
+					"name" : "csan_b",
+					"strict" : false
+				},
+				{
+					"name" : "csbn_b",
+					"strict" : false
+				},
+				{
+					"name" : "cscn_b",
+					"strict" : false
+				},
+				{
+					"name" : "mosi_c",
+					"strict" : false
+				},
+				{
+					"name" : "sclk_c",
+					"strict" : false
+				},
+				{
+					"name" : "csan_c",
+					"strict" : false
+				},
+				{
+					"name" : "csbn_c",
+					"strict" : false
+				},
+				{
+					"name" : "cscn_c",
+					"strict" : false
+				},
+				{
+					"name" : "mosi_d",
+					"strict" : false
+				},
+				{
+					"name" : "sclk_d",
+					"strict" : false
+				},
+				{
+					"name" : "csan_d",
+					"strict" : false
+				},
+				{
+					"name" : "csbn_d",
+					"strict" : false
+				},
+				{
+					"name" : "cscn_d",
+					"strict" : false
+				},
+				{
 					"name" : "txd",
 					"strict" : false
 				},
@@ -20,11 +100,43 @@
 					"strict" : false
 				},
 				{
+					"name" : "live_c",
+					"strict" : false
+				},
+				{
+					"name" : "live_d",
+					"strict" : false
+				},
+				{
+					"name" : "live_a",
+					"strict" : false
+				},
+				{
+					"name" : "live_b",
+					"strict" : false
+				},
+				{
 					"name" : "cts_n",
 					"strict" : false
 				},
 				{
 					"name" : "rxd",
+					"strict" : false
+				},
+				{
+					"name" : "miso_c",
+					"strict" : false
+				},
+				{
+					"name" : "miso_a",
+					"strict" : false
+				},
+				{
+					"name" : "miso_d",
+					"strict" : false
+				},
+				{
+					"name" : "miso_b",
 					"strict" : false
 				},
 				{

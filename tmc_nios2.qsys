@@ -49,6 +49,30 @@
          type = "String";
       }
    }
+   element onchip_flash_0
+   {
+      datum _sortIndex
+      {
+         value = "9";
+         type = "int";
+      }
+   }
+   element onchip_flash_0.csr
+   {
+      datum baseAddress
+      {
+         value = "655360";
+         type = "String";
+      }
+   }
+   element onchip_flash_0.data
+   {
+      datum baseAddress
+      {
+         value = "524288";
+         type = "String";
+      }
+   }
    element onchip_memory2_0
    {
       datum _sortIndex
@@ -157,7 +181,17 @@
  <parameter name="testBenchDutName" value="" />
  <parameter name="timeStamp" value="0" />
  <parameter name="useTestBenchNamingPattern" value="false" />
- <instanceScript></instanceScript>
+ <instanceScript><![CDATA[# request a specific version of the scripting API
+package require -exact qsys 15.1
+
+# Set the name of the procedure to manipulate parameters
+set_module_property COMPOSITION_CALLBACK compose
+
+proc compose {} {
+    # manipulate parameters in here
+    # Example: set_instance_parameter_value child0 param0 [ get_parameter_value new_parameter_0 ]
+}
+]]></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
    name="pio_0_external_connection"
@@ -226,10 +260,10 @@
   <parameter name="customInstSlavesSystemInfo_nios_a" value="&lt;info/&gt;" />
   <parameter name="customInstSlavesSystemInfo_nios_b" value="&lt;info/&gt;" />
   <parameter name="customInstSlavesSystemInfo_nios_c" value="&lt;info/&gt;" />
-  <parameter name="dataAddrWidth" value="19" />
+  <parameter name="dataAddrWidth" value="20" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /><slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -267,8 +301,8 @@
   <parameter name="icache_size" value="65536" />
   <parameter name="icache_tagramBlockType" value="Automatic" />
   <parameter name="impl" value="Tiny" />
-  <parameter name="instAddrWidth" value="19" />
-  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /></address-map>]]></parameter>
+  <parameter name="instAddrWidth" value="20" />
+  <parameter name="instSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /></address-map>]]></parameter>
   <parameter name="instructionMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="instructionMasterHighPerformanceMapParam" value="" />
   <parameter name="instruction_master_high_performance_paddr_base" value="0" />
@@ -303,7 +337,7 @@
   <parameter name="ocimem_ramInit" value="false" />
   <parameter name="regfile_ramBlockType" value="Automatic" />
   <parameter name="resetOffset" value="0" />
-  <parameter name="resetSlave" value="onchip_memory2_0.s1" />
+  <parameter name="resetSlave" value="onchip_flash_0.data" />
   <parameter name="resetrequest_enabled" value="true" />
   <parameter name="setting_HBreakTest" value="false" />
   <parameter name="setting_HDLSimCachesCleared" value="true" />
@@ -384,6 +418,27 @@
   <parameter name="tmr_enabled" value="false" />
   <parameter name="tracefilename" value="" />
   <parameter name="userDefinedSettings" value="" />
+ </module>
+ <module
+   name="onchip_flash_0"
+   kind="altera_onchip_flash"
+   version="15.1"
+   enabled="1">
+  <parameter name="AUTO_CLOCK_RATE" value="50000000" />
+  <parameter name="CLOCK_FREQUENCY" value="116.0" />
+  <parameter name="CONFIGURATION_MODE">Single Uncompressed Image</parameter>
+  <parameter name="CONFIGURATION_SCHEME">Internal Configuration</parameter>
+  <parameter name="DATA_INTERFACE" value="Parallel" />
+  <parameter name="DEVICE_FAMILY" value="MAX 10" />
+  <parameter name="PART_NAME" value="10M08SAE144C8GES" />
+  <parameter name="READ_BURST_COUNT" value="8" />
+  <parameter name="READ_BURST_MODE" value="Incrementing" />
+  <parameter name="SECTOR_ACCESS_MODE">Read and write,Read and write,Read only,Hidden,Hidden</parameter>
+  <parameter name="autoInitializationFileName">$${FILENAME}_onchip_flash_0</parameter>
+  <parameter name="initFlashContent" value="false" />
+  <parameter name="initializationFileName">altera_onchip_flash.hex</parameter>
+  <parameter name="initializationFileNameForSim">altera_onchip_flash.dat</parameter>
+  <parameter name="useNonDefaultInitFile" value="false" />
  </module>
  <module
    name="onchip_memory2_0"
@@ -504,6 +559,24 @@
    kind="avalon"
    version="15.1"
    start="nios2_gen2_0.data_master"
+   end="onchip_flash_0.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x000a0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="nios2_gen2_0.data_master"
+   end="onchip_flash_0.data">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00080000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="nios2_gen2_0.data_master"
    end="nios2_gen2_0.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040000" />
@@ -558,6 +631,15 @@
    kind="avalon"
    version="15.1"
    start="nios2_gen2_0.instruction_master"
+   end="onchip_flash_0.data">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00080000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="nios2_gen2_0.instruction_master"
    end="nios2_gen2_0.debug_mem_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040000" />
@@ -579,6 +661,11 @@
  <connection kind="clock" version="15.1" start="clk_0.clk" end="jtag_uart_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="pio_0.clk" />
  <connection kind="clock" version="15.1" start="clk_0.clk" end="pio_1.clk" />
+ <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="onchip_flash_0.clk" />
  <connection
    kind="clock"
    version="15.1"
@@ -605,6 +692,11 @@
    end="uart_0.irq">
   <parameter name="irqNumber" value="2" />
  </connection>
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="onchip_flash_0.nreset" />
  <connection
    kind="reset"
    version="15.1"

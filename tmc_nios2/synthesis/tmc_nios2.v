@@ -21,14 +21,14 @@ module tmc_nios2 (
 	wire  [31:0] nios2_gen2_0_data_master_readdata;                           // mm_interconnect_0:nios2_gen2_0_data_master_readdata -> nios2_gen2_0:d_readdata
 	wire         nios2_gen2_0_data_master_waitrequest;                        // mm_interconnect_0:nios2_gen2_0_data_master_waitrequest -> nios2_gen2_0:d_waitrequest
 	wire         nios2_gen2_0_data_master_debugaccess;                        // nios2_gen2_0:debug_mem_slave_debugaccess_to_roms -> mm_interconnect_0:nios2_gen2_0_data_master_debugaccess
-	wire  [18:0] nios2_gen2_0_data_master_address;                            // nios2_gen2_0:d_address -> mm_interconnect_0:nios2_gen2_0_data_master_address
+	wire  [19:0] nios2_gen2_0_data_master_address;                            // nios2_gen2_0:d_address -> mm_interconnect_0:nios2_gen2_0_data_master_address
 	wire   [3:0] nios2_gen2_0_data_master_byteenable;                         // nios2_gen2_0:d_byteenable -> mm_interconnect_0:nios2_gen2_0_data_master_byteenable
 	wire         nios2_gen2_0_data_master_read;                               // nios2_gen2_0:d_read -> mm_interconnect_0:nios2_gen2_0_data_master_read
 	wire         nios2_gen2_0_data_master_write;                              // nios2_gen2_0:d_write -> mm_interconnect_0:nios2_gen2_0_data_master_write
 	wire  [31:0] nios2_gen2_0_data_master_writedata;                          // nios2_gen2_0:d_writedata -> mm_interconnect_0:nios2_gen2_0_data_master_writedata
 	wire  [31:0] nios2_gen2_0_instruction_master_readdata;                    // mm_interconnect_0:nios2_gen2_0_instruction_master_readdata -> nios2_gen2_0:i_readdata
 	wire         nios2_gen2_0_instruction_master_waitrequest;                 // mm_interconnect_0:nios2_gen2_0_instruction_master_waitrequest -> nios2_gen2_0:i_waitrequest
-	wire  [18:0] nios2_gen2_0_instruction_master_address;                     // nios2_gen2_0:i_address -> mm_interconnect_0:nios2_gen2_0_instruction_master_address
+	wire  [19:0] nios2_gen2_0_instruction_master_address;                     // nios2_gen2_0:i_address -> mm_interconnect_0:nios2_gen2_0_instruction_master_address
 	wire         nios2_gen2_0_instruction_master_read;                        // nios2_gen2_0:i_read -> mm_interconnect_0:nios2_gen2_0_instruction_master_read
 	wire         mm_interconnect_0_jtag_uart_0_avalon_jtag_slave_chipselect;  // mm_interconnect_0:jtag_uart_0_avalon_jtag_slave_chipselect -> jtag_uart_0:av_chipselect
 	wire  [31:0] mm_interconnect_0_jtag_uart_0_avalon_jtag_slave_readdata;    // jtag_uart_0:av_readdata -> mm_interconnect_0:jtag_uart_0_avalon_jtag_slave_readdata
@@ -39,6 +39,19 @@ module tmc_nios2 (
 	wire  [31:0] mm_interconnect_0_jtag_uart_0_avalon_jtag_slave_writedata;   // mm_interconnect_0:jtag_uart_0_avalon_jtag_slave_writedata -> jtag_uart_0:av_writedata
 	wire  [31:0] mm_interconnect_0_sysid_qsys_0_control_slave_readdata;       // sysid_qsys_0:readdata -> mm_interconnect_0:sysid_qsys_0_control_slave_readdata
 	wire   [0:0] mm_interconnect_0_sysid_qsys_0_control_slave_address;        // mm_interconnect_0:sysid_qsys_0_control_slave_address -> sysid_qsys_0:address
+	wire  [31:0] mm_interconnect_0_onchip_flash_0_csr_readdata;               // onchip_flash_0:avmm_csr_readdata -> mm_interconnect_0:onchip_flash_0_csr_readdata
+	wire   [0:0] mm_interconnect_0_onchip_flash_0_csr_address;                // mm_interconnect_0:onchip_flash_0_csr_address -> onchip_flash_0:avmm_csr_addr
+	wire         mm_interconnect_0_onchip_flash_0_csr_read;                   // mm_interconnect_0:onchip_flash_0_csr_read -> onchip_flash_0:avmm_csr_read
+	wire         mm_interconnect_0_onchip_flash_0_csr_write;                  // mm_interconnect_0:onchip_flash_0_csr_write -> onchip_flash_0:avmm_csr_write
+	wire  [31:0] mm_interconnect_0_onchip_flash_0_csr_writedata;              // mm_interconnect_0:onchip_flash_0_csr_writedata -> onchip_flash_0:avmm_csr_writedata
+	wire  [31:0] mm_interconnect_0_onchip_flash_0_data_readdata;              // onchip_flash_0:avmm_data_readdata -> mm_interconnect_0:onchip_flash_0_data_readdata
+	wire         mm_interconnect_0_onchip_flash_0_data_waitrequest;           // onchip_flash_0:avmm_data_waitrequest -> mm_interconnect_0:onchip_flash_0_data_waitrequest
+	wire  [14:0] mm_interconnect_0_onchip_flash_0_data_address;               // mm_interconnect_0:onchip_flash_0_data_address -> onchip_flash_0:avmm_data_addr
+	wire         mm_interconnect_0_onchip_flash_0_data_read;                  // mm_interconnect_0:onchip_flash_0_data_read -> onchip_flash_0:avmm_data_read
+	wire         mm_interconnect_0_onchip_flash_0_data_readdatavalid;         // onchip_flash_0:avmm_data_readdatavalid -> mm_interconnect_0:onchip_flash_0_data_readdatavalid
+	wire         mm_interconnect_0_onchip_flash_0_data_write;                 // mm_interconnect_0:onchip_flash_0_data_write -> onchip_flash_0:avmm_data_write
+	wire  [31:0] mm_interconnect_0_onchip_flash_0_data_writedata;             // mm_interconnect_0:onchip_flash_0_data_writedata -> onchip_flash_0:avmm_data_writedata
+	wire   [3:0] mm_interconnect_0_onchip_flash_0_data_burstcount;            // mm_interconnect_0:onchip_flash_0_data_burstcount -> onchip_flash_0:avmm_data_burstcount
 	wire  [31:0] mm_interconnect_0_nios2_gen2_0_debug_mem_slave_readdata;     // nios2_gen2_0:debug_mem_slave_readdata -> mm_interconnect_0:nios2_gen2_0_debug_mem_slave_readdata
 	wire         mm_interconnect_0_nios2_gen2_0_debug_mem_slave_waitrequest;  // nios2_gen2_0:debug_mem_slave_waitrequest -> mm_interconnect_0:nios2_gen2_0_debug_mem_slave_waitrequest
 	wire         mm_interconnect_0_nios2_gen2_0_debug_mem_slave_debugaccess;  // mm_interconnect_0:nios2_gen2_0_debug_mem_slave_debugaccess -> nios2_gen2_0:debug_mem_slave_debugaccess
@@ -78,7 +91,7 @@ module tmc_nios2 (
 	wire         irq_mapper_receiver1_irq;                                    // spi_0:irq -> irq_mapper:receiver1_irq
 	wire         irq_mapper_receiver2_irq;                                    // uart_0:irq -> irq_mapper:receiver2_irq
 	wire  [31:0] nios2_gen2_0_irq_irq;                                        // irq_mapper:sender_irq -> nios2_gen2_0:irq
-	wire         rst_controller_reset_out_reset;                              // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart_0:rst_n, mm_interconnect_0:nios2_gen2_0_reset_reset_bridge_in_reset_reset, nios2_gen2_0:reset_n, onchip_memory2_0:reset, pio_0:reset_n, pio_1:reset_n, rst_translator:in_reset, spi_0:reset_n, sysid_qsys_0:reset_n, uart_0:reset_n]
+	wire         rst_controller_reset_out_reset;                              // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart_0:rst_n, mm_interconnect_0:nios2_gen2_0_reset_reset_bridge_in_reset_reset, nios2_gen2_0:reset_n, onchip_flash_0:reset_n, onchip_memory2_0:reset, pio_0:reset_n, pio_1:reset_n, rst_translator:in_reset, spi_0:reset_n, sysid_qsys_0:reset_n, uart_0:reset_n]
 	wire         rst_controller_reset_out_reset_req;                          // rst_controller:reset_req -> [nios2_gen2_0:reset_req, onchip_memory2_0:reset_req, rst_translator:reset_req_in]
 
 	tmc_nios2_jtag_uart_0 jtag_uart_0 (
@@ -121,6 +134,69 @@ module tmc_nios2 (
 		.debug_mem_slave_write               (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_write),       //                          .write
 		.debug_mem_slave_writedata           (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_writedata),   //                          .writedata
 		.dummy_ci_port                       ()                                                            // custom_instruction_master.readra
+	);
+
+	altera_onchip_flash #(
+		.INIT_FILENAME                       (""),
+		.INIT_FILENAME_SIM                   (""),
+		.DEVICE_FAMILY                       ("MAX 10"),
+		.PART_NAME                           ("10M08SAE144C8GES"),
+		.DEVICE_ID                           ("08"),
+		.SECTOR1_START_ADDR                  (0),
+		.SECTOR1_END_ADDR                    (4095),
+		.SECTOR2_START_ADDR                  (4096),
+		.SECTOR2_END_ADDR                    (8191),
+		.SECTOR3_START_ADDR                  (8192),
+		.SECTOR3_END_ADDR                    (29183),
+		.SECTOR4_START_ADDR                  (0),
+		.SECTOR4_END_ADDR                    (0),
+		.SECTOR5_START_ADDR                  (0),
+		.SECTOR5_END_ADDR                    (0),
+		.MIN_VALID_ADDR                      (0),
+		.MAX_VALID_ADDR                      (29183),
+		.MIN_UFM_VALID_ADDR                  (0),
+		.MAX_UFM_VALID_ADDR                  (29183),
+		.SECTOR1_MAP                         (1),
+		.SECTOR2_MAP                         (2),
+		.SECTOR3_MAP                         (3),
+		.SECTOR4_MAP                         (0),
+		.SECTOR5_MAP                         (0),
+		.ADDR_RANGE1_END_ADDR                (29183),
+		.ADDR_RANGE1_OFFSET                  (512),
+		.ADDR_RANGE2_OFFSET                  (0),
+		.AVMM_DATA_ADDR_WIDTH                (15),
+		.AVMM_DATA_DATA_WIDTH                (32),
+		.AVMM_DATA_BURSTCOUNT_WIDTH          (4),
+		.SECTOR_READ_PROTECTION_MODE         (28),
+		.FLASH_SEQ_READ_DATA_COUNT           (2),
+		.FLASH_ADDR_ALIGNMENT_BITS           (1),
+		.FLASH_READ_CYCLE_MAX_INDEX          (3),
+		.FLASH_RESET_CYCLE_MAX_INDEX         (12),
+		.FLASH_BUSY_TIMEOUT_CYCLE_MAX_INDEX  (48),
+		.FLASH_ERASE_TIMEOUT_CYCLE_MAX_INDEX (17500000),
+		.FLASH_WRITE_TIMEOUT_CYCLE_MAX_INDEX (15250),
+		.PARALLEL_MODE                       (1),
+		.READ_AND_WRITE_MODE                 (1),
+		.WRAPPING_BURST_MODE                 (0),
+		.IS_DUAL_BOOT                        ("False"),
+		.IS_ERAM_SKIP                        ("True"),
+		.IS_COMPRESSED_IMAGE                 ("False")
+	) onchip_flash_0 (
+		.clock                   (clk_clk),                                             //    clk.clk
+		.reset_n                 (~rst_controller_reset_out_reset),                     // nreset.reset_n
+		.avmm_data_addr          (mm_interconnect_0_onchip_flash_0_data_address),       //   data.address
+		.avmm_data_read          (mm_interconnect_0_onchip_flash_0_data_read),          //       .read
+		.avmm_data_writedata     (mm_interconnect_0_onchip_flash_0_data_writedata),     //       .writedata
+		.avmm_data_write         (mm_interconnect_0_onchip_flash_0_data_write),         //       .write
+		.avmm_data_readdata      (mm_interconnect_0_onchip_flash_0_data_readdata),      //       .readdata
+		.avmm_data_waitrequest   (mm_interconnect_0_onchip_flash_0_data_waitrequest),   //       .waitrequest
+		.avmm_data_readdatavalid (mm_interconnect_0_onchip_flash_0_data_readdatavalid), //       .readdatavalid
+		.avmm_data_burstcount    (mm_interconnect_0_onchip_flash_0_data_burstcount),    //       .burstcount
+		.avmm_csr_addr           (mm_interconnect_0_onchip_flash_0_csr_address),        //    csr.address
+		.avmm_csr_read           (mm_interconnect_0_onchip_flash_0_csr_read),           //       .read
+		.avmm_csr_writedata      (mm_interconnect_0_onchip_flash_0_csr_writedata),      //       .writedata
+		.avmm_csr_write          (mm_interconnect_0_onchip_flash_0_csr_write),          //       .write
+		.avmm_csr_readdata       (mm_interconnect_0_onchip_flash_0_csr_readdata)        //       .readdata
 	);
 
 	tmc_nios2_onchip_memory2_0 onchip_memory2_0 (
@@ -227,6 +303,19 @@ module tmc_nios2 (
 		.nios2_gen2_0_debug_mem_slave_byteenable        (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_byteenable),   //                                         .byteenable
 		.nios2_gen2_0_debug_mem_slave_waitrequest       (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_waitrequest),  //                                         .waitrequest
 		.nios2_gen2_0_debug_mem_slave_debugaccess       (mm_interconnect_0_nios2_gen2_0_debug_mem_slave_debugaccess),  //                                         .debugaccess
+		.onchip_flash_0_csr_address                     (mm_interconnect_0_onchip_flash_0_csr_address),                //                       onchip_flash_0_csr.address
+		.onchip_flash_0_csr_write                       (mm_interconnect_0_onchip_flash_0_csr_write),                  //                                         .write
+		.onchip_flash_0_csr_read                        (mm_interconnect_0_onchip_flash_0_csr_read),                   //                                         .read
+		.onchip_flash_0_csr_readdata                    (mm_interconnect_0_onchip_flash_0_csr_readdata),               //                                         .readdata
+		.onchip_flash_0_csr_writedata                   (mm_interconnect_0_onchip_flash_0_csr_writedata),              //                                         .writedata
+		.onchip_flash_0_data_address                    (mm_interconnect_0_onchip_flash_0_data_address),               //                      onchip_flash_0_data.address
+		.onchip_flash_0_data_write                      (mm_interconnect_0_onchip_flash_0_data_write),                 //                                         .write
+		.onchip_flash_0_data_read                       (mm_interconnect_0_onchip_flash_0_data_read),                  //                                         .read
+		.onchip_flash_0_data_readdata                   (mm_interconnect_0_onchip_flash_0_data_readdata),              //                                         .readdata
+		.onchip_flash_0_data_writedata                  (mm_interconnect_0_onchip_flash_0_data_writedata),             //                                         .writedata
+		.onchip_flash_0_data_burstcount                 (mm_interconnect_0_onchip_flash_0_data_burstcount),            //                                         .burstcount
+		.onchip_flash_0_data_readdatavalid              (mm_interconnect_0_onchip_flash_0_data_readdatavalid),         //                                         .readdatavalid
+		.onchip_flash_0_data_waitrequest                (mm_interconnect_0_onchip_flash_0_data_waitrequest),           //                                         .waitrequest
 		.onchip_memory2_0_s1_address                    (mm_interconnect_0_onchip_memory2_0_s1_address),               //                      onchip_memory2_0_s1.address
 		.onchip_memory2_0_s1_write                      (mm_interconnect_0_onchip_memory2_0_s1_write),                 //                                         .write
 		.onchip_memory2_0_s1_readdata                   (mm_interconnect_0_onchip_memory2_0_s1_readdata),              //                                         .readdata

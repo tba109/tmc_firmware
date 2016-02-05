@@ -3,7 +3,7 @@
 # Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
 # SOPC Builder design path: ../../tmc_nios2.sopcinfo
 #
-# Generated: Thu Feb 04 14:24:54 EST 2016
+# Generated: Thu Feb 04 17:47:06 EST 2016
 
 # DO NOT MODIFY THIS FILE
 #
@@ -48,3 +48,6 @@
 
 # onchip_memory2_0
 memory 0x0 0x8000 cache
+
+# onchip_flash_0_data
+memory 0x80000 0x9c800 cache

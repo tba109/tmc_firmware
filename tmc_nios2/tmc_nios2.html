@@ -67,7 +67,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   </table>
   <table class="blueBar">
    <tr>
-    <td class="l">2016.02.04.15:12:06</td>
+    <td class="l">2016.02.04.18:03:27</td>
     <td class="r">Datasheet</td>
    </tr>
   </table>
@@ -96,6 +96,9 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
      <br/>&#160;&#160;
      <a href="#module_nios2_gen2_0"><b>nios2_gen2_0</b>
      </a> altera_nios2_gen2 15.1
+     <br/>&#160;&#160;
+     <a href="#module_onchip_flash_0"><b>onchip_flash_0</b>
+     </a> altera_onchip_flash 15.1
      <br/>&#160;&#160;
      <a href="#module_onchip_memory2_0"><b>onchip_memory2_0</b>
      </a> altera_avalon_onchip_memory2 15.1
@@ -155,6 +158,24 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
     <td class="slaveb">debug_mem_slave&#160;</td>
     <td class="addr"><span style="color:#989898">0x</span>00040000</td>
     <td class="addr"><span style="color:#989898">0x</span>00040000</td>
+   </tr>
+   <tr>
+    <td class="slavemodule">&#160;
+     <a href="#module_onchip_flash_0"><b>onchip_flash_0</b>
+     </a>
+    </td>
+    <td class="empty"></td>
+    <td class="empty"></td>
+   </tr>
+   <tr>
+    <td class="slavem">data&#160;</td>
+    <td class="addr"><span style="color:#989898">0x</span>00080000</td>
+    <td class="addr"><span style="color:#989898">0x</span>00080000</td>
+   </tr>
+   <tr>
+    <td class="slavem">csr&#160;</td>
+    <td class="addr"><span style="color:#989898">0x</span>000a0000</td>
+    <td class="empty"></td>
    </tr>
    <tr>
     <td class="slavemodule">&#160;
@@ -446,7 +467,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        <a href="#module_clk_0">clk_0</a>
       </td>
       <td class="from">clk&#160;&#160;</td>
-      <td class="main" rowspan="32">nios2_gen2_0</td>
+      <td class="main" rowspan="39">nios2_gen2_0</td>
      </tr>
      <tr>
       <td class="to">&#160;&#160;clk</td>
@@ -495,6 +516,42 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
       <td></td>
       <td></td>
       <td class="to">&#160;&#160;control_slave</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">data_master&#160;&#160;</td>
+      <td class="neighbor" rowspan="6">
+       <a href="#module_onchip_flash_0">onchip_flash_0</a>
+      </td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;csr</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">data_master&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;data</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="from">instruction_master&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td class="to">&#160;&#160;data</td>
      </tr>
      <tr style="height:6px">
       <td></td>
@@ -813,7 +870,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">resetSlave</td>
-        <td class="parametervalue">onchip_memory2_0.s1</td>
+        <td class="parametervalue">onchip_flash_0.data</td>
        </tr>
        <tr>
         <td class="parametername">mmu_TLBMissExcSlave</td>
@@ -1173,7 +1230,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">resetAbsoluteAddr</td>
-        <td class="parametervalue">0</td>
+        <td class="parametervalue">524288</td>
        </tr>
        <tr>
         <td class="parametername">exceptionAbsoluteAddr</td>
@@ -1237,7 +1294,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">instAddrWidth</td>
-        <td class="parametervalue">19</td>
+        <td class="parametervalue">20</td>
        </tr>
        <tr>
         <td class="parametername">faAddrWidth</td>
@@ -1245,7 +1302,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">dataAddrWidth</td>
-        <td class="parametervalue">19</td>
+        <td class="parametervalue">20</td>
        </tr>
        <tr>
         <td class="parametername">tightlyCoupledDataMaster0AddrWidth</td>
@@ -1289,7 +1346,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">instSlaveMapParam</td>
-        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;/address-map&gt;</td>
+        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /&gt;&lt;/address-map&gt;</td>
        </tr>
        <tr>
         <td class="parametername">faSlaveMapParam</td>
@@ -1297,7 +1354,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">dataSlaveMapParam</td>
-        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /&gt;&lt;slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /&gt;&lt;slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /&gt;&lt;slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /&gt;&lt;slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /&gt;&lt;slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /&gt;&lt;/address-map&gt;</td>
+        <td class="parametervalue">&lt;address-map&gt;&lt;slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /&gt;&lt;slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /&gt;&lt;slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /&gt;&lt;slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /&gt;&lt;slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /&gt;&lt;slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /&gt;&lt;slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /&gt;&lt;slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /&gt;&lt;slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /&gt;&lt;slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /&gt;&lt;/address-map&gt;</td>
        </tr>
        <tr>
         <td class="parametername">tightlyCoupledDataMaster0MapParam</td>
@@ -1434,7 +1491,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">DATA_ADDR_WIDTH</td>
-        <td class="parametervalue">19</td>
+        <td class="parametervalue">20</td>
        </tr>
        <tr>
         <td class="parametername">DCACHE_LINE_SIZE</td>
@@ -1506,7 +1563,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">INST_ADDR_WIDTH</td>
-        <td class="parametervalue">19</td>
+        <td class="parametervalue">20</td>
        </tr>
        <tr>
         <td class="parametername">OCI_VERSION</td>
@@ -1514,7 +1571,393 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">RESET_ADDR</td>
-        <td class="parametervalue">0x00000000</td>
+        <td class="parametervalue">0x00080000</td>
+       </tr>
+      </table>
+     </td>
+    </tr>
+   </table>
+  </div>
+  <a name="module_onchip_flash_0"> </a>
+  <div>
+   <hr/>
+   <h2>onchip_flash_0</h2>altera_onchip_flash v15.1
+   <br/>
+   <div class="greydiv">
+    <table class="connectionboxes">
+     <tr>
+      <td class="neighbor" rowspan="6">
+       <a href="#module_nios2_gen2_0">nios2_gen2_0</a>
+      </td>
+      <td class="from">data_master&#160;&#160;</td>
+      <td class="main" rowspan="11">onchip_flash_0</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;csr</td>
+     </tr>
+     <tr>
+      <td class="from">data_master&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;data</td>
+     </tr>
+     <tr>
+      <td class="from">instruction_master&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;data</td>
+     </tr>
+     <tr style="height:6px">
+      <td></td>
+     </tr>
+     <tr>
+      <td class="neighbor" rowspan="4">
+       <a href="#module_clk_0">clk_0</a>
+      </td>
+      <td class="from">clk&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;clk</td>
+     </tr>
+     <tr>
+      <td class="from">clk_reset&#160;&#160;</td>
+     </tr>
+     <tr>
+      <td class="to">&#160;&#160;nreset</td>
+     </tr>
+    </table>
+   </div>
+   <br/>
+   <br/>
+   <table class="flowbox">
+    <tr>
+     <td class="parametersbox">
+      <h2>Parameters</h2>
+      <table>
+       <tr>
+        <td class="parametername">DATA_INTERFACE</td>
+        <td class="parametervalue">Parallel</td>
+       </tr>
+       <tr>
+        <td class="parametername">READ_BURST_MODE</td>
+        <td class="parametervalue">Incrementing</td>
+       </tr>
+       <tr>
+        <td class="parametername">READ_BURST_COUNT</td>
+        <td class="parametervalue">8</td>
+       </tr>
+       <tr>
+        <td class="parametername">CLOCK_FREQUENCY</td>
+        <td class="parametervalue">116.0</td>
+       </tr>
+       <tr>
+        <td class="parametername">CONFIGURATION_SCHEME</td>
+        <td class="parametervalue">Internal Configuration</td>
+       </tr>
+       <tr>
+        <td class="parametername">CONFIGURATION_MODE</td>
+        <td class="parametervalue">Single Uncompressed Image</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR_ID</td>
+        <td class="parametervalue">1,2,3,NA,NA</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR_ACCESS_MODE</td>
+        <td class="parametervalue">Read and write,Read and write,Read only,Hidden,Hidden</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR_ADDRESS_MAPPING</td>
+        <td class="parametervalue">0x00000 - 0x03fff,0x04000 - 0x07fff,0x08000 - 0x1c7ff,NA,NA</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR_STORAGE_TYPE</td>
+        <td class="parametervalue">UFM,UFM,UFM,CFM,CFM</td>
+       </tr>
+       <tr>
+        <td class="parametername">initFlashContent</td>
+        <td class="parametervalue">false</td>
+       </tr>
+       <tr>
+        <td class="parametername">useNonDefaultInitFile</td>
+        <td class="parametervalue">false</td>
+       </tr>
+       <tr>
+        <td class="parametername">initializationFileName</td>
+        <td class="parametervalue">altera_onchip_flash.hex</td>
+       </tr>
+       <tr>
+        <td class="parametername">initializationFileNameForSim</td>
+        <td class="parametervalue">altera_onchip_flash.dat</td>
+       </tr>
+       <tr>
+        <td class="parametername">autoInitializationFileName</td>
+        <td class="parametervalue">tmc_nios2_onchip_flash_0</td>
+       </tr>
+       <tr>
+        <td class="parametername">INIT_FILENAME</td>
+        <td class="parametervalue"></td>
+       </tr>
+       <tr>
+        <td class="parametername">INIT_FILENAME_SIM</td>
+        <td class="parametervalue"></td>
+       </tr>
+       <tr>
+        <td class="parametername">DEVICE_FAMILY</td>
+        <td class="parametervalue">MAX10FPGA</td>
+       </tr>
+       <tr>
+        <td class="parametername">PART_NAME</td>
+        <td class="parametervalue">10M08SAE144C8GES</td>
+       </tr>
+       <tr>
+        <td class="parametername">AUTO_CLOCK_RATE</td>
+        <td class="parametervalue">50000000</td>
+       </tr>
+       <tr>
+        <td class="parametername">DEVICE_ID</td>
+        <td class="parametervalue">08</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_START_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_END_ADDR</td>
+        <td class="parametervalue">4095</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_START_ADDR</td>
+        <td class="parametervalue">4096</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_END_ADDR</td>
+        <td class="parametervalue">8191</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_START_ADDR</td>
+        <td class="parametervalue">8192</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_END_ADDR</td>
+        <td class="parametervalue">29183</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_START_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_END_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_START_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_END_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">MIN_VALID_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">MAX_VALID_ADDR</td>
+        <td class="parametervalue">29183</td>
+       </tr>
+       <tr>
+        <td class="parametername">MIN_UFM_VALID_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">MAX_UFM_VALID_ADDR</td>
+        <td class="parametervalue">29183</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_MAP</td>
+        <td class="parametervalue">1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_MAP</td>
+        <td class="parametervalue">2</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_MAP</td>
+        <td class="parametervalue">3</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_MAP</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_MAP</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">ADDR_RANGE1_END_ADDR</td>
+        <td class="parametervalue">29183</td>
+       </tr>
+       <tr>
+        <td class="parametername">ADDR_RANGE1_OFFSET</td>
+        <td class="parametervalue">512</td>
+       </tr>
+       <tr>
+        <td class="parametername">ADDR_RANGE2_OFFSET</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">AVMM_DATA_ADDR_WIDTH</td>
+        <td class="parametervalue">15</td>
+       </tr>
+       <tr>
+        <td class="parametername">AVMM_DATA_DATA_WIDTH</td>
+        <td class="parametervalue">32</td>
+       </tr>
+       <tr>
+        <td class="parametername">AVMM_DATA_BURSTCOUNT_WIDTH</td>
+        <td class="parametervalue">4</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR_READ_PROTECTION_MODE</td>
+        <td class="parametervalue">28</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_SEQ_READ_DATA_COUNT</td>
+        <td class="parametervalue">2</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_ADDR_ALIGNMENT_BITS</td>
+        <td class="parametervalue">1</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_READ_CYCLE_MAX_INDEX</td>
+        <td class="parametervalue">3</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_RESET_CYCLE_MAX_INDEX</td>
+        <td class="parametervalue">12</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_BUSY_TIMEOUT_CYCLE_MAX_INDEX</td>
+        <td class="parametervalue">48</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_ERASE_TIMEOUT_CYCLE_MAX_INDEX</td>
+        <td class="parametervalue">17500000</td>
+       </tr>
+       <tr>
+        <td class="parametername">FLASH_WRITE_TIMEOUT_CYCLE_MAX_INDEX</td>
+        <td class="parametervalue">15250</td>
+       </tr>
+       <tr>
+        <td class="parametername">PARALLEL_MODE</td>
+        <td class="parametervalue">true</td>
+       </tr>
+       <tr>
+        <td class="parametername">READ_AND_WRITE_MODE</td>
+        <td class="parametervalue">true</td>
+       </tr>
+       <tr>
+        <td class="parametername">WRAPPING_BURST_MODE</td>
+        <td class="parametervalue">false</td>
+       </tr>
+       <tr>
+        <td class="parametername">IS_DUAL_BOOT</td>
+        <td class="parametervalue">False</td>
+       </tr>
+       <tr>
+        <td class="parametername">IS_ERAM_SKIP</td>
+        <td class="parametervalue">True</td>
+       </tr>
+       <tr>
+        <td class="parametername">IS_COMPRESSED_IMAGE</td>
+        <td class="parametervalue">False</td>
+       </tr>
+       <tr>
+        <td class="parametername">deviceFamily</td>
+        <td class="parametervalue">UNKNOWN</td>
+       </tr>
+       <tr>
+        <td class="parametername">generateLegacySim</td>
+        <td class="parametervalue">false</td>
+       </tr>
+      </table>
+     </td>
+    </tr>
+   </table>&#160;&#160;
+   <table class="flowbox">
+    <tr>
+     <td class="parametersbox">
+      <h2>Software Assignments</h2>
+      <table>
+       <tr>
+        <td class="parametername">BYTES_PER_PAGE</td>
+        <td class="parametervalue">2048</td>
+       </tr>
+       <tr>
+        <td class="parametername">READ_ONLY_MODE</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_ENABLED</td>
+        <td class="parametervalue">1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_END_ADDR</td>
+        <td class="parametervalue">16383</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR1_START_ADDR</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_ENABLED</td>
+        <td class="parametervalue">1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_END_ADDR</td>
+        <td class="parametervalue">32767</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR2_START_ADDR</td>
+        <td class="parametervalue">16384</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_ENABLED</td>
+        <td class="parametervalue">1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_END_ADDR</td>
+        <td class="parametervalue">116735</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR3_START_ADDR</td>
+        <td class="parametervalue">32768</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_ENABLED</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_END_ADDR</td>
+        <td class="parametervalue">-1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR4_START_ADDR</td>
+        <td class="parametervalue">-1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_ENABLED</td>
+        <td class="parametervalue">0</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_END_ADDR</td>
+        <td class="parametervalue">-1</td>
+       </tr>
+       <tr>
+        <td class="parametername">SECTOR5_START_ADDR</td>
+        <td class="parametervalue">-1</td>
        </tr>
       </table>
      </td>
@@ -2419,7 +2862,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">timestamp</td>
-        <td class="parametervalue">1454616726</td>
+        <td class="parametervalue">1454627007</td>
        </tr>
        <tr>
         <td class="parametername">AUTO_DEVICE_FAMILY</td>
@@ -2448,7 +2891,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
        </tr>
        <tr>
         <td class="parametername">TIMESTAMP</td>
-        <td class="parametervalue">1454616726</td>
+        <td class="parametervalue">1454627007</td>
        </tr>
       </table>
      </td>
@@ -2638,7 +3081,7 @@ div.greydiv { vertical-align:top ; text-align:center ; background:#eeeeee ; bord
   <table class="blueBar">
    <tr>
     <td class="l">generation took 0.00 seconds</td>
-    <td class="r">rendering took 0.03 seconds</td>
+    <td class="r">rendering took 0.04 seconds</td>
    </tr>
   </table>
  </body>

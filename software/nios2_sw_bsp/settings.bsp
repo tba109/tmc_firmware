@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Feb 4, 2016 3:45:04 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1454618704286</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Feb 4, 2016 6:18:40 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1454627920654</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp</BspGeneratedLocation>
         <BspSettingsFile>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp/settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../tmc_nios2.sopcinfo</SopcDesignFile>
@@ -62,7 +62,7 @@
                 <SettingName>hal.linker.allow_code_at_reset</SettingName>
                 <Identifier>ALT_ALLOW_CODE_AT_RESET</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Indicates if initialization code is allowed at the reset address. If true, defines the macro ALT_ALLOW_CODE_AT_RESET in linker.h.</Description>
@@ -74,7 +74,7 @@
                 <SettingName>hal.linker.enable_alt_load</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Enables the alt_load() facility. The alt_load() facility copies sections from the .text memory into RAM. If true, this setting sets up the VMA/LMA of sections in linker.x to allow them to be loaded into the .text memory.</Description>
@@ -98,7 +98,7 @@
                 <SettingName>hal.linker.enable_alt_load_copy_rwdata</SettingName>
                 <Identifier>none</Identifier>
                 <Type>Boolean</Type>
-                <Value>1</Value>
+                <Value>0</Value>
                 <DefaultValue>0</DefaultValue>
                 <DestinationFile>none</DestinationFile>
                 <Description>Causes the alt_load() facility to copy the .rwdata section. If true, this setting defines the macro ALT_LOAD_COPY_RWDATA in linker.h.</Description>
@@ -950,6 +950,18 @@
                 <slaveDescriptor>pio_1</slaveDescriptor>
                 <addressRange>0x00040870 - 0x0004087F</addressRange>
                 <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>onchip_flash_0_data</slaveDescriptor>
+                <addressRange>0x00080000 - 0x0009C7FF</addressRange>
+                <addressSpan>116736</addressSpan>
+                <attributes>flash, memory, non-volatile</attributes>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>onchip_flash_0_csr</slaveDescriptor>
+                <addressRange>0x000A0000 - 0x000A0007</addressRange>
+                <addressSpan>8</addressSpan>
                 <attributes/>
         </MemoryMap>
         <LinkerSection>

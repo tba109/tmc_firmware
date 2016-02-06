@@ -100,19 +100,19 @@
 					"strict" : false
 				},
 				{
-					"name" : "live_c",
-					"strict" : false
-				},
-				{
 					"name" : "live_d",
 					"strict" : false
 				},
 				{
-					"name" : "live_a",
+					"name" : "live_c",
 					"strict" : false
 				},
 				{
 					"name" : "live_b",
+					"strict" : false
+				},
+				{
+					"name" : "live_a",
 					"strict" : false
 				},
 				{
@@ -124,11 +124,7 @@
 					"strict" : false
 				},
 				{
-					"name" : "miso_c",
-					"strict" : false
-				},
-				{
-					"name" : "miso_a",
+					"name" : "miso_b",
 					"strict" : false
 				},
 				{
@@ -136,7 +132,11 @@
 					"strict" : false
 				},
 				{
-					"name" : "miso_b",
+					"name" : "miso_c",
+					"strict" : false
+				},
+				{
+					"name" : "miso_a",
 					"strict" : false
 				},
 				{

@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Feb 5, 2016 10:06:47 AM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1454684807642</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Feb 8, 2016 5:30:16 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1454970616791</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp</BspGeneratedLocation>
         <BspSettingsFile>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp/settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../tmc_nios2.sopcinfo</SopcDesignFile>

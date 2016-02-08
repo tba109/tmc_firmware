@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="tmc_nios2" kind="system" version="15.1" fabric="QSYS">
  <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.02.04.18:03:41 -->
+ <!-- 2016.02.08.16:50:48 -->
  <!-- A collection of modules and connections -->
  <parameter name="clockCrossingAdapter">
   <type>com.altera.sopcmodel.ensemble.EClockAdapter</type>
@@ -53,7 +53,7 @@
  </parameter>
  <parameter name="generationId">
   <type>int</type>
-  <value>1454627007</value>
+  <value>1454968221</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>true</visible>
@@ -9158,7 +9158,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1454627007</value>
+   <value>1454968221</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -9178,7 +9178,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1454627007</value>
+   <value>1454968221</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -9194,7 +9194,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1454627007</value>
+   <value>1454968221</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -9670,7 +9670,7 @@ parameters are a RESULT of the module parameters. -->
 the requested settings for a module instance. -->
   <assignment>
    <name>embeddedsw.CMacro.BAUD</name>
-   <value>9600</value>
+   <value>115200</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.DATA_BITS</name>
@@ -9730,7 +9730,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.current-speed</name>
-   <value>9600</value>
+   <value>115200</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -9738,7 +9738,7 @@ the requested settings for a module instance. -->
   </assignment>
   <parameter name="baud">
    <type>int</type>
-   <value>9600</value>
+   <value>115200</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -17585,5 +17585,5 @@ parameters are a RESULT of the module parameters. -->
   <version>15.1</version>
  </plugin>
  <reportVersion>15.1 185</reportVersion>
- <uniqueIdentifier>BD304EB3565100000152AE86B3D4</uniqueIdentifier>
+ <uniqueIdentifier>8056F279FB6700000152C2DD3C73</uniqueIdentifier>
 </EnsembleReport>

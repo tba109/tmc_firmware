@@ -509,7 +509,7 @@ proc compose {} {
   <parameter name="masterSPI" value="true" />
   <parameter name="numberOfSlaves" value="12" />
   <parameter name="syncRegDepth" value="2" />
-  <parameter name="targetClockRate" value="128000" />
+  <parameter name="targetClockRate" value="1000000" />
   <parameter name="targetSlaveSelectToSClkDelay" value="0.0" />
  </module>
  <module

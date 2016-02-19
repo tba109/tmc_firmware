@@ -15,6 +15,7 @@
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
+#define N_BRD 4 // 4 boards
 
 // Write nbytes bytes from data to the ADC with CSN corresponding to adc, reg 
 unsigned char ad7124_write_reg(unsigned char adc, unsigned char reg, unsigned int data, unsigned char nbytes)
@@ -84,6 +85,50 @@ unsigned char ad7124_read_reg(unsigned char adc, unsigned char reg, unsigned int
   return ret_val;
 }
 
+unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
+{
+  unsigned char adc = 0;
+  unsigned char chan = 0;
+
+  // Here's the printing section
+  printf("---------------------------------\n");
+  printf("        ");
+  for(adc=0; adc < N_ADC; adc++)
+    printf("    ADC_%02d",adc);
+  printf("\n");
+  
+  for(chan=0; chan < N_CHAN; chan++)
+    {
+      printf("CHAN_%d  ",chan);
+      for(adc=0; adc < N_ADC; adc++)
+	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
+	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
+	printf("  %8d",data_arr[adc][chan] & 0x00FFFFFF);
+      printf("\n");
+    }
+
+  return 0;
+}
+
+void flip_led()
+{
+  static unsigned char x = 0xFF;
+  IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
+  x ^= 1 << 7;    
+}
+
+void set_led()
+{
+  unsigned char x = 0x7F;
+  IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
+}
+
+void clear_led()
+{
+  unsigned char x = 0xFF;
+  IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
+}
+
 int main()
 {
   unsigned char x = 0xFF;
@@ -91,14 +136,14 @@ int main()
   unsigned char nbytes = 0;
   const unsigned char pchan_b[6] = {12,10,8,5,3,1};
   const unsigned char nchan_c[6] = {7,7,7,7,7,7};
-  unsigned char sys_chan[4][6];
-  unsigned int data_arr[4][6];
+  unsigned char sys_chan[N_BRD][N_CHAN];
+  unsigned int data_arr[N_BRD][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
 
-  for(adc=0;adc<4;adc++)
-    for(chan=0;chan<6;chan++)
-      sys_chan[adc][chan] = chan+6*adc;
+  for(adc=0;adc<N_BRD;adc++)
+    for(chan=0;chan<N_CHAN;chan++)
+      sys_chan[adc][chan] = chan+N_CHAN*adc;
 
   ////////////////////////////////////
   // Startup
@@ -113,9 +158,7 @@ int main()
   // Measurement loop
   while(1)
     {      
-      // Flip LED1
-      IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
-      x ^= 1 << 7;
+      flip_led();
       for(chan = 0; chan < N_CHAN; chan++)
       	{
 	  // usleep(1000*1000);
@@ -159,8 +202,11 @@ int main()
 		AD7124_FILT_REG_POST_FILTER(3) |
 		AD7124_FILT_REG_FS(640);
 	      
-	      // full power mode, single acquisition
-	      data = AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | AD7124_ADC_CTRL_REG_MODE(0x1);
+	      // Control register: full power mode, single acquisition
+	      data = 
+		AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
+		AD7124_ADC_CTRL_REG_MODE(0x1);
+		
 	      ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
 	      // read it back
 	      data = 0;
@@ -171,7 +217,7 @@ int main()
 	  
 	  // Read the data conversion register
 	  // Conversion should take 133ms
-	  usleep(160*1000);
+	  usleep(115*1000); // oddly, this seems to give the ~160us delay
 	  for(adc = 0; adc < N_ADC; adc++)
 	    {
 	      data = 0;
@@ -179,24 +225,12 @@ int main()
 	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
 	      data_arr[adc][chan] = data;
 	    }
-	  
 	}
-      
-      // Here's the printing section
-      printf("---------------------------------\n");
-      printf("        ");
-      for(adc=0; adc < N_ADC; adc++)
-	printf("    ADC_%02d",adc);
-      printf("\n");
-      
-      for(chan=0; chan < N_CHAN; chan++)
-	{
-	  printf("CHAN_%d  ",chan);
-	  for(adc=0; adc < N_ADC; adc++)
-	    printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	  printf("\n");
-	}
+      // set_led();
+      print_table(data_arr);
+      // clear_led();
     }
   return 0;
 }
+
       

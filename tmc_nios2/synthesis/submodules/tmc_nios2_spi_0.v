@@ -30,7 +30,7 @@
 //INPUT_CLOCK: 50000000
 //ISMASTER: 1
 //DATABITS: 8
-//TARGETCLOCK: 128000
+//TARGETCLOCK: 1000000
 //NUMSLAVES: 12
 //CPOL: 1
 //CPHA: 1
@@ -114,7 +114,7 @@ module tmc_nios2_spi_0 (
   wire    [ 15: 0] p1_data_to_cpu;
   wire             p1_data_wr_strobe;
   wire             p1_rd_strobe;
-  wire    [  7: 0] p1_slowcount;
+  wire    [  4: 0] p1_slowcount;
   wire             p1_wr_strobe;
   reg              rd_strobe;
   wire             readyfordata;
@@ -122,7 +122,7 @@ module tmc_nios2_spi_0 (
   reg     [  7: 0] shift_reg;
   wire             slaveselect_wr_strobe;
   wire             slowclock;
-  reg     [  7: 0] slowcount;
+  reg     [  4: 0] slowcount;
   wire    [ 10: 0] spi_control;
   reg     [ 15: 0] spi_slave_select_holding_reg;
   reg     [ 15: 0] spi_slave_select_reg;
@@ -255,11 +255,11 @@ module tmc_nios2_spi_0 (
     end
 
 
-  // slowclock is active once every 196 system clock pulses.
-  assign slowclock = slowcount == 8'hC3;
+  // slowclock is active once every 25 system clock pulses.
+  assign slowclock = slowcount == 5'h18;
 
-  assign p1_slowcount = ({8 {(transmitting && !slowclock)}} & (slowcount + 1)) |
-    ({8 {(~((transmitting && !slowclock)))}} & 0);
+  assign p1_slowcount = ({5 {(transmitting && !slowclock)}} & (slowcount + 1)) |
+    ({5 {(~((transmitting && !slowclock)))}} & 0);
 
   // Divide counter for SPI clock.
   always @(posedge clk or negedge reset_n)

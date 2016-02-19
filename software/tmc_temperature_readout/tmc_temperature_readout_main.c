@@ -17,6 +17,12 @@
 #define N_CHAN 6 // 6 channels/board
 #define N_BRD 4 // 4 boards
 
+// Board temperature
+#define HK_BD0_TEMP 0
+#define HK_BD1_TEMP 1
+#define HK_BD2_TEMP 2
+#define HK_BD3_TEMP 3
+
 // Write nbytes bytes from data to the ADC with CSN corresponding to adc, reg 
 unsigned char ad7124_write_reg(unsigned char adc, unsigned char reg, unsigned int data, unsigned char nbytes)
 {
@@ -110,6 +116,19 @@ unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
   return 0;
 }
 
+unsigned char print_list(unsigned int(*data_arr)[N_CHAN])
+{
+  unsigned char adc = 0;
+  unsigned char chan = 0;
+
+  // Here's the printing section
+  for(adc=0; adc < N_ADC; adc++)
+    for(chan=0; chan < N_CHAN; chan++)
+      printf("ADC_CHAN_%02d_%02d: %8d\n",adc,chan,data_arr[adc][chan] & 0x00FFFFFF);
+
+  return 0;
+}
+
 void flip_led()
 {
   static unsigned char x = 0xFF;
@@ -129,22 +148,78 @@ void clear_led()
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
 }
 
+unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char nchan)
+{
+  unsigned int data = 0;
+
+  // Enable channel register 0, set positive and negative and
+  // map to setup 0
+  data = 
+    AD7124_CH_MAP_REG_CH_ENABLE |
+    AD7124_CH_MAP_REG_SETUP(0)  |
+    AD7124_CH_MAP_REG_AINP(pchan)  |
+    AD7124_CH_MAP_REG_AINM(nchan);
+  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
+  
+  // Configuration register: input and ref bufs enabled, 
+  // set the PGA for 4, bipolar mode
+  data = 
+    AD7124_CFG_REG_BIPOLAR |
+    AD7124_CFG_REG_REF_BUFP |
+    AD7124_CFG_REG_REF_BUFM |
+    AD7124_CFG_REG_AIN_BUFP |
+    AD7124_CFG_REG_AIN_BUFM |
+    AD7124_CFG_REG_PGA(2);
+  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+  
+  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
+  data = 
+    AD7124_FILT_REG_FILTER(0) |
+    AD7124_FILT_REG_REJ60 |
+    AD7124_FILT_REG_POST_FILTER(3) |
+    AD7124_FILT_REG_FS(640);
+  
+  // Control register: full power mode, single acquisition
+  data = 
+    AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
+    AD7124_ADC_CTRL_REG_MODE(0x1);
+  
+  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
+
+  return 0;
+}
+
 int main()
 {
   unsigned char x = 0xFF;
   unsigned int data = 0;
   unsigned char nbytes = 0;
-  const unsigned char pchan_b[6] = {12,10,8,5,3,1};
-  const unsigned char nchan_c[6] = {7,7,7,7,7,7};
-  unsigned char sys_chan[N_BRD][N_CHAN];
-  unsigned int data_arr[N_BRD][N_CHAN];
+  const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
+  const unsigned char nchan_2n2222 = 7;
+  const unsigned char pchan_current[N_CHAN] = {13,11,9,6,4,2};
+  const unsigned char nchan_current[N_CHAN] = {12,10,8,5,3,1};
+  const unsigned char pchan_board_temp = 14;
+  const unsigned char nchan_board_temp = 15;
+  unsigned int data_arr_2n2222[N_BRD][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
-
-  for(adc=0;adc<N_BRD;adc++)
-    for(chan=0;chan<N_CHAN;chan++)
-      sys_chan[adc][chan] = chan+N_CHAN*adc;
-
+  unsigned char cal_type = 0;
+  
   ////////////////////////////////////
   // Startup
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x)); // enable I/O interface
@@ -152,7 +227,6 @@ int main()
   printf("Hello, welcome to the TMC temperature readout program!\n");
   nbytes = ad7124_read_reg(0,AD7124_ID_REG,&data,1);
   printf("ADC %d ID register has 0x%2X\n",0,data);
-  usleep(160*1000);
   
   /////////////////////////////////////
   // Measurement loop
@@ -161,74 +235,26 @@ int main()
       flip_led();
       for(chan = 0; chan < N_CHAN; chan++)
       	{
-	  // usleep(1000*1000);
-
+	  // Setup the conversions for the 2N2222
 	  for(adc = 0; adc < N_ADC; adc++)
-	    {
-	      // Enable channel register 0, set positive and negative and
-	      // map to setup 0
-	      data = 
-		AD7124_CH_MAP_REG_CH_ENABLE |
-		AD7124_CH_MAP_REG_SETUP(0)  |
-		AD7124_CH_MAP_REG_AINP(pchan_b[chan])  |
-		AD7124_CH_MAP_REG_AINM(nchan_c[chan]);
-	      ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
-	      // read it back
-	      data = 0;
-	      usleep(1000);
-	      // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
-	      // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
-	      
-	      // Configuration register: input and ref bufs enabled, 
-	      // set the PGA for 4, bipolar mode
-	      data = 
-		AD7124_CFG_REG_BIPOLAR |
-		AD7124_CFG_REG_REF_BUFP |
-		AD7124_CFG_REG_REF_BUFM |
-		AD7124_CFG_REG_AIN_BUFP |
-		AD7124_CFG_REG_AIN_BUFM |
-		AD7124_CFG_REG_PGA(2);
-	      ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
-	      // read it back
-	      data = 0;
-	      usleep(1000);
-	      // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
-	      // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-	      
-	      // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
-	      data = 
-		AD7124_FILT_REG_FILTER(0) |
-		AD7124_FILT_REG_REJ60 |
-		AD7124_FILT_REG_POST_FILTER(3) |
-		AD7124_FILT_REG_FS(640);
-	      
-	      // Control register: full power mode, single acquisition
-	      data = 
-		AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
-		AD7124_ADC_CTRL_REG_MODE(0x1);
-		
-	      ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
-	      // read it back
-	      data = 0;
-	      usleep(1000);
-	      // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
-	      // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
-	    }
+	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222);
+	  
+	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
+	  usleep(115*1000); // oddly, this seems to give the ~160ms delay
 	  
 	  // Read the data conversion register
-	  // Conversion should take 133ms
-	  usleep(115*1000); // oddly, this seems to give the ~160us delay
 	  for(adc = 0; adc < N_ADC; adc++)
 	    {
 	      data = 0;
 	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
 	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
-	      data_arr[adc][chan] = data;
+	      data_arr_2n2222[adc][chan] = data;
 	    }
 	}
-      // set_led();
-      print_table(data_arr);
-      // clear_led();
+      print_table(data_arr_2n2222);
+      // print_list(data_arr_2n2222);
+     
+      
     }
   return 0;
 }

@@ -17,12 +17,32 @@
 #define N_CHAN 6 // 6 channels/board
 #define N_BRD 4 // 4 boards
 
-// Board temperature
-#define HK_BD0_TEMP 0
-#define HK_BD1_TEMP 1
-#define HK_BD2_TEMP 2
-#define HK_BD3_TEMP 3
+// Number of calibration and housekeeping operations to perform
+#define N_CAL_HK 8
 
+// Board temperature
+#define HK_BD_TEMP 0
+
+// Currents 
+#define HK_CURRENT_MIN 1
+#define HK_CURRENT_MAX 6
+
+// Calibration 
+#define CALIBRATE 7
+
+// Constants
+const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
+const unsigned char nchan_2n2222 = 7;
+const unsigned char pchan_current[N_CHAN] = {13,11,9,6,4,2};
+const unsigned char nchan_current[N_CHAN] = {12,10,8,5,3,1};
+const unsigned char pchan_board_temp = 14;
+const unsigned char nchan_board_temp = 15;
+  
+
+// 160us wait
+#define USLEEP_160MS 115*1000  // oddly, this seems to give the ~160ms delay
+
+////////////////////////////////////////////////////////////////////////////////////////
 // Write nbytes bytes from data to the ADC with CSN corresponding to adc, reg 
 unsigned char ad7124_write_reg(unsigned char adc, unsigned char reg, unsigned int data, unsigned char nbytes)
 {
@@ -65,11 +85,13 @@ unsigned char ad7124_read_reg(unsigned char adc, unsigned char reg, unsigned int
 				   (unsigned char *)&read_data,
 				   0
 				   );
+  *data = 0; // Missing this was a frustrating bug!
   for(i=0; i<nbytes; i++)
     {
       // printf("%x\n",read_data[i]);
       *data |= ((unsigned int)read_data[i] << 8*(nbytes-i-1));
     }
+  // printf("read reg data = %d\n",*data);
   switch(nbytes)
     {
     case 1:
@@ -204,17 +226,187 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
   return 0;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+// This handles ad7124 gain calibration
+// 
+unsigned char ad7124_gain_cal(unsigned char adc)
+{
+  unsigned char nbytes = 0;
+  unsigned int data = 0;
+  
+  // For debugging, read and print the values of the offset register and gain register
+  // nbytes = ad7124_read_reg(adc,AD7124_GAIN0_REG,&data,3);
+  // printf("ADC_GAIN_%02d: %8d\n",adc,data);
+   
+  // Enable channel register 0, set positive and negative and
+  // map to setup 0
+  // I'm going to setup for 
+  data = 
+    AD7124_CH_MAP_REG_CH_ENABLE |
+    AD7124_CH_MAP_REG_SETUP(0)  |
+    AD7124_CH_MAP_REG_AINP(12)  |
+    AD7124_CH_MAP_REG_AINM(7);
+  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
+  
+  // Configuration register: input and ref bufs enabled, 
+  // set the PGA for 4, bipolar mode
+  data = 
+    AD7124_CFG_REG_BIPOLAR |
+    AD7124_CFG_REG_REF_BUFP |
+    AD7124_CFG_REG_REF_BUFM |
+    AD7124_CFG_REG_AIN_BUFP |
+    AD7124_CFG_REG_AIN_BUFM |
+    AD7124_CFG_REG_PGA(2);
+  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+  
+  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
+  data = 
+    AD7124_FILT_REG_FILTER(0) |
+    AD7124_FILT_REG_REJ60 |
+    AD7124_FILT_REG_POST_FILTER(3) |
+    AD7124_FILT_REG_FS(640);
+  
+  // Write 0x800000 to the offset register
+  data = 0x800000;
+  ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
+ 
+  // Start a full scale internal calibration
+  // Set the power mode to mid (can't calibrate in full power mode)
+  data = 
+    AD7124_ADC_CTRL_REG_POWER_MODE(0x1) | 
+    AD7124_ADC_CTRL_REG_MODE(0x6);
+  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
+  
+  // For debugging, read and print the values of the offset register and gain register
+  // nbytes = ad7124_read_reg(adc,AD7124_GAIN0_REG,&data,3);
+  // printf("ADC_GAIN_%02d: %8d\n",adc,data);
+  
+  return data;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// This handles ad7124 offset calibration
+// 
+unsigned char ad7124_offset_cal(unsigned char adc)
+{
+  unsigned char nbytes = 0;
+  unsigned int data = 0;
+  
+  // For debugging, read and print the values of the offset register and gain register
+  // nbytes = ad7124_read_reg(adc,AD7124_OFFS0_REG,&data,3);
+  // printf("ADC_OFFS_%02d: %8d\n",adc,data);
+
+  // Write 0x800001 to the offset register (debugging, assure it's actually changing!)
+  // data = 0x800001;
+  // ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
+
+  
+  // Start a zero scale internal calibration
+  // Set the power mode to mid (can't calibrate in full power mode)
+  data = 
+    AD7124_ADC_CTRL_REG_POWER_MODE(0x1) | 
+    AD7124_ADC_CTRL_REG_MODE(0x5);
+  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
+  
+  // For debugging, read and print the values of the offset register and gain register
+  // nbytes = ad7124_read_reg(adc,AD7124_OFFS0_REG,&data,3);
+  // printf("ADC_OFFS_%02d: %8d\n",adc,data);
+
+  return data;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// This handles calibration and housekeeping
+// 
+unsigned char switch_cal_hk(unsigned char cal_type)
+{
+  unsigned int data = 0;
+  unsigned char i = 0;
+  
+  if(cal_type == HK_BD_TEMP)
+    {
+      for(i = 0; i < N_BRD; i++)
+	{
+	  // The only difference between a board temperature and a 2N2222 is the channel
+	  // So, we can just call setup_2n2222 with a bit of translation.  
+	  setup_2n2222(i*3,pchan_board_temp,nchan_board_temp);
+	}  
+      usleep(USLEEP_160MS);
+      printf("\n               BD0       BD1       BD2       BD3\nTemp:   ");
+      for(i = 0; i < N_BRD; i++)
+	{
+	  ad7124_read_reg(i*3,AD7124_DATA_REG,&data,3);
+	  printf("  %8d",data);
+	}
+    }
+  else if(cal_type >= HK_CURRENT_MIN && cal_type <= HK_CURRENT_MAX)
+    {
+      for(i = 0; i < N_ADC; i++)
+	{
+	  // The only difference between a current and a 2N2222 is the channel
+	  // So, we can just call setup_2n2222 with a bit of translation.  
+	  setup_2n2222(i,pchan_current[cal_type-1],nchan_current[cal_type-1]);
+	}
+      usleep(USLEEP_160MS);
+      printf("        ");
+      printf("\n            CUR_00    CUR_01    CUR_02    CUR_03    CUR_04    CUR_05    CUR_06    CUR_07    CUR_08    CUR_09    CUR_10    CUR_11\n");
+      printf("CHAN_%d  ",cal_type-1);
+      for(i = 0; i<N_ADC; i++)
+	{
+	  data = 0;
+	  ad7124_read_reg(i,AD7124_DATA_REG,&data,3);
+	  printf("  %8d",data & 0x00FFFFFF);
+	}
+    }
+  else if(cal_type == CALIBRATE)
+    {
+      printf("        ");
+      printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
+      
+      /* for(i = 0; i < N_ADC; i++) */
+      /* 	{ */
+      /* 	  ad7124_gain_cal(i); */
+      /* 	} */
+      /* usleep(1000*1000); */
+      /* for(i = 0; i < N_ADC; i++) */
+      /* 	{ */
+      /* 	  ad7124_offset_cal(i); */
+      /* 	} */
+      /* usleep(1000*1000); */
+      printf("GAIN    ");
+      for(i = 0; i < N_ADC; i++)
+      	{
+      	  ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3);
+      	  printf("  %8d",data & 0x00FFFFFF);
+      	}          
+      printf("\nOFFS    ");
+      for(i = 0; i < N_ADC; i++)
+      	{
+      	  ad7124_read_reg(i,AD7124_OFFS0_REG,&data,3);
+      	  printf("  %8d",data & 0x00FFFFFF);
+      	}
+    }
+
+
+  printf("\n");
+  return 0;
+}
+
 int main()
 {
   unsigned char x = 0xFF;
   unsigned int data = 0;
   unsigned char nbytes = 0;
-  const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
-  const unsigned char nchan_2n2222 = 7;
-  const unsigned char pchan_current[N_CHAN] = {13,11,9,6,4,2};
-  const unsigned char nchan_current[N_CHAN] = {12,10,8,5,3,1};
-  const unsigned char pchan_board_temp = 14;
-  const unsigned char nchan_board_temp = 15;
   unsigned int data_arr_2n2222[N_BRD][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
@@ -231,30 +423,32 @@ int main()
   /////////////////////////////////////
   // Measurement loop
   while(1)
-    {      
+    {
       flip_led();
       for(chan = 0; chan < N_CHAN; chan++)
       	{
-	  // Setup the conversions for the 2N2222
-	  for(adc = 0; adc < N_ADC; adc++)
-	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222);
+    	  // Setup the conversions for the 2N2222
+    	  for(adc = 0; adc < N_ADC; adc++)
+    	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222);
 	  
-	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
-	  usleep(115*1000); // oddly, this seems to give the ~160ms delay
+    	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
+    	  usleep(USLEEP_160MS);
 	  
-	  // Read the data conversion register
-	  for(adc = 0; adc < N_ADC; adc++)
-	    {
-	      data = 0;
-	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
-	      data_arr_2n2222[adc][chan] = data;
-	    }
-	}
+    	  // Read the data conversion register
+    	  for(adc = 0; adc < N_ADC; adc++)
+    	    {
+    	      data = 0;
+    	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
+    	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
+    	      data_arr_2n2222[adc][chan] = data;
+    	    }
+    	}
       print_table(data_arr_2n2222);
       // print_list(data_arr_2n2222);
-     
       
+      // Finally, do calibraiton and housekeeping and increment cal_type
+      switch_cal_hk(cal_type);
+      cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;
     }
   return 0;
 }

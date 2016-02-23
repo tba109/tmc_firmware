@@ -1,6 +1,6 @@
 <sld_project_info>
   <project>
-    <hash md5_digest_80b="d15575a4403952a30a4d"/>
+    <hash md5_digest_80b="8453bddecb691f2a1a4b"/>
   </project>
   <file_info>
     <file device="10M08SAE144C8GES" path="tmc_firmware.sof" usercode="0xFFFFFFFF"/>
@@ -99,7 +99,7 @@
     </sld_info>
     <sld_info hpath="tmc_nios2:u0" name="u0">
       <assignment_values>
-        <assignment_value text="QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1455904187"/>
+        <assignment_value text="QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1456180857"/>
       </assignment_values>
       <parameters/>
     </sld_info>

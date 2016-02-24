@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
  * SOPC Builder design path: ../../tmc_nios2.sopcinfo
  *
- * Generated: Mon Feb 22 17:44:50 EST 2016
+ * Generated: Wed Feb 24 10:53:04 EST 2016
  */
 
 /*
@@ -138,6 +138,7 @@
 #define __ALTERA_AVALON_PIO
 #define __ALTERA_AVALON_SPI
 #define __ALTERA_AVALON_SYSID_QSYS
+#define __ALTERA_AVALON_TIMER
 #define __ALTERA_AVALON_UART
 #define __ALTERA_NIOS2_GEN2
 #define __ALTERA_ONCHIP_FLASH
@@ -396,8 +397,34 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1456180857
+#define SYSID_QSYS_0_TIMESTAMP 1456328591
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
+
+
+/*
+ * timer_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_timer_0 altera_avalon_timer
+#define TIMER_0_ALWAYS_RUN 0
+#define TIMER_0_BASE 0x40900
+#define TIMER_0_COUNTER_SIZE 32
+#define TIMER_0_FIXED_PERIOD 0
+#define TIMER_0_FREQ 50000000
+#define TIMER_0_IRQ 3
+#define TIMER_0_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define TIMER_0_LOAD_VALUE 149999999
+#define TIMER_0_MULT 1.0
+#define TIMER_0_NAME "/dev/timer_0"
+#define TIMER_0_PERIOD 3
+#define TIMER_0_PERIOD_UNITS "s"
+#define TIMER_0_RESET_OUTPUT 0
+#define TIMER_0_SNAPSHOT 1
+#define TIMER_0_SPAN 32
+#define TIMER_0_TICKS_PER_SEC 0
+#define TIMER_0_TIMEOUT_PULSE_OUTPUT 0
+#define TIMER_0_TYPE "altera_avalon_timer"
 
 
 /*

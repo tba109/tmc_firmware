@@ -12,10 +12,15 @@
 #include "alt_types.h"
 #include "altera_avalon_spi.h"
 #include "ad7124_regs.h"
+#include "altera_avalon_timer_regs.h"
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
 #define N_BRD 4 // 4 boards
+
+#define MAJOR_VERSION_NUMBER 1
+
+#define MINOR_VERSION_NUMBER 0
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -23,12 +28,15 @@
 // Board temperature
 #define HK_BD_TEMP 0
 
+// ADC on-chip temperature sensor
+#define HK_ADC_TEMP 1
+
 // Currents 
-#define HK_CURRENT_MIN 1
-#define HK_CURRENT_MAX 6
+#define HK_CURRENT_MIN 2
+#define HK_CURRENT_MAX 7
 
 // Calibration 
-#define CALIBRATE 7
+#define CALIBRATE 8
 
 // Constants
 const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
@@ -37,10 +45,22 @@ const unsigned char pchan_current[N_CHAN] = {13,11,9,6,4,2};
 const unsigned char nchan_current[N_CHAN] = {12,10,8,5,3,1};
 const unsigned char pchan_board_temp = 14;
 const unsigned char nchan_board_temp = 15;
-  
+const unsigned char pchan_adc_temp = 0x10; // temperature sensor
+const unsigned char nchan_adc_temp = 0x11; // VSS
+
+// This keeps track of when the loop is done
+volatile unsigned char loop_done;
 
 // 160us wait
 #define USLEEP_160MS 115*1000  // oddly, this seems to give the ~160ms delay
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Handle timer interrupts
+static void handle_timer_interrupts(void* context)
+{
+  IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE,0);//Clear TO(timeout) bit)
+  loop_done = 1;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Write nbytes bytes from data to the ADC with CSN corresponding to adc, reg 
@@ -118,8 +138,10 @@ unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
   unsigned char adc = 0;
   unsigned char chan = 0;
 
-  // Here's the printing section
+  printf("\n"); // this one sends the one for the measurement loop to the screen
   printf("---------------------------------\n");
+
+  // Here's the printing section
   printf("        ");
   for(adc=0; adc < N_ADC; adc++)
     printf("    ADC_%02d",adc);
@@ -132,6 +154,8 @@ unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
 	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
 	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
 	printf("  %8d",data_arr[adc][chan] & 0x00FFFFFF);
+      
+      // Do this in the ISR, let's you know the measurement loop is done
       printf("\n");
     }
 
@@ -349,18 +373,18 @@ unsigned char switch_cal_hk(unsigned char cal_type)
 	  printf("  %8d",data);
 	}
     }
-  else if(cal_type >= HK_CURRENT_MIN && cal_type <= HK_CURRENT_MAX)
+  else if(cal_type == HK_ADC_TEMP)
     {
       for(i = 0; i < N_ADC; i++)
 	{
 	  // The only difference between a current and a 2N2222 is the channel
 	  // So, we can just call setup_2n2222 with a bit of translation.  
-	  setup_2n2222(i,pchan_current[cal_type-1],nchan_current[cal_type-1]);
+	  setup_2n2222(i,pchan_adc_temp,nchan_adc_temp);
 	}
       usleep(USLEEP_160MS);
       printf("        ");
-      printf("\n            CUR_00    CUR_01    CUR_02    CUR_03    CUR_04    CUR_05    CUR_06    CUR_07    CUR_08    CUR_09    CUR_10    CUR_11\n");
-      printf("CHAN_%d  ",cal_type-1);
+      printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
+      printf("Temp:   ");
       for(i = 0; i<N_ADC; i++)
 	{
 	  data = 0;
@@ -368,7 +392,26 @@ unsigned char switch_cal_hk(unsigned char cal_type)
 	  printf("  %8d",data & 0x00FFFFFF);
 	}
     }
-  else if(cal_type == CALIBRATE)
+  else if(cal_type >= HK_CURRENT_MIN && cal_type <= HK_CURRENT_MAX)
+    {
+      for(i = 0; i < N_ADC; i++)
+	{
+	  // The only difference between a current and a 2N2222 is the channel
+	  // So, we can just call setup_2n2222 with a bit of translation.  
+	  setup_2n2222(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN]);
+	}
+      usleep(USLEEP_160MS);
+      printf("        ");
+      printf("\n            CUR_00    CUR_01    CUR_02    CUR_03    CUR_04    CUR_05    CUR_06    CUR_07    CUR_08    CUR_09    CUR_10    CUR_11\n");
+      printf("CHAN_%d  ",cal_type-HK_CURRENT_MIN);
+      for(i = 0; i<N_ADC; i++)
+	{
+	  data = 0;
+	  ad7124_read_reg(i,AD7124_DATA_REG,&data,3);
+	  printf("  %8d",data & 0x00FFFFFF);
+	}
+    }
+  else if(cal_type == CALIBRATE) // We're not doing this right now
     {
       printf("        ");
       printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
@@ -397,7 +440,6 @@ unsigned char switch_cal_hk(unsigned char cal_type)
       	}
     }
 
-
   printf("\n");
   return 0;
 }
@@ -411,15 +453,35 @@ int main()
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;
-  
+  int * ptr;
+
+  loop_done = 0;
+
   ////////////////////////////////////
   // Startup
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x)); // enable I/O interface
-  printf("-----------------------------------------------------\n\n");
-  printf("Hello, welcome to the TMC temperature readout program!\n");
-  nbytes = ad7124_read_reg(0,AD7124_ID_REG,&data,1);
-  printf("ADC %d ID register has 0x%2X\n",0,data);
+  printf("-----------------------------------------------------\n");
+  printf("TMC firmware version %d.%d\n",MAJOR_VERSION_NUMBER,MINOR_VERSION_NUMBER);
+  // nbytes = ad7124_read_reg(0,AD7124_ID_REG,&data,1);
+  // printf("ADC %d ID register has 0x%2X\n",0,data);
   
+  // Enable to loop timer (3 second period, by default)
+  // STOP, CONTINUOUS, generate an IRQ 
+  // IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, (1<<3) | (1 << 1) |(1 << 0));  
+  // STOP, generate IRQ
+  IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, (1<<3) | (1 << 0));  
+  // Clear the timemout bit
+  IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE,0);
+  alt_ic_isr_register(TIMER_0_IRQ_INTERRUPT_CONTROLLER_ID,
+		      TIMER_0_IRQ,
+		      handle_timer_interrupts,
+		      ptr,
+		      0x00);
+  // RUN, CONTINUOUS, generate IRQ
+  // IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
+  // RUN, generate IRQ
+  IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
+
   /////////////////////////////////////
   // Measurement loop
   while(1)
@@ -446,11 +508,21 @@ int main()
       print_table(data_arr_2n2222);
       // print_list(data_arr_2n2222);
       
-      // Finally, do calibraiton and housekeeping and increment cal_type
+      // Do calibraiton and housekeeping incrementally
       switch_cal_hk(cal_type);
       cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;
+      
+      // This does full housekeeping 
+      /* for(cal_type = 0; cal_type < N_CAL_HK; cal_type++) */
+      /* 	switch_cal_hk(cal_type); */
+
+      // Read from the I2C bus and set the heater registers
+
+      // Wait for control loop to finish (give yourself 3 seconds every time)
+      while(!loop_done); 
+      loop_done = 0;
+      // printf("---------------------------------\n");
     }
   return 0;
 }
 
-      

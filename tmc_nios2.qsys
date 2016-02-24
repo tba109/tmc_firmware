@@ -145,6 +145,22 @@
          type = "String";
       }
    }
+   element timer_0
+   {
+      datum _sortIndex
+      {
+         value = "10";
+         type = "int";
+      }
+   }
+   element timer_0.s1
+   {
+      datum baseAddress
+      {
+         value = "264448";
+         type = "String";
+      }
+   }
    element uart_0
    {
       datum _sortIndex
@@ -262,7 +278,7 @@ proc compose {} {
   <parameter name="dataAddrWidth" value="20" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /><slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /><slave name='timer_0.s1' start='0x40900' end='0x40920' type='altera_avalon_timer.s1' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /><slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -308,7 +324,7 @@ proc compose {} {
   <parameter name="instruction_master_high_performance_paddr_size" value="0" />
   <parameter name="instruction_master_paddr_base" value="0" />
   <parameter name="instruction_master_paddr_size" value="0" />
-  <parameter name="internalIrqMaskSystemInfo" value="7" />
+  <parameter name="internalIrqMaskSystemInfo" value="15" />
   <parameter name="io_regionbase" value="0" />
   <parameter name="io_regionsize" value="0" />
   <parameter name="master_addr_map" value="false" />
@@ -520,6 +536,18 @@ proc compose {} {
   <parameter name="AUTO_DEVICE_FAMILY" value="MAX 10" />
   <parameter name="id" value="0" />
  </module>
+ <module name="timer_0" kind="altera_avalon_timer" version="15.1" enabled="1">
+  <parameter name="alwaysRun" value="false" />
+  <parameter name="counterSize" value="32" />
+  <parameter name="fixedPeriod" value="false" />
+  <parameter name="period" value="3" />
+  <parameter name="periodUnits" value="SEC" />
+  <parameter name="resetOutput" value="false" />
+  <parameter name="snapshot" value="true" />
+  <parameter name="systemFrequency" value="50000000" />
+  <parameter name="timeoutPulseOutput" value="false" />
+  <parameter name="watchdogPulse" value="2" />
+ </module>
  <module name="uart_0" kind="altera_avalon_uart" version="15.1" enabled="1">
   <parameter name="baud" value="115200" />
   <parameter name="clockRate" value="50000000" />
@@ -621,6 +649,15 @@ proc compose {} {
    kind="avalon"
    version="15.1"
    start="nios2_gen2_0.data_master"
+   end="timer_0.s1">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00040900" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="nios2_gen2_0.data_master"
    end="spi_0.spi_control_port">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040820" />
@@ -665,6 +702,7 @@ proc compose {} {
    version="15.1"
    start="clk_0.clk"
    end="onchip_flash_0.clk" />
+ <connection kind="clock" version="15.1" start="clk_0.clk" end="timer_0.clk" />
  <connection
    kind="clock"
    version="15.1"
@@ -690,6 +728,13 @@ proc compose {} {
    start="nios2_gen2_0.irq"
    end="uart_0.irq">
   <parameter name="irqNumber" value="2" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="15.1"
+   start="nios2_gen2_0.irq"
+   end="timer_0.irq">
+  <parameter name="irqNumber" value="3" />
  </connection>
  <connection
    kind="reset"
@@ -719,6 +764,11 @@ proc compose {} {
    end="jtag_uart_0.reset" />
  <connection kind="reset" version="15.1" start="clk_0.clk_reset" end="pio_0.reset" />
  <connection kind="reset" version="15.1" start="clk_0.clk_reset" end="pio_1.reset" />
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="timer_0.reset" />
  <connection
    kind="reset"
    version="15.1"

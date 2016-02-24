@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
  * SOPC Builder design path: ../../tmc_nios2.sopcinfo
  *
- * Generated: Thu Feb 04 17:47:06 EST 2016
+ * Generated: Wed Feb 24 10:53:04 EST 2016
  */
 
 /*
@@ -62,6 +62,7 @@
 #include "altera_avalon_jtag_uart.h"
 #include "altera_avalon_spi.h"
 #include "altera_avalon_sysid_qsys.h"
+#include "altera_avalon_timer.h"
 #include "altera_avalon_uart.h"
 #include "altera_onchip_flash.h"
 
@@ -73,6 +74,7 @@ ALTERA_NIOS2_GEN2_IRQ_INSTANCE ( NIOS2_GEN2_0, nios2_gen2_0);
 ALTERA_AVALON_JTAG_UART_INSTANCE ( JTAG_UART_0, jtag_uart_0);
 ALTERA_AVALON_SPI_INSTANCE ( SPI_0, spi_0);
 ALTERA_AVALON_SYSID_QSYS_INSTANCE ( SYSID_QSYS_0, sysid_qsys_0);
+ALTERA_AVALON_TIMER_INSTANCE ( TIMER_0, timer_0);
 ALTERA_AVALON_UART_INSTANCE ( UART_0, uart_0);
 ALTERA_ONCHIP_FLASH_DATA_CSR_INSTANCE ( ONCHIP_FLASH_0, ONCHIP_FLASH_0_DATA, ONCHIP_FLASH_0_CSR, onchip_flash_0);
 
@@ -97,6 +99,7 @@ void alt_irq_init ( const void* base )
 
 void alt_sys_init( void )
 {
+    ALTERA_AVALON_TIMER_INIT ( TIMER_0, timer_0);
     ALTERA_AVALON_JTAG_UART_INIT ( JTAG_UART_0, jtag_uart_0);
     ALTERA_AVALON_SPI_INIT ( SPI_0, spi_0);
     ALTERA_AVALON_SYSID_QSYS_INIT ( SYSID_QSYS_0, sysid_qsys_0);

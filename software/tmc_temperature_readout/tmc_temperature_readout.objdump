@@ -1253,21 +1253,21 @@ Disassembly of section .text:
      e00:	f800283a 	ret
 
 00000e04 <main>:
-     e04:	deffdf04 	addi	sp,sp,-132
-     e08:	dfc02015 	stw	ra,128(sp)
-     e0c:	df001f15 	stw	fp,124(sp)
-     e10:	dc401e15 	stw	r17,120(sp)
-     e14:	dc001d15 	stw	r16,116(sp)
-     e18:	df001f04 	addi	fp,sp,124
+     e04:	deffaf04 	addi	sp,sp,-324
+     e08:	dfc05015 	stw	ra,320(sp)
+     e0c:	df004f15 	stw	fp,316(sp)
+     e10:	dc404e15 	stw	r17,312(sp)
+     e14:	dc004d15 	stw	r16,308(sp)
+     e18:	df004f04 	addi	fp,sp,316
      e1c:	00bfffc4 	movi	r2,-1
-     e20:	e0bfe2c5 	stb	r2,-117(fp)
-     e24:	e03fe515 	stw	zero,-108(fp)
-     e28:	e03fe305 	stb	zero,-116(fp)
-     e2c:	e03fe205 	stb	zero,-120(fp)
-     e30:	e03fe245 	stb	zero,-119(fp)
-     e34:	e03fe285 	stb	zero,-118(fp)
+     e20:	e0bfb2c5 	stb	r2,-309(fp)
+     e24:	e03fb515 	stw	zero,-300(fp)
+     e28:	e03fb305 	stb	zero,-308(fp)
+     e2c:	e03fb205 	stb	zero,-312(fp)
+     e30:	e03fb245 	stb	zero,-311(fp)
+     e34:	e03fb285 	stb	zero,-310(fp)
      e38:	d0201505 	stb	zero,-32684(gp)
-     e3c:	e0ffe2c3 	ldbu	r3,-117(fp)
+     e3c:	e0ffb2c3 	ldbu	r3,-309(fp)
      e40:	00800134 	movhi	r2,4
      e44:	10821c04 	addi	r2,r2,2160
      e48:	10c00035 	stwio	r3,0(r2)
@@ -1292,19 +1292,19 @@ Disassembly of section .text:
      e94:	014000c4 	movi	r5,3
      e98:	01800034 	movhi	r6,0
      e9c:	31809904 	addi	r6,r6,612
-     ea0:	e1ffe417 	ldw	r7,-112(fp)
+     ea0:	e1ffb417 	ldw	r7,-304(fp)
      ea4:	0001a540 	call	1a54 <alt_ic_isr_register>
      ea8:	00c001c4 	movi	r3,7
      eac:	00800134 	movhi	r2,4
      eb0:	10824104 	addi	r2,r2,2308
      eb4:	10c00035 	stwio	r3,0(r2)
      eb8:	00007440 	call	744 <flip_led>
-     ebc:	e03fe245 	stb	zero,-119(fp)
+     ebc:	e03fb245 	stb	zero,-311(fp)
      ec0:	00003606 	br	f9c <main+0x198>
-     ec4:	e03fe205 	stb	zero,-120(fp)
+     ec4:	e03fb205 	stb	zero,-312(fp)
      ec8:	00000e06 	br	f04 <main+0x100>
-     ecc:	e13fe203 	ldbu	r4,-120(fp)
-     ed0:	e0ffe243 	ldbu	r3,-119(fp)
+     ecc:	e13fb203 	ldbu	r4,-312(fp)
+     ed0:	e0ffb243 	ldbu	r3,-311(fp)
      ed4:	d0a00004 	addi	r2,gp,-32768
      ed8:	1885883a 	add	r2,r3,r2
      edc:	10800003 	ldbu	r2,0(r2)
@@ -1314,65 +1314,65 @@ Disassembly of section .text:
      eec:	180b883a 	mov	r5,r3
      ef0:	100d883a 	mov	r6,r2
      ef4:	00007ec0 	call	7ec <setup_2n2222>
-     ef8:	e0bfe203 	ldbu	r2,-120(fp)
+     ef8:	e0bfb203 	ldbu	r2,-312(fp)
      efc:	10800044 	addi	r2,r2,1
-     f00:	e0bfe205 	stb	r2,-120(fp)
-     f04:	e0bfe203 	ldbu	r2,-120(fp)
+     f00:	e0bfb205 	stb	r2,-312(fp)
+     f04:	e0bfb203 	ldbu	r2,-312(fp)
      f08:	10800330 	cmpltui	r2,r2,12
      f0c:	103fef1e 	bne	r2,zero,ecc <main+0xc8>
      f10:	010000b4 	movhi	r4,2
      f14:	21304e04 	addi	r4,r4,-16072
      f18:	0001d9c0 	call	1d9c <usleep>
-     f1c:	e03fe205 	stb	zero,-120(fp)
+     f1c:	e03fb205 	stb	zero,-312(fp)
      f20:	00001806 	br	f84 <main+0x180>
-     f24:	e03fe515 	stw	zero,-108(fp)
-     f28:	e0ffe203 	ldbu	r3,-120(fp)
-     f2c:	e0bfe504 	addi	r2,fp,-108
+     f24:	e03fb515 	stw	zero,-300(fp)
+     f28:	e0ffb203 	ldbu	r3,-312(fp)
+     f2c:	e0bfb504 	addi	r2,fp,-300
      f30:	1809883a 	mov	r4,r3
      f34:	01400084 	movi	r5,2
      f38:	100d883a 	mov	r6,r2
      f3c:	01c000c4 	movi	r7,3
      f40:	00003980 	call	398 <ad7124_read_reg>
-     f44:	e0bfe203 	ldbu	r2,-120(fp)
-     f48:	e47fe243 	ldbu	r17,-119(fp)
-     f4c:	e43fe517 	ldw	r16,-108(fp)
+     f44:	e0bfb203 	ldbu	r2,-312(fp)
+     f48:	e47fb243 	ldbu	r17,-311(fp)
+     f4c:	e43fb517 	ldw	r16,-300(fp)
      f50:	1009883a 	mov	r4,r2
      f54:	01400184 	movi	r5,6
      f58:	0000ffc0 	call	ffc <__mulsi3>
      f5c:	1445883a 	add	r2,r2,r17
      f60:	1085883a 	add	r2,r2,r2
      f64:	1085883a 	add	r2,r2,r2
-     f68:	e0ffe204 	addi	r3,fp,-120
+     f68:	e0ffb204 	addi	r3,fp,-312
      f6c:	1885883a 	add	r2,r3,r2
      f70:	10800404 	addi	r2,r2,16
      f74:	14000015 	stw	r16,0(r2)
-     f78:	e0bfe203 	ldbu	r2,-120(fp)
+     f78:	e0bfb203 	ldbu	r2,-312(fp)
      f7c:	10800044 	addi	r2,r2,1
-     f80:	e0bfe205 	stb	r2,-120(fp)
-     f84:	e0bfe203 	ldbu	r2,-120(fp)
+     f80:	e0bfb205 	stb	r2,-312(fp)
+     f84:	e0bfb203 	ldbu	r2,-312(fp)
      f88:	10800330 	cmpltui	r2,r2,12
      f8c:	103fe51e 	bne	r2,zero,f24 <main+0x120>
-     f90:	e0bfe243 	ldbu	r2,-119(fp)
+     f90:	e0bfb243 	ldbu	r2,-311(fp)
      f94:	10800044 	addi	r2,r2,1
-     f98:	e0bfe245 	stb	r2,-119(fp)
-     f9c:	e0bfe243 	ldbu	r2,-119(fp)
+     f98:	e0bfb245 	stb	r2,-311(fp)
+     f9c:	e0bfb243 	ldbu	r2,-311(fp)
      fa0:	108001b0 	cmpltui	r2,r2,6
      fa4:	103fc71e 	bne	r2,zero,ec4 <main+0xc0>
-     fa8:	e0bfe604 	addi	r2,fp,-104
+     fa8:	e0bfb604 	addi	r2,fp,-296
      fac:	1009883a 	mov	r4,r2
      fb0:	000052c0 	call	52c <print_table>
-     fb4:	e0bfe283 	ldbu	r2,-118(fp)
+     fb4:	e0bfb283 	ldbu	r2,-310(fp)
      fb8:	1009883a 	mov	r4,r2
      fbc:	0000a080 	call	a08 <switch_cal_hk>
-     fc0:	e0bfe283 	ldbu	r2,-118(fp)
+     fc0:	e0bfb283 	ldbu	r2,-310(fp)
      fc4:	10800044 	addi	r2,r2,1
      fc8:	10800208 	cmpgei	r2,r2,8
      fcc:	1000031e 	bne	r2,zero,fdc <main+0x1d8>
-     fd0:	e0bfe283 	ldbu	r2,-118(fp)
+     fd0:	e0bfb283 	ldbu	r2,-310(fp)
      fd4:	10800044 	addi	r2,r2,1
      fd8:	00000106 	br	fe0 <main+0x1dc>
      fdc:	0005883a 	mov	r2,zero
-     fe0:	e0bfe285 	stb	r2,-118(fp)
+     fe0:	e0bfb285 	stb	r2,-310(fp)
      fe4:	0001883a 	nop
      fe8:	d0a01503 	ldbu	r2,-32684(gp)
      fec:	10803fcc 	andi	r2,r2,255

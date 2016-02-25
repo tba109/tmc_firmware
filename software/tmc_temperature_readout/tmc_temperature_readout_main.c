@@ -449,7 +449,7 @@ int main()
   unsigned char x = 0xFF;
   unsigned int data = 0;
   unsigned char nbytes = 0;
-  unsigned int data_arr_2n2222[N_BRD][N_CHAN];
+  unsigned int data_arr_2n2222[N_ADC][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;

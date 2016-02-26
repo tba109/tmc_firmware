@@ -13,6 +13,8 @@
 #include "altera_avalon_spi.h"
 #include "ad7124_regs.h"
 #include "altera_avalon_timer_regs.h"
+#include <fcntl.h>
+#include <string.h>
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -439,22 +441,63 @@ unsigned char switch_cal_hk(unsigned char cal_type)
       	  printf("  %8d",data & 0x00FFFFFF);
       	}
     }
-
+  
   printf("\n");
   return 0;
+}
+
+// Small C library doesn't give me this, and I need some way to read
+// from stdin. From example 6-12 of Nios-2 Software Developer's 
+// Handbook, which supposedly is taken from Kernighan and Ritchie's
+// "The C Programming Language, 2nd Ed"
+int my_getchar()
+{
+  char c = NULL;
+  return ( read ( 0, &c, 1 ) == 1 ) ? (unsigned char) c : NULL;
+}
+
+// Fri Feb 26 10:33:36 EST 2016
+// Seems ridiculous that I have to write this, but I 
+// can't seem to get a way around it on the small development
+// kit without disabling the small c library option (i.e., using
+// the large, full C library, which doesn't fit on the device due
+// to limited on chip memory.) I could maybe execute out of 
+// flash instead of onchip RAM, but for now, I'll stick with 
+// this approach, and probably call the "normal" function once
+// I have the larger chip on the production board with the
+// normal c library. 
+unsigned int read_serial(char * str1)
+{
+  unsigned int nbytes = 0;
+  char c;
+  str1[0] = NULL;
+  if( (c = my_getchar()) != 0x00)
+    {
+      str1[nbytes] = c;
+      nbytes++;
+      while((c = my_getchar()) != 0x0A) // Note: 0x0A is Linefeed character
+      {
+	str1[nbytes] = c;
+	nbytes++;
+	// printf("Got %c\n",c);
+      }
+    }
+  str1[nbytes] = NULL;
+  return nbytes;
 }
 
 int main()
 {
   unsigned char x = 0xFF;
   unsigned int data = 0;
-  unsigned char nbytes = 0;
+  unsigned int nbytes = 0;
   unsigned int data_arr_2n2222[N_ADC][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;
   int * ptr;
-
+  char str1[1024];
+  char c1;
   loop_done = 0;
 
   ////////////////////////////////////
@@ -482,11 +525,24 @@ int main()
   // RUN, generate IRQ
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
 
+  // Setup stdin for non-blocking input.
+  int flags = fcntl(0,F_GETFL,0);
+  flags |= O_NONBLOCK;
+  fcntl(0,F_SETFL,flags);
+
   /////////////////////////////////////
   // Measurement loop
   while(1)
     {
       flip_led();
+
+      // This isn't available with the small c library
+      // scanf("%s",&str1);
+            
+      // This should work
+      while(read_serial(str1))
+	printf("Command: %s\n",str1);
+
       for(chan = 0; chan < N_CHAN; chan++)
       	{
     	  // Setup the conversions for the 2N2222
@@ -519,8 +575,8 @@ int main()
       // Read from the I2C bus and set the heater registers
 
       // Wait for control loop to finish (give yourself 3 seconds every time)
-      while(!loop_done); 
-      loop_done = 0;
+      // while(!loop_done); 
+      // loop_done = 0;
       // printf("---------------------------------\n");
     }
   return 0;

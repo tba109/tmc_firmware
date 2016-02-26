@@ -4,18 +4,21 @@
 
 `timescale 1 ps / 1 ps
 module tmc_nios2 (
-		input  wire        clk_clk,                          //                        clk.clk
-		input  wire [7:0]  pio_0_external_connection_export, //  pio_0_external_connection.export
-		output wire [7:0]  pio_1_external_connection_export, //  pio_1_external_connection.export
-		input  wire        reset_reset_n,                    //                      reset.reset_n
-		input  wire        spi_0_external_MISO,              //             spi_0_external.MISO
-		output wire        spi_0_external_MOSI,              //                           .MOSI
-		output wire        spi_0_external_SCLK,              //                           .SCLK
-		output wire [11:0] spi_0_external_SS_n,              //                           .SS_n
-		input  wire        uart_0_external_connection_rxd,   // uart_0_external_connection.rxd
-		output wire        uart_0_external_connection_txd,   //                           .txd
-		input  wire        uart_0_external_connection_cts_n, //                           .cts_n
-		output wire        uart_0_external_connection_rts_n  //                           .rts_n
+		input  wire        clk_clk,                                  //                               clk.clk
+		input  wire [7:0]  pio_0_external_connection_export,         //         pio_0_external_connection.export
+		output wire [7:0]  pio_1_external_connection_export,         //         pio_1_external_connection.export
+		input  wire        reset_reset_n,                            //                             reset.reset_n
+		input  wire [7:0]  rx_char_external_connection_export,       //       rx_char_external_connection.export
+		input  wire        rx_fifo_empty_external_connection_export, // rx_fifo_empty_external_connection.export
+		output wire        rx_fifo_read_external_connection_export,  //  rx_fifo_read_external_connection.export
+		input  wire        spi_0_external_MISO,                      //                    spi_0_external.MISO
+		output wire        spi_0_external_MOSI,                      //                                  .MOSI
+		output wire        spi_0_external_SCLK,                      //                                  .SCLK
+		output wire [11:0] spi_0_external_SS_n,                      //                                  .SS_n
+		input  wire        uart_0_external_connection_rxd,           //        uart_0_external_connection.rxd
+		output wire        uart_0_external_connection_txd,           //                                  .txd
+		input  wire        uart_0_external_connection_cts_n,         //                                  .cts_n
+		output wire        uart_0_external_connection_rts_n          //                                  .rts_n
 	);
 
 	wire  [31:0] nios2_gen2_0_data_master_readdata;                           // mm_interconnect_0:nios2_gen2_0_data_master_readdata -> nios2_gen2_0:d_readdata
@@ -86,6 +89,15 @@ module tmc_nios2 (
 	wire   [2:0] mm_interconnect_0_timer_0_s1_address;                        // mm_interconnect_0:timer_0_s1_address -> timer_0:address
 	wire         mm_interconnect_0_timer_0_s1_write;                          // mm_interconnect_0:timer_0_s1_write -> timer_0:write_n
 	wire  [15:0] mm_interconnect_0_timer_0_s1_writedata;                      // mm_interconnect_0:timer_0_s1_writedata -> timer_0:writedata
+	wire  [31:0] mm_interconnect_0_rx_char_s1_readdata;                       // rx_char:readdata -> mm_interconnect_0:rx_char_s1_readdata
+	wire   [1:0] mm_interconnect_0_rx_char_s1_address;                        // mm_interconnect_0:rx_char_s1_address -> rx_char:address
+	wire         mm_interconnect_0_rx_fifo_read_s1_chipselect;                // mm_interconnect_0:rx_fifo_read_s1_chipselect -> rx_fifo_read:chipselect
+	wire  [31:0] mm_interconnect_0_rx_fifo_read_s1_readdata;                  // rx_fifo_read:readdata -> mm_interconnect_0:rx_fifo_read_s1_readdata
+	wire   [1:0] mm_interconnect_0_rx_fifo_read_s1_address;                   // mm_interconnect_0:rx_fifo_read_s1_address -> rx_fifo_read:address
+	wire         mm_interconnect_0_rx_fifo_read_s1_write;                     // mm_interconnect_0:rx_fifo_read_s1_write -> rx_fifo_read:write_n
+	wire  [31:0] mm_interconnect_0_rx_fifo_read_s1_writedata;                 // mm_interconnect_0:rx_fifo_read_s1_writedata -> rx_fifo_read:writedata
+	wire  [31:0] mm_interconnect_0_rx_fifo_empty_s1_readdata;                 // rx_fifo_empty:readdata -> mm_interconnect_0:rx_fifo_empty_s1_readdata
+	wire   [1:0] mm_interconnect_0_rx_fifo_empty_s1_address;                  // mm_interconnect_0:rx_fifo_empty_s1_address -> rx_fifo_empty:address
 	wire         mm_interconnect_0_spi_0_spi_control_port_chipselect;         // mm_interconnect_0:spi_0_spi_control_port_chipselect -> spi_0:spi_select
 	wire  [15:0] mm_interconnect_0_spi_0_spi_control_port_readdata;           // spi_0:data_to_cpu -> mm_interconnect_0:spi_0_spi_control_port_readdata
 	wire   [2:0] mm_interconnect_0_spi_0_spi_control_port_address;            // mm_interconnect_0:spi_0_spi_control_port_address -> spi_0:mem_addr
@@ -97,7 +109,7 @@ module tmc_nios2 (
 	wire         irq_mapper_receiver2_irq;                                    // uart_0:irq -> irq_mapper:receiver2_irq
 	wire         irq_mapper_receiver3_irq;                                    // timer_0:irq -> irq_mapper:receiver3_irq
 	wire  [31:0] nios2_gen2_0_irq_irq;                                        // irq_mapper:sender_irq -> nios2_gen2_0:irq
-	wire         rst_controller_reset_out_reset;                              // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart_0:rst_n, mm_interconnect_0:nios2_gen2_0_reset_reset_bridge_in_reset_reset, nios2_gen2_0:reset_n, onchip_flash_0:reset_n, onchip_memory2_0:reset, pio_0:reset_n, pio_1:reset_n, rst_translator:in_reset, spi_0:reset_n, sysid_qsys_0:reset_n, timer_0:reset_n, uart_0:reset_n]
+	wire         rst_controller_reset_out_reset;                              // rst_controller:reset_out -> [irq_mapper:reset, jtag_uart_0:rst_n, mm_interconnect_0:nios2_gen2_0_reset_reset_bridge_in_reset_reset, nios2_gen2_0:reset_n, onchip_flash_0:reset_n, onchip_memory2_0:reset, pio_0:reset_n, pio_1:reset_n, rst_translator:in_reset, rx_char:reset_n, rx_fifo_empty:reset_n, rx_fifo_read:reset_n, spi_0:reset_n, sysid_qsys_0:reset_n, timer_0:reset_n, uart_0:reset_n]
 	wire         rst_controller_reset_out_reset_req;                          // rst_controller:reset_req -> [nios2_gen2_0:reset_req, onchip_memory2_0:reset_req, rst_translator:reset_req_in]
 
 	tmc_nios2_jtag_uart_0 jtag_uart_0 (
@@ -237,6 +249,33 @@ module tmc_nios2 (
 		.out_port   (pio_1_external_connection_export)       // external_connection.export
 	);
 
+	tmc_nios2_pio_0 rx_char (
+		.clk      (clk_clk),                               //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),       //               reset.reset_n
+		.address  (mm_interconnect_0_rx_char_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_rx_char_s1_readdata), //                    .readdata
+		.in_port  (rx_char_external_connection_export)     // external_connection.export
+	);
+
+	tmc_nios2_rx_fifo_empty rx_fifo_empty (
+		.clk      (clk_clk),                                     //                 clk.clk
+		.reset_n  (~rst_controller_reset_out_reset),             //               reset.reset_n
+		.address  (mm_interconnect_0_rx_fifo_empty_s1_address),  //                  s1.address
+		.readdata (mm_interconnect_0_rx_fifo_empty_s1_readdata), //                    .readdata
+		.in_port  (rx_fifo_empty_external_connection_export)     // external_connection.export
+	);
+
+	tmc_nios2_rx_fifo_read rx_fifo_read (
+		.clk        (clk_clk),                                      //                 clk.clk
+		.reset_n    (~rst_controller_reset_out_reset),              //               reset.reset_n
+		.address    (mm_interconnect_0_rx_fifo_read_s1_address),    //                  s1.address
+		.write_n    (~mm_interconnect_0_rx_fifo_read_s1_write),     //                    .write_n
+		.writedata  (mm_interconnect_0_rx_fifo_read_s1_writedata),  //                    .writedata
+		.chipselect (mm_interconnect_0_rx_fifo_read_s1_chipselect), //                    .chipselect
+		.readdata   (mm_interconnect_0_rx_fifo_read_s1_readdata),   //                    .readdata
+		.out_port   (rx_fifo_read_external_connection_export)       // external_connection.export
+	);
+
 	tmc_nios2_spi_0 spi_0 (
 		.clk           (clk_clk),                                             //              clk.clk
 		.reset_n       (~rst_controller_reset_out_reset),                     //            reset.reset_n
@@ -347,6 +386,15 @@ module tmc_nios2 (
 		.pio_1_s1_readdata                              (mm_interconnect_0_pio_1_s1_readdata),                         //                                         .readdata
 		.pio_1_s1_writedata                             (mm_interconnect_0_pio_1_s1_writedata),                        //                                         .writedata
 		.pio_1_s1_chipselect                            (mm_interconnect_0_pio_1_s1_chipselect),                       //                                         .chipselect
+		.rx_char_s1_address                             (mm_interconnect_0_rx_char_s1_address),                        //                               rx_char_s1.address
+		.rx_char_s1_readdata                            (mm_interconnect_0_rx_char_s1_readdata),                       //                                         .readdata
+		.rx_fifo_empty_s1_address                       (mm_interconnect_0_rx_fifo_empty_s1_address),                  //                         rx_fifo_empty_s1.address
+		.rx_fifo_empty_s1_readdata                      (mm_interconnect_0_rx_fifo_empty_s1_readdata),                 //                                         .readdata
+		.rx_fifo_read_s1_address                        (mm_interconnect_0_rx_fifo_read_s1_address),                   //                          rx_fifo_read_s1.address
+		.rx_fifo_read_s1_write                          (mm_interconnect_0_rx_fifo_read_s1_write),                     //                                         .write
+		.rx_fifo_read_s1_readdata                       (mm_interconnect_0_rx_fifo_read_s1_readdata),                  //                                         .readdata
+		.rx_fifo_read_s1_writedata                      (mm_interconnect_0_rx_fifo_read_s1_writedata),                 //                                         .writedata
+		.rx_fifo_read_s1_chipselect                     (mm_interconnect_0_rx_fifo_read_s1_chipselect),                //                                         .chipselect
 		.spi_0_spi_control_port_address                 (mm_interconnect_0_spi_0_spi_control_port_address),            //                   spi_0_spi_control_port.address
 		.spi_0_spi_control_port_write                   (mm_interconnect_0_spi_0_spi_control_port_write),              //                                         .write
 		.spi_0_spi_control_port_read                    (mm_interconnect_0_spi_0_spi_control_port_read),               //                                         .read

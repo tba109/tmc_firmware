@@ -96,7 +96,14 @@ module tmc_firmware_top
    wire [11:0] qsys_csn;
    wire [7:0]  pio_in;
    wire [7:0]  pio_out;
-
+   wire [7:0]  rx_fifo_data_in;
+   wire        rx_fifo_wr_en;
+   wire        rx_fifo_full;
+   wire [7:0]  rx_fifo_data_out;
+   wire        rx_fifo_rd_en;
+   wire        rx_fifo_rd_en_p;
+   wire        rx_fifo_empty;
+   
    // Troubleshooting assignments
    assign LED2 = pio_out[7];
 
@@ -150,20 +157,59 @@ module tmc_firmware_top
        default:  qsys_miso <= 1'b0;
      endcase
    
-       tmc_nios2 u0 (
+   tmc_nios2 u0 (
 		 .clk_clk(logic_clk), 
 		 .reset_reset_n(logic_clk_rst_n),
 		 .spi_0_external_MISO(qsys_miso),
 		 .spi_0_external_MOSI(qsys_mosi),
 		 .spi_0_external_SCLK(qsys_sclk),
 		 .spi_0_external_SS_n(qsys_csn),
-		 .uart_0_external_connection_rxd(rxd),
+		 // .uart_0_external_connection_rxd(rxd), // handle receiving as a separate FIFO
+		 .uart_0_external_connection_rxd(),
 		 .uart_0_external_connection_txd(txd),
 		 .uart_0_external_connection_cts_n(cts_n),
-		 .uart_0_external_connection_rts_n(rts_n),
+		 // .uart_0_external_connection_rts_n(rts_n), // handle receiving as a seaprate FIFO
+		 .uart_0_external_connection_rts_n(),
 		 .pio_1_external_connection_export(pio_out),
-		 .pio_0_external_connection_export(pio_in)
+		 .pio_0_external_connection_export(pio_in),
+		 .rx_fifo_read_external_connection_export(rx_fifo_rd_en),
+		 .rx_char_external_connection_export(rx_fifo_data_out),
+		 .rx_fifo_empty_external_connection_export(rx_fifo_empty)
 		 );
-
+   
+   // Fri Feb 26 13:36:10 EST 2016
+   // This is the RS232 receive logic with deep FIFO (the QSYS one wasn't deep enough and
+   // we were overflowing)
+   // Deserializer
+   defparam RS232_DES0.P_CLK_FREQ_HZ = 50000000;
+   defparam RS232_DES0.P_BAUD_RATE = 115200;
+   rs232_des RS232_DES0
+     (
+      .clk(logic_clk),
+      .rst_n(logic_clk_rst_n),
+      .rx(rx),
+      .rx_fifo_data(rx_fifo_data_in),
+      .rx_fifo_wr_en(rx_fifo_wr_en),
+      .rx_fifo_full(rx_fifo_full)
+      );
+   
+   posedge_detector PEDGE_0
+     (
+      .clk(logic_clk),
+      .rst_n(logic_clk_rst_n),
+      .a(rx_fifo_rd_en),
+      .y(rx_fifo_rd_en_p)
+      );
+   
+   fifo_1024_8 FIFO_1024_8_0
+     (
+      .clock(logic_clk),
+      .data(rx_fifo_data_in),
+      .rdreq(rx_fifo_rd_en),
+      .wrreq(rx_fifo_wr_en),
+      .empty(rx_fifo_empty),
+      .full(rx_fifo_full),
+      .q(rx_fifo_data_out)
+      );
    
 endmodule

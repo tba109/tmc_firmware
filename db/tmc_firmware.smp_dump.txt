@@ -1,4 +1,11 @@
 
+State Machine - |tmc_firmware_top|rs232_des:RS232_DES0|fsm
+Name fsm.S_STOP fsm.S_SHIFT fsm.S_START fsm.S_IDLE 
+fsm.S_IDLE 0 0 0 0 
+fsm.S_START 0 0 1 1 
+fsm.S_SHIFT 0 1 0 1 
+fsm.S_STOP 1 0 0 1 
+
 State Machine - |tmc_firmware_top|tmc_nios2:u0|altera_onchip_flash:onchip_flash_0|altera_onchip_flash_avmm_data_controller:avmm_data_controller|read_state
 Name read_state.READ_STATE_CLEAR read_state.READ_STATE_FINAL read_state.READ_STATE_READY read_state.READ_STATE_DUMMY read_state.READ_STATE_SETUP read_state.READ_STATE_IDLE 
 read_state.READ_STATE_IDLE 0 0 0 0 0 0 

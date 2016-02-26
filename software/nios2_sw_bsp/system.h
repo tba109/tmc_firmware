@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
  * SOPC Builder design path: ../../tmc_nios2.sopcinfo
  *
- * Generated: Wed Feb 24 10:53:04 EST 2016
+ * Generated: Fri Feb 26 15:32:59 EST 2016
  */
 
 /*
@@ -355,6 +355,87 @@
 
 
 /*
+ * rx_char configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_rx_char altera_avalon_pio
+#define RX_CHAR_BASE 0x40920
+#define RX_CHAR_BIT_CLEARING_EDGE_REGISTER 0
+#define RX_CHAR_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define RX_CHAR_CAPTURE 0
+#define RX_CHAR_DATA_WIDTH 8
+#define RX_CHAR_DO_TEST_BENCH_WIRING 0
+#define RX_CHAR_DRIVEN_SIM_VALUE 0
+#define RX_CHAR_EDGE_TYPE "NONE"
+#define RX_CHAR_FREQ 50000000
+#define RX_CHAR_HAS_IN 1
+#define RX_CHAR_HAS_OUT 0
+#define RX_CHAR_HAS_TRI 0
+#define RX_CHAR_IRQ -1
+#define RX_CHAR_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define RX_CHAR_IRQ_TYPE "NONE"
+#define RX_CHAR_NAME "/dev/rx_char"
+#define RX_CHAR_RESET_VALUE 0
+#define RX_CHAR_SPAN 16
+#define RX_CHAR_TYPE "altera_avalon_pio"
+
+
+/*
+ * rx_fifo_empty configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_rx_fifo_empty altera_avalon_pio
+#define RX_FIFO_EMPTY_BASE 0x40940
+#define RX_FIFO_EMPTY_BIT_CLEARING_EDGE_REGISTER 0
+#define RX_FIFO_EMPTY_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define RX_FIFO_EMPTY_CAPTURE 0
+#define RX_FIFO_EMPTY_DATA_WIDTH 1
+#define RX_FIFO_EMPTY_DO_TEST_BENCH_WIRING 0
+#define RX_FIFO_EMPTY_DRIVEN_SIM_VALUE 0
+#define RX_FIFO_EMPTY_EDGE_TYPE "NONE"
+#define RX_FIFO_EMPTY_FREQ 50000000
+#define RX_FIFO_EMPTY_HAS_IN 1
+#define RX_FIFO_EMPTY_HAS_OUT 0
+#define RX_FIFO_EMPTY_HAS_TRI 0
+#define RX_FIFO_EMPTY_IRQ -1
+#define RX_FIFO_EMPTY_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define RX_FIFO_EMPTY_IRQ_TYPE "NONE"
+#define RX_FIFO_EMPTY_NAME "/dev/rx_fifo_empty"
+#define RX_FIFO_EMPTY_RESET_VALUE 0
+#define RX_FIFO_EMPTY_SPAN 16
+#define RX_FIFO_EMPTY_TYPE "altera_avalon_pio"
+
+
+/*
+ * rx_fifo_read configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_rx_fifo_read altera_avalon_pio
+#define RX_FIFO_READ_BASE 0x40930
+#define RX_FIFO_READ_BIT_CLEARING_EDGE_REGISTER 0
+#define RX_FIFO_READ_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define RX_FIFO_READ_CAPTURE 0
+#define RX_FIFO_READ_DATA_WIDTH 1
+#define RX_FIFO_READ_DO_TEST_BENCH_WIRING 0
+#define RX_FIFO_READ_DRIVEN_SIM_VALUE 0
+#define RX_FIFO_READ_EDGE_TYPE "NONE"
+#define RX_FIFO_READ_FREQ 50000000
+#define RX_FIFO_READ_HAS_IN 0
+#define RX_FIFO_READ_HAS_OUT 1
+#define RX_FIFO_READ_HAS_TRI 0
+#define RX_FIFO_READ_IRQ -1
+#define RX_FIFO_READ_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define RX_FIFO_READ_IRQ_TYPE "NONE"
+#define RX_FIFO_READ_NAME "/dev/rx_fifo_read"
+#define RX_FIFO_READ_RESET_VALUE 0
+#define RX_FIFO_READ_SPAN 16
+#define RX_FIFO_READ_TYPE "altera_avalon_pio"
+
+
+/*
  * spi_0 configuration
  *
  */
@@ -397,7 +478,7 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1456328591
+#define SYSID_QSYS_0_TIMESTAMP 1456516783
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
 
 

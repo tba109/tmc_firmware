@@ -88,10 +88,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "rts_n",
-					"strict" : false
-				},
-				{
 					"name" : "LED2",
 					"strict" : false
 				},
@@ -117,10 +113,6 @@
 				},
 				{
 					"name" : "cts_n",
-					"strict" : false
-				},
-				{
-					"name" : "rxd",
 					"strict" : false
 				},
 				{

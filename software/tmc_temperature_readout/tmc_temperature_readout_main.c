@@ -539,9 +539,9 @@ int main()
       // This isn't available with the small c library
       // scanf("%s",&str1);
             
-      // This should work
-      while(read_serial(str1))
-	printf("Command: %s\n",str1);
+      /* // This should work */
+      /* while(read_serial(str1)) */
+      /* 	printf("Command: %s\n",str1); */
 
       for(chan = 0; chan < N_CHAN; chan++)
       	{
@@ -575,8 +575,8 @@ int main()
       // Read from the I2C bus and set the heater registers
 
       // Wait for control loop to finish (give yourself 3 seconds every time)
-      // while(!loop_done); 
-      // loop_done = 0;
+      while(!loop_done); 
+      loop_done = 0;
       // printf("---------------------------------\n");
     }
   return 0;

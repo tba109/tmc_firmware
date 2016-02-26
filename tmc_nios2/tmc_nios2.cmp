@@ -1,17 +1,20 @@
 	component tmc_nios2 is
 		port (
-			clk_clk                          : in  std_logic                     := 'X';             -- clk
-			pio_0_external_connection_export : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- export
-			pio_1_external_connection_export : out std_logic_vector(7 downto 0);                     -- export
-			reset_reset_n                    : in  std_logic                     := 'X';             -- reset_n
-			spi_0_external_MISO              : in  std_logic                     := 'X';             -- MISO
-			spi_0_external_MOSI              : out std_logic;                                        -- MOSI
-			spi_0_external_SCLK              : out std_logic;                                        -- SCLK
-			spi_0_external_SS_n              : out std_logic_vector(11 downto 0);                    -- SS_n
-			uart_0_external_connection_rxd   : in  std_logic                     := 'X';             -- rxd
-			uart_0_external_connection_txd   : out std_logic;                                        -- txd
-			uart_0_external_connection_cts_n : in  std_logic                     := 'X';             -- cts_n
-			uart_0_external_connection_rts_n : out std_logic                                         -- rts_n
+			clk_clk                                  : in  std_logic                     := 'X';             -- clk
+			pio_0_external_connection_export         : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- export
+			pio_1_external_connection_export         : out std_logic_vector(7 downto 0);                     -- export
+			reset_reset_n                            : in  std_logic                     := 'X';             -- reset_n
+			rx_char_external_connection_export       : in  std_logic_vector(7 downto 0)  := (others => 'X'); -- export
+			rx_fifo_empty_external_connection_export : in  std_logic                     := 'X';             -- export
+			rx_fifo_read_external_connection_export  : out std_logic;                                        -- export
+			spi_0_external_MISO                      : in  std_logic                     := 'X';             -- MISO
+			spi_0_external_MOSI                      : out std_logic;                                        -- MOSI
+			spi_0_external_SCLK                      : out std_logic;                                        -- SCLK
+			spi_0_external_SS_n                      : out std_logic_vector(11 downto 0);                    -- SS_n
+			uart_0_external_connection_rxd           : in  std_logic                     := 'X';             -- rxd
+			uart_0_external_connection_txd           : out std_logic;                                        -- txd
+			uart_0_external_connection_cts_n         : in  std_logic                     := 'X';             -- cts_n
+			uart_0_external_connection_rts_n         : out std_logic                                         -- rts_n
 		);
 	end component tmc_nios2;
 

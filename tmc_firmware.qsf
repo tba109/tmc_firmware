@@ -57,13 +57,6 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
 set_location_assignment PIN_27 -to R_CLK
 set_location_assignment PIN_132 -to LED1
-set_global_assignment -name VERILOG_FILE tmc_nios2/synthesis/tmc_nios2.v
-set_global_assignment -name QIP_FILE tmc_nios2/synthesis/tmc_nios2.qip
-set_global_assignment -name VERILOG_FILE tmc_firmware_top.v
-set_global_assignment -name VERILOG_FILE config_ind.v
-set_global_assignment -name CDF_FILE output_files/Chain1.cdf
-set_global_assignment -name CDF_FILE output_files/Chain2.cdf
-set_global_assignment -name QIP_FILE tmc_pll.qip
 set_location_assignment PIN_47 -to csan_a
 set_location_assignment PIN_45 -to csan_b
 set_location_assignment PIN_99 -to csan_c
@@ -136,4 +129,16 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to miso_a
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to miso_b
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to miso_c
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to miso_d
+set_global_assignment -name VERILOG_FILE negedge_detector.v
+set_global_assignment -name VERILOG_FILE sync.v
+set_global_assignment -name VERILOG_FILE posedge_detector.v
+set_global_assignment -name VERILOG_FILE rs232_des.v
+set_global_assignment -name VERILOG_FILE tmc_nios2/synthesis/tmc_nios2.v -library tmc_nios2
+set_global_assignment -name QIP_FILE tmc_nios2/synthesis/tmc_nios2.qip
+set_global_assignment -name VERILOG_FILE tmc_firmware_top.v
+set_global_assignment -name VERILOG_FILE config_ind.v
+set_global_assignment -name CDF_FILE output_files/Chain1.cdf
+set_global_assignment -name CDF_FILE output_files/Chain2.cdf
+set_global_assignment -name QIP_FILE tmc_pll.qip
+set_global_assignment -name QIP_FILE fifo_1024_8.qip
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

@@ -7,10 +7,6 @@
 //
 // Major modules:
 //
-// version_number: "Version Number"
-//                 A custom Verilog HDL module which contains a verison number
-//                 for the project. It is automatically updated with each compile.
-//
 // config_ind: Configuration indicator to say when the FPGA is configured. It just
 //             flashes and LED
 ////////////////////////////////////////////////////////////////////////////////////   
@@ -69,6 +65,11 @@ module tmc_firmware_top
    output txd, // pin 81
    output rts_n, // pin 86
    input  cts_n, // pin 79
+	  
+   // Mon Feb 29 14:09:49 EST 2016
+   // I2C bus for the LTC2605 on the heater boards
+   output scl_pad_io,
+   inout sda_pad_io,
    
    output LED2, // pin 134
    output LED1  // pin 132
@@ -174,7 +175,9 @@ module tmc_firmware_top
 		 .pio_0_external_connection_export(pio_in),
 		 .rx_fifo_read_external_connection_export(rx_fifo_rd_en),
 		 .rx_char_external_connection_export(rx_fifo_data_out),
-		 .rx_fifo_empty_external_connection_export(rx_fifo_empty)
+		 .rx_fifo_empty_external_connection_export(rx_fifo_empty),
+		 .i2c_opencores_0_export_scl_pad_io(scl_pad_io),
+		 .i2c_opencores_0_export_sda_pad_io(sda_pad_io)
 		 );
    
    // Fri Feb 26 13:36:10 EST 2016
@@ -187,7 +190,7 @@ module tmc_firmware_top
      (
       .clk(logic_clk),
       .rst_n(logic_clk_rst_n),
-      .rx(rx),
+      .rx(rxd),
       .rx_fifo_data(rx_fifo_data_in),
       .rx_fifo_wr_en(rx_fifo_wr_en),
       .rx_fifo_full(rx_fifo_full)
@@ -205,7 +208,7 @@ module tmc_firmware_top
      (
       .clock(logic_clk),
       .data(rx_fifo_data_in),
-      .rdreq(rx_fifo_rd_en),
+      .rdreq(rx_fifo_rd_en_p),
       .wrreq(rx_fifo_wr_en),
       .empty(rx_fifo_empty),
       .full(rx_fifo_full),

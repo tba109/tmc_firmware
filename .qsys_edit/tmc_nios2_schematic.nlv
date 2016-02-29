@@ -1,29 +1,35 @@
 # # File gsaved with Nlview version 6.3.8  2013-12-19 bk=1.2992 VDI=34 GEI=35
 # 
-preplace inst tmc_nios2.sysid_qsys_0 -pg 1 -lvl 2 -y 320
-preplace inst tmc_nios2.onchip_memory2_0 -pg 1 -lvl 2 -y 240
+preplace inst tmc_nios2.rx_fifo_read -pg 1 -lvl 3 -y 840
+preplace inst tmc_nios2.sysid_qsys_0 -pg 1 -lvl 2 -y 300
+preplace inst tmc_nios2.onchip_memory2_0 -pg 1 -lvl 2 -y 220
 preplace inst tmc_nios2.nios2_gen2_0.reset_bridge -pg 1
-preplace inst tmc_nios2.jtag_uart_0 -pg 1 -lvl 3 -y 170
+preplace inst tmc_nios2.jtag_uart_0 -pg 1 -lvl 3 -y 150
 preplace inst tmc_nios2 -pg 1 -lvl 1 -y 40 -regy -20
-preplace inst tmc_nios2.onchip_flash_0 -pg 1 -lvl 3 -y 70
+preplace inst tmc_nios2.onchip_flash_0 -pg 1 -lvl 3 -y 50
 preplace inst tmc_nios2.nios2_gen2_0.cpu -pg 1
-preplace inst tmc_nios2.timer_0 -pg 1 -lvl 3 -y 270
-preplace inst tmc_nios2.clk_0 -pg 1 -lvl 1 -y 150
-preplace inst tmc_nios2.uart_0 -pg 1 -lvl 2 -y 620
+preplace inst tmc_nios2.timer_0 -pg 1 -lvl 3 -y 250
+preplace inst tmc_nios2.clk_0 -pg 1 -lvl 1 -y 130
+preplace inst tmc_nios2.uart_0 -pg 1 -lvl 2 -y 600
+preplace inst tmc_nios2.rx_char -pg 1 -lvl 3 -y 740
 preplace inst tmc_nios2.nios2_gen2_0.clock_bridge -pg 1
-preplace inst tmc_nios2.nios2_gen2_0 -pg 1 -lvl 2 -y 90
-preplace inst tmc_nios2.spi_0 -pg 1 -lvl 2 -y 500
-preplace inst tmc_nios2.pio_0 -pg 1 -lvl 3 -y 370
-preplace inst tmc_nios2.pio_1 -pg 1 -lvl 3 -y 470
-preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)pio_0.external_connection,(SLAVE)tmc_nios2.pio_0_external_connection) 1 0 3 NJ 410 NJ 410 NJ
-preplace netloc INTERCONNECT<net_container>tmc_nios2</net_container>(SLAVE)jtag_uart_0.avalon_jtag_slave,(SLAVE)sysid_qsys_0.control_slave,(SLAVE)onchip_flash_0.csr,(SLAVE)pio_1.s1,(SLAVE)uart_0.s1,(SLAVE)nios2_gen2_0.debug_mem_slave,(SLAVE)onchip_memory2_0.s1,(SLAVE)pio_0.s1,(MASTER)nios2_gen2_0.data_master,(SLAVE)onchip_flash_0.data,(SLAVE)spi_0.spi_control_port,(MASTER)nios2_gen2_0.instruction_master,(SLAVE)timer_0.s1) 1 1 2 420 450 860
-preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(SLAVE)jtag_uart_0.reset,(SLAVE)nios2_gen2_0.reset,(SLAVE)spi_0.reset,(SLAVE)uart_0.reset,(SLAVE)pio_0.reset,(SLAVE)pio_1.reset,(SLAVE)onchip_flash_0.nreset,(SLAVE)sysid_qsys_0.reset,(MASTER)clk_0.clk_reset,(SLAVE)timer_0.reset,(SLAVE)onchip_memory2_0.reset1) 1 1 2 400 50 840
+preplace inst tmc_nios2.nios2_gen2_0 -pg 1 -lvl 2 -y 70
+preplace inst tmc_nios2.spi_0 -pg 1 -lvl 2 -y 480
+preplace inst tmc_nios2.rx_fifo_empty -pg 1 -lvl 3 -y 940
+preplace inst tmc_nios2.pio_0 -pg 1 -lvl 3 -y 350
+preplace inst tmc_nios2.pio_1 -pg 1 -lvl 3 -y 450
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)uart_0.external_connection,(SLAVE)tmc_nios2.uart_0_external_connection) 1 0 2 NJ 630 NJ
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)pio_0.external_connection,(SLAVE)tmc_nios2.pio_0_external_connection) 1 0 3 NJ 390 NJ 390 NJ
+preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(SLAVE)onchip_flash_0.clk,(SLAVE)uart_0.clk,(SLAVE)pio_0.clk,(SLAVE)onchip_memory2_0.clk1,(SLAVE)jtag_uart_0.clk,(SLAVE)pio_1.clk,(SLAVE)rx_fifo_read.clk,(SLAVE)sysid_qsys_0.clk,(SLAVE)rx_char.clk,(SLAVE)rx_fifo_empty.clk,(SLAVE)nios2_gen2_0.clk,(SLAVE)spi_0.clk,(SLAVE)timer_0.clk,(MASTER)clk_0.clk) 1 1 2 410 30 910
+preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(SLAVE)onchip_flash_0.nreset,(SLAVE)onchip_memory2_0.reset1,(SLAVE)timer_0.reset,(SLAVE)rx_fifo_empty.reset,(SLAVE)rx_char.reset,(SLAVE)pio_1.reset,(SLAVE)pio_0.reset,(SLAVE)spi_0.reset,(SLAVE)nios2_gen2_0.reset,(SLAVE)uart_0.reset,(SLAVE)jtag_uart_0.reset,(SLAVE)sysid_qsys_0.reset,(MASTER)clk_0.clk_reset,(SLAVE)rx_fifo_read.reset) 1 1 2 430 210 850
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.rx_char_external_connection,(SLAVE)rx_char.external_connection) 1 0 3 NJ 770 NJ 770 NJ
 preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.clk,(SLAVE)clk_0.clk_in) 1 0 1 NJ
-preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(MASTER)nios2_gen2_0.irq,(SLAVE)spi_0.irq,(SLAVE)uart_0.irq,(SLAVE)jtag_uart_0.irq,(SLAVE)timer_0.irq) 1 1 2 440 470 800
-preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(MASTER)clk_0.clk,(SLAVE)uart_0.clk,(SLAVE)timer_0.clk,(SLAVE)sysid_qsys_0.clk,(SLAVE)nios2_gen2_0.clk,(SLAVE)spi_0.clk,(SLAVE)jtag_uart_0.clk,(SLAVE)pio_1.clk,(SLAVE)onchip_flash_0.clk,(SLAVE)pio_0.clk,(SLAVE)onchip_memory2_0.clk1) 1 1 2 380 30 880
-preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.uart_0_external_connection,(SLAVE)uart_0.external_connection) 1 0 2 NJ 650 NJ
-preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.pio_1_external_connection,(SLAVE)pio_1.external_connection) 1 0 3 NJ 430 NJ 430 NJ
-preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.reset,(SLAVE)clk_0.clk_in_reset) 1 0 1 NJ
-preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.spi_0_external,(SLAVE)spi_0.external) 1 0 2 NJ 530 NJ
-levelinfo -pg 1 0 170 1100
-levelinfo -hier tmc_nios2 180 210 560 940 1090
+preplace netloc FAN_OUT<net_container>tmc_nios2</net_container>(MASTER)nios2_gen2_0.irq,(SLAVE)spi_0.irq,(SLAVE)uart_0.irq,(SLAVE)jtag_uart_0.irq,(SLAVE)timer_0.irq) 1 1 2 470 450 870
+preplace netloc INTERCONNECT<net_container>tmc_nios2</net_container>(SLAVE)pio_0.s1,(SLAVE)onchip_flash_0.csr,(SLAVE)onchip_memory2_0.s1,(SLAVE)sysid_qsys_0.control_slave,(SLAVE)rx_fifo_empty.s1,(SLAVE)onchip_flash_0.data,(SLAVE)rx_char.s1,(MASTER)nios2_gen2_0.instruction_master,(SLAVE)pio_1.s1,(SLAVE)uart_0.s1,(SLAVE)timer_0.s1,(SLAVE)spi_0.spi_control_port,(SLAVE)jtag_uart_0.avalon_jtag_slave,(SLAVE)rx_fifo_read.s1,(MASTER)nios2_gen2_0.data_master,(SLAVE)nios2_gen2_0.debug_mem_slave) 1 1 2 450 730 890
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.rx_fifo_read_external_connection,(SLAVE)rx_fifo_read.external_connection) 1 0 3 NJ 870 NJ 870 NJ
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)clk_0.clk_in_reset,(SLAVE)tmc_nios2.reset) 1 0 1 NJ
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.rx_fifo_empty_external_connection,(SLAVE)rx_fifo_empty.external_connection) 1 0 3 NJ 970 NJ 970 NJ
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)tmc_nios2.spi_0_external,(SLAVE)spi_0.external) 1 0 2 NJ 510 NJ
+preplace netloc EXPORT<net_container>tmc_nios2</net_container>(SLAVE)pio_1.external_connection,(SLAVE)tmc_nios2.pio_1_external_connection) 1 0 3 NJ 750 NJ 750 NJ
+levelinfo -pg 1 0 200 1130
+levelinfo -hier tmc_nios2 210 240 590 970 1120

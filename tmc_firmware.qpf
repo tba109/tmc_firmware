@@ -29,3 +29,5 @@ DATE = "16:14:41  January 29, 2016"
 # Revisions
 
 PROJECT_REVISION = "tmc_firmware"
+
+set_global_assignment -name SEARCH_PATH "./i2c_opencores/"

@@ -15,6 +15,7 @@
 #include "altera_avalon_timer_regs.h"
 #include <fcntl.h>
 #include <string.h>
+#include "i2c_opencores.h"
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -22,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 0
+#define MINOR_VERSION_NUMBER 1
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -39,6 +40,12 @@
 
 // Calibration 
 #define CALIBRATE 8
+
+// For the RX FIFO
+#define RX_EOC 0x0A // RX end of command
+
+// For i2c_opencores SCL speed
+#define I2C_SCL_SPEED 100000
 
 // Constants
 const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
@@ -466,6 +473,9 @@ int my_getchar()
 // this approach, and probably call the "normal" function once
 // I have the larger chip on the production board with the
 // normal c library. 
+// Fri Feb 26 15:39:46 EST 2016
+// TBA_NOTE: I ended up abandoning this method because I was having trouble with the QSYS
+// UART having only 64B, and I was overflowing it. 
 unsigned int read_serial(char * str1)
 {
   unsigned int nbytes = 0;
@@ -484,6 +494,44 @@ unsigned int read_serial(char * str1)
     }
   str1[nbytes] = NULL;
   return nbytes;
+}
+
+// Read a single character from the RX FIFO
+char read_rx_fifo_char()
+{
+  unsigned char x = 1;
+  IOWR_ALTERA_AVALON_PIO_DATA(RX_FIFO_READ_BASE, (unsigned char)(x)); // set read signal (note: FPGA internally positive edge clocks this)
+  x = 0;
+  IOWR_ALTERA_AVALON_PIO_DATA(RX_FIFO_READ_BASE, (unsigned char)(x)); // clear read signal (note: FPGA internally positive edge clocks this)
+  return IORD_ALTERA_AVALON_PIO_DATA(RX_CHAR_BASE);
+  // TBA_NOTE: was here!  
+}
+
+// Readout the rx fifo contents
+unsigned int read_rx_fifo(char * str1)
+{
+  unsigned int nbytes = 0;
+  char c;
+  str1[0] = NULL;
+  if( !IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE) ) // Check if receive fifo is not empty
+    {
+      str1[nbytes] = read_rx_fifo_char();
+      nbytes++;
+      while((str1[nbytes] = read_rx_fifo_char()) != RX_EOC) 
+      {
+	nbytes++;
+      }
+    }
+  str1[nbytes] = NULL;
+  return nbytes;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Execute charaters commands on the I2C bus
+unsigned int execute_cmd(char * str1,unsigned int nbytes)
+{
+  
+  return 0;
 }
 
 int main()
@@ -525,10 +573,15 @@ int main()
   // RUN, generate IRQ
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
 
-  // Setup stdin for non-blocking input.
-  int flags = fcntl(0,F_GETFL,0);
-  flags |= O_NONBLOCK;
-  fcntl(0,F_SETFL,flags);
+  /* // Setup stdin for non-blocking input. */
+  /* int flags = fcntl(0,F_GETFL,0); */
+  /* flags |= O_NONBLOCK; */
+  /* fcntl(0,F_SETFL,flags); */
+
+  // Setup the i2c_opencores interface
+  I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ,I2C_SCL_SPEED);
+  printf("I2C initialized\n");
+  
 
   /////////////////////////////////////
   // Measurement loop
@@ -539,9 +592,13 @@ int main()
       // This isn't available with the small c library
       // scanf("%s",&str1);
             
-      /* // This should work */
+      /* // This keeps having buffer overflow issues */
       /* while(read_serial(str1)) */
       /* 	printf("Command: %s\n",str1); */
+
+      // This keeps having buffer overflow issues
+      while(read_rx_fifo(str1))
+      	printf("Command: %s\n",str1);
 
       for(chan = 0; chan < N_CHAN; chan++)
       	{
@@ -572,7 +629,9 @@ int main()
       /* for(cal_type = 0; cal_type < N_CAL_HK; cal_type++) */
       /* 	switch_cal_hk(cal_type); */
 
-      // Read from the I2C bus and set the heater registers
+      // Read from the RX line and send the appropriate I2C commands
+      nbytes = read_rx_fifo(str1);
+      printf("Command(s) Received:\n%s\n",str1);
 
       // Wait for control loop to finish (give yourself 3 seconds every time)
       while(!loop_done); 

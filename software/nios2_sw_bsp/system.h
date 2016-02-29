@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
  * SOPC Builder design path: ../../tmc_nios2.sopcinfo
  *
- * Generated: Fri Feb 26 15:32:59 EST 2016
+ * Generated: Mon Feb 29 15:08:03 EST 2016
  */
 
 /*
@@ -142,6 +142,7 @@
 #define __ALTERA_AVALON_UART
 #define __ALTERA_NIOS2_GEN2
 #define __ALTERA_ONCHIP_FLASH
+#define __I2C_OPENCORES
 
 
 /*
@@ -189,6 +190,20 @@
 #define ALT_MAX_FD 32
 #define ALT_SYS_CLK none
 #define ALT_TIMESTAMP_CLK none
+
+
+/*
+ * i2c_opencores_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_i2c_opencores_0 i2c_opencores
+#define I2C_OPENCORES_0_BASE 0x40960
+#define I2C_OPENCORES_0_IRQ 4
+#define I2C_OPENCORES_0_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define I2C_OPENCORES_0_NAME "/dev/i2c_opencores_0"
+#define I2C_OPENCORES_0_SPAN 32
+#define I2C_OPENCORES_0_TYPE "i2c_opencores"
 
 
 /*
@@ -478,7 +493,7 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1456516783
+#define SYSID_QSYS_0_TIMESTAMP 1456776288
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
 
 

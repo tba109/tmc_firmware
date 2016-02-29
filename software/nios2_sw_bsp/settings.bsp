@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Feb 26, 2016 3:32:59 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1456518779106</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Feb 29, 2016 3:08:02 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1456776482893</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp</BspGeneratedLocation>
         <BspSettingsFile>/home/tyler/epds/tmc_firmware/software/nios2_sw_bsp/settings.bsp</BspSettingsFile>
         <SopcDesignFile>../../tmc_nios2.sopcinfo</SopcDesignFile>
@@ -974,6 +974,12 @@
                 <slaveDescriptor>rx_fifo_empty</slaveDescriptor>
                 <addressRange>0x00040940 - 0x0004094F</addressRange>
                 <addressSpan>16</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>i2c_opencores_0</slaveDescriptor>
+                <addressRange>0x00040960 - 0x0004097F</addressRange>
+                <addressSpan>32</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

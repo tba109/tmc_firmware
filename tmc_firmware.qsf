@@ -141,4 +141,11 @@ set_global_assignment -name CDF_FILE output_files/Chain1.cdf
 set_global_assignment -name CDF_FILE output_files/Chain2.cdf
 set_global_assignment -name QIP_FILE tmc_pll.qip
 set_global_assignment -name QIP_FILE fifo_1024_8.qip
+set_global_assignment -name IP_SEARCH_PATHS /home/tyler/epds/tmc_firmware/i2c_opencores
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to sda_pad_io
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to scl_pad_io
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to scl_pad_io
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to sda_pad_io
+set_location_assignment PIN_29 -to sda_pad_io
+set_location_assignment PIN_28 -to scl_pad_io
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

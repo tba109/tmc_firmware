@@ -142,7 +142,8 @@ ACDS_VERSION := 15.1
 ELF := tmc_temperature_readout.elf
 
 # Paths to C, C++, and assembly source files.
-C_SRCS := tmc_temperature_readout_main.c
+C_SRCS += tmc_temperature_readout_main.c
+C_SRCS += i2c_opencores.c
 CXX_SRCS :=
 ASM_SRCS :=
 

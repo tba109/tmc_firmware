@@ -97,8 +97,8 @@ RESERVED_INPUT_WITH_WEAK_PULLUP : 24        :        :                   :      
 RESERVED_INPUT_WITH_WEAK_PULLUP : 25        :        :                   :         : 1B        :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 26        :        :                   :         : 2         :                
 R_CLK                        : 27        : input  : 3.3-V LVTTL       :         : 2         : Y              
-RESERVED_INPUT_WITH_WEAK_PULLUP : 28        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : 29        :        :                   :         : 2         :                
+scl_pad_io                   : 28        : output : 3.3-V LVTTL       :         : 2         : Y              
+sda_pad_io                   : 29        : bidir  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : 30        :        :                   :         : 2         :                
 VCCIO2                       : 31        : power  :                   : 3.3V    : 2         :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : 32        :        :                   :         : 2         :                

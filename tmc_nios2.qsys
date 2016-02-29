@@ -17,6 +17,22 @@
          type = "int";
       }
    }
+   element i2c_opencores_0
+   {
+      datum _sortIndex
+      {
+         value = "14";
+         type = "int";
+      }
+   }
+   element i2c_opencores_0.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "264544";
+         type = "String";
+      }
+   }
    element jtag_uart_0
    {
       datum _sortIndex
@@ -257,6 +273,11 @@ proc compose {} {
 }]]></instanceScript>
  <interface name="clk" internal="clk_0.clk_in" type="clock" dir="end" />
  <interface
+   name="i2c_opencores_0_export"
+   internal="i2c_opencores_0.export"
+   type="conduit"
+   dir="end" />
+ <interface
    name="pio_0_external_connection"
    internal="pio_0.external_connection"
    type="conduit"
@@ -298,6 +319,11 @@ proc compose {} {
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
+ <module
+   name="i2c_opencores_0"
+   kind="i2c_opencores"
+   version="13.0"
+   enabled="1" />
  <module
    name="jtag_uart_0"
    kind="altera_avalon_jtag_uart"
@@ -341,7 +367,7 @@ proc compose {} {
   <parameter name="dataAddrWidth" value="20" />
   <parameter name="dataMasterHighPerformanceAddrWidth" value="1" />
   <parameter name="dataMasterHighPerformanceMapParam" value="" />
-  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /><slave name='timer_0.s1' start='0x40900' end='0x40920' type='altera_avalon_timer.s1' /><slave name='rx_char.s1' start='0x40920' end='0x40930' type='altera_avalon_pio.s1' /><slave name='rx_fifo_read.s1' start='0x40930' end='0x40940' type='altera_avalon_pio.s1' /><slave name='rx_fifo_empty.s1' start='0x40940' end='0x40950' type='altera_avalon_pio.s1' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /><slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /></address-map>]]></parameter>
+  <parameter name="dataSlaveMapParam"><![CDATA[<address-map><slave name='onchip_memory2_0.s1' start='0x0' end='0x8000' type='altera_avalon_onchip_memory2.s1' /><slave name='nios2_gen2_0.debug_mem_slave' start='0x40000' end='0x40800' type='altera_nios2_gen2.debug_mem_slave' /><slave name='sysid_qsys_0.control_slave' start='0x40800' end='0x40808' type='altera_avalon_sysid_qsys.control_slave' /><slave name='jtag_uart_0.avalon_jtag_slave' start='0x40810' end='0x40818' type='altera_avalon_jtag_uart.avalon_jtag_slave' /><slave name='spi_0.spi_control_port' start='0x40820' end='0x40840' type='altera_avalon_spi.spi_control_port' /><slave name='uart_0.s1' start='0x40840' end='0x40860' type='altera_avalon_uart.s1' /><slave name='pio_0.s1' start='0x40860' end='0x40870' type='altera_avalon_pio.s1' /><slave name='pio_1.s1' start='0x40870' end='0x40880' type='altera_avalon_pio.s1' /><slave name='timer_0.s1' start='0x40900' end='0x40920' type='altera_avalon_timer.s1' /><slave name='rx_char.s1' start='0x40920' end='0x40930' type='altera_avalon_pio.s1' /><slave name='rx_fifo_read.s1' start='0x40930' end='0x40940' type='altera_avalon_pio.s1' /><slave name='rx_fifo_empty.s1' start='0x40940' end='0x40950' type='altera_avalon_pio.s1' /><slave name='i2c_opencores_0.avalon_slave_0' start='0x40960' end='0x40980' type='i2c_opencores.avalon_slave_0' /><slave name='onchip_flash_0.data' start='0x80000' end='0x9C800' type='altera_onchip_flash.data' /><slave name='onchip_flash_0.csr' start='0xA0000' end='0xA0008' type='altera_onchip_flash.csr' /></address-map>]]></parameter>
   <parameter name="data_master_high_performance_paddr_base" value="0" />
   <parameter name="data_master_high_performance_paddr_size" value="0" />
   <parameter name="data_master_paddr_base" value="0" />
@@ -387,7 +413,7 @@ proc compose {} {
   <parameter name="instruction_master_high_performance_paddr_size" value="0" />
   <parameter name="instruction_master_paddr_base" value="0" />
   <parameter name="instruction_master_paddr_size" value="0" />
-  <parameter name="internalIrqMaskSystemInfo" value="15" />
+  <parameter name="internalIrqMaskSystemInfo" value="31" />
   <parameter name="io_regionbase" value="0" />
   <parameter name="io_regionsize" value="0" />
   <parameter name="master_addr_map" value="false" />
@@ -690,6 +716,15 @@ proc compose {} {
    kind="avalon"
    version="15.1"
    start="nios2_gen2_0.data_master"
+   end="i2c_opencores_0.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x00040960" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="15.1"
+   start="nios2_gen2_0.data_master"
    end="sysid_qsys_0.control_slave">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x00040800" />
@@ -852,6 +887,18 @@ proc compose {} {
    start="clk_0.clk"
    end="onchip_memory2_0.clk1" />
  <connection
+   kind="clock"
+   version="15.1"
+   start="clk_0.clk"
+   end="i2c_opencores_0.clock" />
+ <connection
+   kind="interrupt"
+   version="15.1"
+   start="nios2_gen2_0.irq"
+   end="i2c_opencores_0.interrupt_sender">
+  <parameter name="irqNumber" value="4" />
+ </connection>
+ <connection
    kind="interrupt"
    version="15.1"
    start="nios2_gen2_0.irq"
@@ -879,6 +926,11 @@ proc compose {} {
    end="timer_0.irq">
   <parameter name="irqNumber" value="3" />
  </connection>
+ <connection
+   kind="reset"
+   version="15.1"
+   start="clk_0.clk_reset"
+   end="i2c_opencores_0.clock_reset" />
  <connection
    kind="reset"
    version="15.1"

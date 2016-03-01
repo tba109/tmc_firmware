@@ -68,7 +68,7 @@ module tmc_firmware_top
 	  
    // Mon Feb 29 14:09:49 EST 2016
    // I2C bus for the LTC2605 on the heater boards
-   output scl_pad_io,
+   inout scl_pad_io,
    inout sda_pad_io,
    
    output LED2, // pin 134
@@ -90,6 +90,10 @@ module tmc_firmware_top
    // Configuraiton indicator
    config_ind CONFIG_IND0(.clk(logic_clk),.rst_n(logic_clk_rst_n),.blink_configed(LED1));
 
+   // Debugging!
+   // assign scl_pad_io = LED1;
+   // assign sda_pad_io = LED1;
+      
    // The processor (most everything is in here)
    reg         qsys_miso;
    wire        qsys_mosi;

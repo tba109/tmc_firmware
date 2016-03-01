@@ -1,4 +1,4 @@
-// (C) 2001-2015 Altera Corporation. All rights reserved.
+// (C) 2001-2016 Altera Corporation. All rights reserved.
 // Your use of Altera Corporation's design tools, logic functions and other 
 // software and tools, and its AMPP partner logic functions, and any output 
 // files any of the foregoing (including device programming or simulation 
@@ -20,7 +20,7 @@
 // Altera Identification hub
 //
 // Parameters
-//   DESIGN_HASH   : 113c39a2a8b272787f23
+//   DESIGN_HASH   : efd0813021f161a87344
 //   COUNT         : 1
 //   ROM_WIDTHS    : 4
 //   LATENCIES     : 0
@@ -39,7 +39,7 @@ module alt_sld_fab_alt_sld_fab_ident
 );
 
 
-wire [127:0] data_0 = { mixed, 12'h0, 32'h0, 80'h113c39a2a8b272787f23 };
+wire [127:0] data_0 = { mixed, 12'h0, 32'h0, 80'hefd0813021f161a87344 };
 
 reg [3:0] result_0;
 always @(address_0 or data_0) begin

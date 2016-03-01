@@ -1,6 +1,6 @@
 Flow report for tmc_firmware
-Mon Feb 29 17:54:53 2016
-Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
+Tue Mar  1 15:03:49 2016
+Quartus Prime Version 15.1.2 Build 193 02/01/2016 SJ Lite Edition
 
 
 ---------------------
@@ -21,7 +21,7 @@ Quartus Prime Version 15.1.0 Build 185 10/21/2015 SJ Lite Edition
 ----------------
 ; Legal Notice ;
 ----------------
-Copyright (C) 1991-2015 Altera Corporation. All rights reserved.
+Copyright (C) 1991-2016 Altera Corporation. All rights reserved.
 Your use of Altera Corporation's design tools, logic functions 
 and other software and tools, and its AMPP partner logic 
 functions, and any output files from any of the foregoing 
@@ -41,20 +41,20 @@ agreement for further details.
 +----------------------------------------------------------------------------------+
 ; Flow Summary                                                                     ;
 +------------------------------------+---------------------------------------------+
-; Flow Status                        ; Successful - Mon Feb 29 17:54:34 2016       ;
-; Quartus Prime Version              ; 15.1.0 Build 185 10/21/2015 SJ Lite Edition ;
+; Flow Status                        ; Successful - Tue Mar  1 15:03:36 2016       ;
+; Quartus Prime Version              ; 15.1.2 Build 193 02/01/2016 SJ Lite Edition ;
 ; Revision Name                      ; tmc_firmware                                ;
 ; Top-level Entity Name              ; tmc_firmware_top                            ;
 ; Family                             ; MAX 10                                      ;
 ; Device                             ; 10M08SAE144C8GES                            ;
 ; Timing Models                      ; Final                                       ;
-; Total logic elements               ; 3,335 / 8,064 ( 41 % )                      ;
-;     Total combinational functions  ; 3,140 / 8,064 ( 39 % )                      ;
-;     Dedicated logic registers      ; 1,817 / 8,064 ( 23 % )                      ;
-; Total registers                    ; 1817                                        ;
+; Total logic elements               ; 3,983 / 8,064 ( 49 % )                      ;
+;     Total combinational functions  ; 3,570 / 8,064 ( 44 % )                      ;
+;     Dedicated logic registers      ; 2,317 / 8,064 ( 29 % )                      ;
+; Total registers                    ; 2317                                        ;
 ; Total pins                         ; 37 / 101 ( 37 % )                           ;
 ; Total virtual pins                 ; 0                                           ;
-; Total memory bits                  ; 277,504 / 387,072 ( 72 % )                  ;
+; Total memory bits                  ; 279,296 / 387,072 ( 72 % )                  ;
 ; Embedded Multiplier 9-bit elements ; 0 / 48 ( 0 % )                              ;
 ; Total PLLs                         ; 1 / 1 ( 100 % )                             ;
 ; UFM blocks                         ; 1 / 1 ( 100 % )                             ;
@@ -67,41 +67,69 @@ agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 02/29/2016 17:52:47 ;
+; Start date & time ; 03/01/2016 15:01:55 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; tmc_firmware        ;
 +-------------------+---------------------+
 
 
-+---------------------------------------------------------------------------------------------------------------------------------------------------+
-; Flow Non-Default Global Settings                                                                                                                  ;
-+-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
-; Assignment Name                     ; Value                                                       ; Default Value ; Entity Name      ; Section Id ;
-+-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
-; COMPILER_SIGNATURE_ID               ; 207732451923946.145678636719921                             ; --            ; --               ; --         ;
-; FLOW_ENABLE_POWER_ANALYZER          ; On                                                          ; Off           ; --               ; --         ;
-; IP_SEARCH_PATHS                     ; /home/tyler/epds/tmc_firmware/i2c_opencores                 ; --            ; --               ; --         ;
-; MAX_CORE_JUNCTION_TEMP              ; 85                                                          ; --            ; --               ; --         ;
-; MIN_CORE_JUNCTION_TEMP              ; 0                                                           ; --            ; --               ; --         ;
-; MISC_FILE                           ; tmc_nios2/synthesis/../tmc_nios2.cmp                        ; --            ; --               ; --         ;
-; MISC_FILE                           ; tmc_nios2/synthesis/../../tmc_nios2.qsys                    ; --            ; --               ; --         ;
-; MISC_FILE                           ; tmc_pll_bb.v                                                ; --            ; --               ; --         ;
-; MISC_FILE                           ; tmc_pll.ppf                                                 ; --            ; --               ; --         ;
-; MISC_FILE                           ; fifo_1024_8_bb.v                                            ; --            ; --               ; --         ;
-; PARTITION_COLOR                     ; 16764057                                                    ; --            ; tmc_firmware_top ; Top        ;
-; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                                       ; --            ; tmc_firmware_top ; Top        ;
-; PARTITION_NETLIST_TYPE              ; SOURCE                                                      ; --            ; tmc_firmware_top ; Top        ;
-; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                                         ; --            ; --               ; --         ;
-; POWER_DEFAULT_INPUT_IO_TOGGLE_RATE  ; 12.5 %                                                      ; 12.5%         ; --               ; --         ;
-; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW                       ; --            ; --               ; --         ;
-; PROJECT_OUTPUT_DIRECTORY            ; output_files                                                ; --            ; --               ; --         ;
-; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.regmap                        ; --            ; --               ; --         ;
-; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.debuginfo                     ; --            ; --               ; --         ;
-; SLD_INFO                            ; QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1456776288 ; --            ; tmc_nios2        ; --         ;
-; SOPCINFO_FILE                       ; tmc_nios2/synthesis/../../tmc_nios2.sopcinfo                ; --            ; --               ; --         ;
-; SYNTHESIS_ONLY_QIP                  ; On                                                          ; --            ; --               ; --         ;
-; TOP_LEVEL_ENTITY                    ; tmc_firmware_top                                            ; tmc_firmware  ; --               ; --         ;
-+-------------------------------------+-------------------------------------------------------------+---------------+------------------+------------+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Flow Non-Default Global Settings                                                                                                                                              ;
++-------------------------------------+--------------------------------------------------------------------------------+---------------+---------------------+------------------+
+; Assignment Name                     ; Value                                                                          ; Default Value ; Entity Name         ; Section Id       ;
++-------------------------------------+--------------------------------------------------------------------------------+---------------+---------------------+------------------+
+; COMPILER_SIGNATURE_ID               ; 207732451923946.145686251514578                                                ; --            ; --                  ; --               ;
+; ENABLE_SIGNALTAP                    ; On                                                                             ; --            ; --                  ; --               ;
+; FLOW_ENABLE_POWER_ANALYZER          ; On                                                                             ; Off           ; --                  ; --               ;
+; IP_SEARCH_PATHS                     ; /home/tyler/epds/tmc_firmware/i2c_opencores                                    ; --            ; --                  ; --               ;
+; MAX_CORE_JUNCTION_TEMP              ; 85                                                                             ; --            ; --                  ; --               ;
+; MESSAGE_DISABLE                     ; 332060                                                                         ; --            ; altera_onchip_flash ; --               ;
+; MIN_CORE_JUNCTION_TEMP              ; 0                                                                              ; --            ; --                  ; --               ;
+; MISC_FILE                           ; tmc_nios2/synthesis/../tmc_nios2.cmp                                           ; --            ; --                  ; --               ;
+; MISC_FILE                           ; tmc_nios2/synthesis/../../tmc_nios2.qsys                                       ; --            ; --                  ; --               ;
+; MISC_FILE                           ; tmc_pll_bb.v                                                                   ; --            ; --                  ; --               ;
+; MISC_FILE                           ; tmc_pll.ppf                                                                    ; --            ; --                  ; --               ;
+; MISC_FILE                           ; fifo_1024_8_bb.v                                                               ; --            ; --                  ; --               ;
+; PARTITION_COLOR                     ; 16764057                                                                       ; --            ; tmc_firmware_top    ; Top              ;
+; PARTITION_FITTER_PRESERVATION_LEVEL ; PLACEMENT_AND_ROUTING                                                          ; --            ; tmc_firmware_top    ; Top              ;
+; PARTITION_NETLIST_TYPE              ; SOURCE                                                                         ; --            ; tmc_firmware_top    ; Top              ;
+; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                                                            ; --            ; --                  ; --               ;
+; POWER_DEFAULT_INPUT_IO_TOGGLE_RATE  ; 12.5 %                                                                         ; 12.5%         ; --                  ; --               ;
+; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW                                          ; --            ; --                  ; --               ;
+; PROJECT_OUTPUT_DIRECTORY            ; output_files                                                                   ; --            ; --                  ; --               ;
+; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.regmap                                           ; --            ; --                  ; --               ;
+; SLD_FILE                            ; tmc_nios2/synthesis/tmc_nios2.debuginfo                                        ; --            ; --                  ; --               ;
+; SLD_FILE                            ; db/stp1_auto_stripped.stp                                                      ; --            ; --                  ; --               ;
+; SLD_INFO                            ; QSYS_NAME tmc_nios2 HAS_SOPCINFO 1 GENERATION_ID 1456855338                    ; --            ; tmc_nios2           ; --               ;
+; SLD_NODE_CREATOR_ID                 ; 110                                                                            ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_ENTITY_NAME                ; sld_signaltap                                                                  ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_RAM_BLOCK_TYPE=AUTO                                                        ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_DATA_BITS=14                                                               ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_BITS=14                                                            ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STORAGE_QUALIFIER_BITS=14                                                  ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_INFO=805334528                                                        ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_POWER_UP_TRIGGER=0                                                         ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STORAGE_QUALIFIER_INVERSION_MASK_LENGTH=0                                  ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SEGMENT_SIZE=128                                                           ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ATTRIBUTE_MEM_MODE=OFF                                                     ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STATE_FLOW_USE_GENERATED=0                                                 ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STATE_BITS=11                                                              ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_BUFFER_FULL_STOP=1                                                         ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_CURRENT_RESOURCE_WIDTH=1                                                   ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_INCREMENTAL_ROUTING=1                                                      ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_LEVEL=1                                                            ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SAMPLE_DEPTH=128                                                           ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_IN_ENABLED=0                                                       ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_LEVEL_PIPELINE=1                                                   ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_INVERSION_MASK=000000000000000000000                                       ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_INVERSION_MASK_LENGTH=21                                                   ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ADVANCED_TRIGGER_ENTITY=sld_reserved_tmc_firmware_auto_signaltap_0_1_5729, ; --            ; --                  ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ENABLE_ADVANCED_TRIGGER=1                                                  ; --            ; --                  ; auto_signaltap_0 ;
+; SOPCINFO_FILE                       ; tmc_nios2/synthesis/../../tmc_nios2.sopcinfo                                   ; --            ; --                  ; --               ;
+; SYNTHESIS_ONLY_QIP                  ; On                                                                             ; --            ; --                  ; --               ;
+; TOP_LEVEL_ENTITY                    ; tmc_firmware_top                                                               ; tmc_firmware  ; --                  ; --               ;
+; USE_SIGNALTAP_FILE                  ; stp1.stp                                                                       ; --            ; --                  ; --               ;
++-------------------------------------+--------------------------------------------------------------------------------+---------------+---------------------+------------------+
 
 
 +-------------------------------------------------------------------------------------------------------------------------------+
@@ -109,12 +137,12 @@ agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:40     ; 1.0                     ; 1383 MB             ; 00:01:17                           ;
-; Fitter                    ; 00:00:33     ; 1.0                     ; 1412 MB             ; 00:00:34                           ;
-; Assembler                 ; 00:00:01     ; 1.0                     ; 1023 MB             ; 00:00:01                           ;
-; PowerPlay Power Analyzer  ; 00:00:13     ; 1.0                     ; 1108 MB             ; 00:00:12                           ;
-; TimeQuest Timing Analyzer ; 00:00:14     ; 1.0                     ; 1082 MB             ; 00:00:13                           ;
-; Total                     ; 00:01:41     ; --                      ; --                  ; 00:02:17                           ;
+; Analysis & Synthesis      ; 00:00:48     ; 1.0                     ; 1409 MB             ; 00:01:26                           ;
+; Fitter                    ; 00:00:28     ; 1.4                     ; 1511 MB             ; 00:00:41                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 1063 MB             ; 00:00:02                           ;
+; PowerPlay Power Analyzer  ; 00:00:09     ; 1.6                     ; 1174 MB             ; 00:00:14                           ;
+; TimeQuest Timing Analyzer ; 00:00:09     ; 1.6                     ; 1145 MB             ; 00:00:14                           ;
+; Total                     ; 00:01:36     ; --                      ; --                  ; 00:02:37                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

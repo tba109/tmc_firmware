@@ -3,7 +3,12 @@
 #include "i2c_opencores_regs.h"
 #include "i2c_opencores.h"
 
-// #define I2C_DEBUG
+
+#define I2C_DEBUG
+#ifdef I2C_DEBUG
+#include <stdio.h>
+#endif
+
 //int I2C_init(alt_u32 base,alt_u32 clk, alt_u32 speed)
 //int I2C_start(alt_u32 base, alt_u32 add, alt_u32 write);
 //alt_u32 I2C_read(alt_u32 base);
@@ -27,9 +32,10 @@ inputs
 *****************************************************************/
 void I2C_init(alt_u32 base,alt_u32 clk,alt_u32 speed)
 {
+
   alt_u32 prescale = (clk/( 5 * speed))-1;
 #ifdef  I2C_DEBUG
-        printf(" Initializing  I2C at 0x%x, \n\twith clock speed 0x%x \n\tand SCL speed 0x%x \n\tand prescale 0x%x\n",base,clk,speed,prescale);
+        printf("\nInitializing I2C at 0x%x, \n\twith clock speed %d \n\tand SCL speed %d \n\tand prescale %d\n\t",base,clk,speed,prescale);
 #endif
   IOWR_I2C_OPENCORES_CTR(base, 0x00); /* turn off the core*/
 
@@ -59,7 +65,7 @@ return value
 int I2C_start(alt_u32 base, alt_u32 add, alt_u32 read)
 {
 #ifdef  I2C_DEBUG
-        printf(" Start  I2C at 0x%x, \n\twith address 0x%x \n\tand read 0x%x \n\tand prescale 0x%x\n",base,add,read);
+        printf("Start  I2C at 0x%x, \n\twith address 0x%x \n\tand read 0x%x \n\tand prescale 0x%x\n",base,add,read);
 #endif
 
           /* transmit the address shifted by one and the read/write bit*/

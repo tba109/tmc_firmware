@@ -88,15 +88,15 @@
 					"strict" : false
 				},
 				{
-					"name" : "scl_pad_io",
-					"strict" : false
-				},
-				{
 					"name" : "LED2",
 					"strict" : false
 				},
 				{
 					"name" : "LED1",
+					"strict" : false
+				},
+				{
+					"name" : "scl_pad_io",
 					"strict" : false
 				},
 				{

@@ -44,7 +44,7 @@
 // For the RX FIFO
 #define RX_EOC 0x0A // RX end of command
 
-// For i2c_opencores SCL speed
+// For i2c_opencores
 #define I2C_SCL_SPEED 100000
 
 // Constants
@@ -534,6 +534,22 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
   return 0;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+// Write the DAC word to the I2C bus. 
+// 
+unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned short data)
+{
+  printf("--Write the start\n");
+  I2C_start(I2C_OPENCORES_0_BASE,board,0);
+  printf("--Write first byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(0x03 << 4) | (dac & 0x0F),0); // write/update register
+  printf("--Write second byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00)>>8,0);
+  printf("--write third byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00),1);
+  return 0;
+}
+
 int main()
 {
   unsigned char x = 0xFF;
@@ -546,6 +562,7 @@ int main()
   int * ptr;
   char str1[1024];
   char c1;
+  unsigned short i2c_short = 0x00; // just a test value
   loop_done = 0;
 
   ////////////////////////////////////
@@ -553,6 +570,7 @@ int main()
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x)); // enable I/O interface
   printf("-----------------------------------------------------\n");
   printf("TMC firmware version %d.%d\n",MAJOR_VERSION_NUMBER,MINOR_VERSION_NUMBER);
+
   // nbytes = ad7124_read_reg(0,AD7124_ID_REG,&data,1);
   // printf("ADC %d ID register has 0x%2X\n",0,data);
   
@@ -581,7 +599,6 @@ int main()
   // Setup the i2c_opencores interface
   I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ,I2C_SCL_SPEED);
   printf("I2C initialized\n");
-  
 
   /////////////////////////////////////
   // Measurement loop
@@ -596,47 +613,55 @@ int main()
       /* while(read_serial(str1)) */
       /* 	printf("Command: %s\n",str1); */
 
-      // This keeps having buffer overflow issues
-      while(read_rx_fifo(str1))
-      	printf("Command: %s\n",str1);
+      /* // This has a larger buffer */
+      /* while(read_rx_fifo(str1)) */
+      /* 	printf("Command: %s\n",str1); */
 
-      for(chan = 0; chan < N_CHAN; chan++)
-      	{
-    	  // Setup the conversions for the 2N2222
-    	  for(adc = 0; adc < N_ADC; adc++)
-    	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222);
+      /* for(chan = 0; chan < N_CHAN; chan++) */
+      /* 	{ */
+      /* 	  // Setup the conversions for the 2N2222 */
+      /* 	  for(adc = 0; adc < N_ADC; adc++) */
+      /* 	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222); */
 	  
-    	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
-    	  usleep(USLEEP_160MS);
+      /* 	  // Wait for the conversions to complete (should take 133ms, wait 160ms) */
+      /* 	  usleep(USLEEP_160MS); */
 	  
-    	  // Read the data conversion register
-    	  for(adc = 0; adc < N_ADC; adc++)
-    	    {
-    	      data = 0;
-    	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-    	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
-    	      data_arr_2n2222[adc][chan] = data;
-    	    }
-    	}
-      print_table(data_arr_2n2222);
-      // print_list(data_arr_2n2222);
+      /* 	  // Read the data conversion register */
+      /* 	  for(adc = 0; adc < N_ADC; adc++) */
+      /* 	    { */
+      /* 	      data = 0; */
+      /* 	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3); */
+      /* 	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data); */
+      /* 	      data_arr_2n2222[adc][chan] = data; */
+      /* 	    } */
+      /* 	} */
+      /* print_table(data_arr_2n2222); */
+      /* // print_list(data_arr_2n2222); */
       
-      // Do calibraiton and housekeeping incrementally
-      switch_cal_hk(cal_type);
-      cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;
+      /* // Do calibraiton and housekeeping incrementally */
+      /* switch_cal_hk(cal_type); */
+      /* cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1; */
       
-      // This does full housekeeping 
-      /* for(cal_type = 0; cal_type < N_CAL_HK; cal_type++) */
-      /* 	switch_cal_hk(cal_type); */
+      /* // This does full housekeeping  */
+      /* /\* for(cal_type = 0; cal_type < N_CAL_HK; cal_type++) *\/ */
+      /* /\* 	switch_cal_hk(cal_type); *\/ */
 
-      // Read from the RX line and send the appropriate I2C commands
-      nbytes = read_rx_fifo(str1);
-      printf("Command(s) Received:\n%s\n",str1);
+      /* // Read from the RX line and send the appropriate I2C commands */
+      /* nbytes = read_rx_fifo(str1); */
+      /* printf("Command(s) Received:\n%s\n",str1); */
 
       // Wait for control loop to finish (give yourself 3 seconds every time)
-      while(!loop_done); 
+      while(!loop_done);
       loop_done = 0;
-      // printf("---------------------------------\n");
+      printf("---------------------------------\n");
+      
+      
+      // i2c_short++;
+      i2c_short = i2c_short + 8191;
+      write_ltc2605(0x43,0,i2c_short);
+      // i2c_short = 0x01 << i2c_pos;
+      printf("i2c_short = %d\n",i2c_short);
+      // i2c_pos = (i2c_pos + 1)%8;
     }
   return 0;
 }

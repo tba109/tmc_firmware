@@ -7,30 +7,33 @@ fsm.S_SHIFT 0 1 0 1
 fsm.S_STOP 1 0 0 1 
 
 State Machine - |tmc_firmware_top|tmc_nios2:u0|altera_onchip_flash:onchip_flash_0|altera_onchip_flash_avmm_data_controller:avmm_data_controller|read_state
-Name read_state.READ_STATE_CLEAR read_state.READ_STATE_FINAL read_state.READ_STATE_READY read_state.READ_STATE_DUMMY read_state.READ_STATE_SETUP read_state.READ_STATE_IDLE 
-read_state.READ_STATE_IDLE 0 0 0 0 0 0 
-read_state.READ_STATE_SETUP 0 0 0 0 1 1 
-read_state.READ_STATE_DUMMY 0 0 0 1 0 1 
-read_state.READ_STATE_READY 0 0 1 0 0 1 
-read_state.READ_STATE_FINAL 0 1 0 0 0 1 
-read_state.READ_STATE_CLEAR 1 0 0 0 0 1 
+Name read_state.READ_STATE_CLEAR read_state.READ_STATE_FINAL read_state.READ_STATE_READY read_state.READ_STATE_DUMMY read_state.READ_STATE_SETUP read_state.READ_STATE_ADDR read_state.READ_STATE_IDLE 
+read_state.READ_STATE_IDLE 0 0 0 0 0 0 0 
+read_state.READ_STATE_ADDR 0 0 0 0 0 1 1 
+read_state.READ_STATE_SETUP 0 0 0 0 1 0 1 
+read_state.READ_STATE_DUMMY 0 0 0 1 0 0 1 
+read_state.READ_STATE_READY 0 0 1 0 0 0 1 
+read_state.READ_STATE_FINAL 0 1 0 0 0 0 1 
+read_state.READ_STATE_CLEAR 1 0 0 0 0 0 1 
 
 State Machine - |tmc_firmware_top|tmc_nios2:u0|altera_onchip_flash:onchip_flash_0|altera_onchip_flash_avmm_data_controller:avmm_data_controller|erase_state
-Name erase_state.ERASE_STATE_RESET erase_state.ERASE_STATE_WAIT_DONE erase_state.ERASE_STATE_WAIT_BUSY erase_state.ERASE_STATE_IDLE erase_state.ERASE_STATE_ERROR 
-erase_state.ERASE_STATE_IDLE 0 0 0 0 0 
-erase_state.ERASE_STATE_WAIT_BUSY 0 0 1 1 0 
-erase_state.ERASE_STATE_WAIT_DONE 0 1 0 1 0 
-erase_state.ERASE_STATE_RESET 1 0 0 1 0 
-erase_state.ERASE_STATE_ERROR 0 0 0 1 1 
+Name erase_state.ERASE_STATE_ERROR erase_state.ERASE_STATE_RESET erase_state.ERASE_STATE_WAIT_DONE erase_state.ERASE_STATE_WAIT_BUSY erase_state.ERASE_STATE_ADDR erase_state.ERASE_STATE_IDLE 
+erase_state.ERASE_STATE_IDLE 0 0 0 0 0 0 
+erase_state.ERASE_STATE_ADDR 0 0 0 0 1 1 
+erase_state.ERASE_STATE_WAIT_BUSY 0 0 0 1 0 1 
+erase_state.ERASE_STATE_WAIT_DONE 0 0 1 0 0 1 
+erase_state.ERASE_STATE_RESET 0 1 0 0 0 1 
+erase_state.ERASE_STATE_ERROR 1 0 0 0 0 1 
 
 State Machine - |tmc_firmware_top|tmc_nios2:u0|altera_onchip_flash:onchip_flash_0|altera_onchip_flash_avmm_data_controller:avmm_data_controller|write_state
-Name write_state.WRITE_STATE_ERROR write_state.WRITE_STATE_RESET write_state.WRITE_STATE_WAIT_DONE write_state.WRITE_STATE_WAIT_BUSY write_state.WRITE_STATE_WRITE write_state.WRITE_STATE_IDLE 
-write_state.WRITE_STATE_IDLE 0 0 0 0 0 0 
-write_state.WRITE_STATE_WRITE 0 0 0 0 1 1 
-write_state.WRITE_STATE_WAIT_BUSY 0 0 0 1 0 1 
-write_state.WRITE_STATE_WAIT_DONE 0 0 1 0 0 1 
-write_state.WRITE_STATE_RESET 0 1 0 0 0 1 
-write_state.WRITE_STATE_ERROR 1 0 0 0 0 1 
+Name write_state.WRITE_STATE_ERROR write_state.WRITE_STATE_RESET write_state.WRITE_STATE_WAIT_DONE write_state.WRITE_STATE_WAIT_BUSY write_state.WRITE_STATE_WRITE write_state.WRITE_STATE_ADDR write_state.WRITE_STATE_IDLE 
+write_state.WRITE_STATE_IDLE 0 0 0 0 0 0 0 
+write_state.WRITE_STATE_ADDR 0 0 0 0 0 1 1 
+write_state.WRITE_STATE_WRITE 0 0 0 0 1 0 1 
+write_state.WRITE_STATE_WAIT_BUSY 0 0 0 1 0 0 1 
+write_state.WRITE_STATE_WAIT_DONE 0 0 1 0 0 0 1 
+write_state.WRITE_STATE_RESET 0 1 0 0 0 0 1 
+write_state.WRITE_STATE_ERROR 1 0 0 0 0 0 1 
 
 State Machine - |tmc_firmware_top|tmc_nios2:u0|tmc_nios2_nios2_gen2_0:nios2_gen2_0|tmc_nios2_nios2_gen2_0_cpu:cpu|tmc_nios2_nios2_gen2_0_cpu_nios2_oci:the_tmc_nios2_nios2_gen2_0_cpu_nios2_oci|tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper:the_tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper|tmc_nios2_nios2_gen2_0_cpu_debug_slave_tck:the_tmc_nios2_nios2_gen2_0_cpu_debug_slave_tck|DRsize
 Name DRsize.101 DRsize.100 DRsize.011 DRsize.010 DRsize.001 DRsize.000 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="tmc_nios2" kind="system" version="15.1" fabric="QSYS">
- <!-- Format version 15.1 185 (Future versions may contain additional information.) -->
- <!-- 2016.02.29.15:05:05 -->
+ <!-- Format version 15.1 193 (Future versions may contain additional information.) -->
+ <!-- 2016.03.01.13:02:35 -->
  <!-- A collection of modules and connections -->
  <parameter name="clockCrossingAdapter">
   <type>com.altera.sopcmodel.ensemble.EClockAdapter</type>
@@ -53,7 +53,7 @@
  </parameter>
  <parameter name="generationId">
   <type>int</type>
-  <value>1456776288</value>
+  <value>1456855338</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>true</visible>
@@ -5102,7 +5102,7 @@ parameters are a RESULT of the module parameters. -->
  <module
    name="onchip_flash_0"
    kind="altera_onchip_flash"
-   version="15.1"
+   version="15.1.1"
    path="onchip_flash_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
@@ -5621,7 +5621,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="FLASH_READ_CYCLE_MAX_INDEX">
    <type>int</type>
-   <value>3</value>
+   <value>4</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -5637,7 +5637,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="FLASH_BUSY_TIMEOUT_CYCLE_MAX_INDEX">
    <type>int</type>
-   <value>48</value>
+   <value>60</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>
@@ -12095,7 +12095,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1456776288</value>
+   <value>1456855338</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -12115,7 +12115,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1456776288</value>
+   <value>1456855338</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -12131,7 +12131,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1456776288</value>
+   <value>1456855338</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -23612,7 +23612,7 @@ parameters are a RESULT of the module parameters. -->
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IModule</subtype>
   <displayName>Altera On-Chip Flash</displayName>
-  <version>15.1</version>
+  <version>15.1.1</version>
  </plugin>
  <plugin>
   <instanceCount>1</instanceCount>
@@ -23734,6 +23734,6 @@ parameters are a RESULT of the module parameters. -->
   <displayName>Reset Connection</displayName>
   <version>15.1</version>
  </plugin>
- <reportVersion>15.1 185</reportVersion>
- <uniqueIdentifier>8056F279FB67000001532EA22199</uniqueIdentifier>
+ <reportVersion>15.1 193</reportVersion>
+ <uniqueIdentifier>8056F279FB670000015333585A0E</uniqueIdentifier>
 </EnsembleReport>

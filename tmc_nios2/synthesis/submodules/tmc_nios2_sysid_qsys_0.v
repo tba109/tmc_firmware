@@ -49,7 +49,7 @@ module tmc_nios2_sysid_qsys_0 (
 
   wire    [ 31: 0] readdata;
   //control_slave, which is an e_avalon_slave
-  assign readdata = address ? 1456855338 : 0;
+  assign readdata = address ? 1456930168 : 0;
 
 endmodule
 

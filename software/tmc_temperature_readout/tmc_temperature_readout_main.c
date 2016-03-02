@@ -47,6 +47,9 @@
 // For i2c_opencores
 #define I2C_SCL_SPEED 100000
 
+// For receive character buffer size
+#define RX_BUF_SIZE 1024
+
 // Constants
 const unsigned char pchan_2n2222[N_CHAN] = {12,10,8,5,3,1};
 const unsigned char nchan_2n2222 = 7;
@@ -511,16 +514,32 @@ char read_rx_fifo_char()
 unsigned int read_rx_fifo(char * str1)
 {
   unsigned int nbytes = 0;
-  char c;
   str1[0] = NULL;
-  if( !IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE) ) // Check if receive fifo is not empty
+  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check if receive fifo is not empty
     {
-      str1[nbytes] = read_rx_fifo_char();
-      nbytes++;
-      while((str1[nbytes] = read_rx_fifo_char()) != RX_EOC) 
-      {
-	nbytes++;
-      }
+      while(1)
+  	{
+	  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check if receive fifo is not empty
+	    {
+	      str1[nbytes] = read_rx_fifo_char();
+	      nbytes++;
+	      if(nbytes == RX_BUF_SIZE)
+		{
+		  printf("ERROR::read_rx_fifo: Buffer full\n");
+		  return nbytes;
+		}
+	      else if(str1[nbytes-1] == RX_EOC)
+		{
+		  str1[nbytes] = NULL;
+		  return nbytes;
+		}
+	    }
+	  if(loop_done)
+	    {
+	      printf("ERROR::read_rx_fifo: Timeout\n");
+	      return nbytes;
+	    }
+	}
     }
   str1[nbytes] = NULL;
   return nbytes;
@@ -531,19 +550,16 @@ unsigned int read_rx_fifo(char * str1)
 // 
 unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned short data)
 {
-  printf("--Write the start\n");
+  // printf("--Write the start\n");
   I2C_start(I2C_OPENCORES_0_BASE,board,0);
-  printf("--Write first byte\n");
+  // printf("--Write first byte\n");
   I2C_write(I2C_OPENCORES_0_BASE,(0x03 << 4) | (dac & 0x0F),0); // write/update register
-  printf("--Write second byte\n");
+  // printf("--Write second byte\n");
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00)>>8,0);
-  printf("--write third byte\n");
-  I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00),1);
+  // printf("--write third byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(data & 0x00FF),1);
   return 0;
 }
-
-////////////////////////////////////////////////////////////////////////////////////////
-// 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -554,14 +570,15 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
   unsigned char dac = 0;
   unsigned short data = 0;
   char * token;
-  char delim[2] = " ";
+  char delim[2] = " "; // Command chunks and commands are separted by ' ' and '\n'
   // 0: expect 'c', 
-  // 1: expect the board
-  // 2: expect the dac register number
+  // 1: expect the board address
+  // 2: expect the dac register address
   // 3: expect the data
+
   unsigned char chunk_type = 0; 
   unsigned int ncmds = 0;
-
+  
   // http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm
   token = strtok(str1,delim);
   while(token != NULL)
@@ -569,21 +586,29 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
       // The first byte of any command should be 'c'
       if(chunk_type == 0)
 	{
-	  if(token* != 'c')
+	  if(*token != 'c')
 	    chunk_type = 0;
+	  else
+	    chunk_type = 1;
 	}
       else if(chunk_type == 1)
-	board = atoi(token);
+	{
+	  board = atoi(token);
+	  chunk_type = 2;
+	}
       else if(chunk_type == 2)
-	dac = atoi(token);
+	{
+	  dac = atoi(token);
+	  chunk_type = 3;
+	}
       else if(chunk_type == 3)
 	{
 	  data = atoi(token);
 	  write_ltc2605(board,dac,data);
 	  ncmds++;
+	  chunk_type = 0;
 	}
       token = strtok(NULL,delim);
-      chunk_type = (chunk_type+1)%4;
     }
 
   return ncmds;
@@ -594,14 +619,16 @@ int main()
   unsigned char x = 0xFF;
   unsigned int data = 0;
   unsigned int nbytes = 0;
+  unsigned int nbytes_total = 0;
+  unsigned int ncmd = 0;
+  unsigned int ncmd_total = 0;
   unsigned int data_arr_2n2222[N_ADC][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;
   int * ptr;
-  char str1[1024];
-  char c1;
-  unsigned short i2c_short = 0x00; // just a test value
+  char str1[RX_BUF_SIZE];
+    
   loop_done = 0;
 
   ////////////////////////////////////
@@ -637,7 +664,7 @@ int main()
 
   // Setup the i2c_opencores interface
   I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ,I2C_SCL_SPEED);
-  printf("I2C initialized\n");
+  // printf("I2C initialized\n");
 
   /////////////////////////////////////
   // Measurement loop
@@ -648,13 +675,9 @@ int main()
       // This isn't available with the small c library
       // scanf("%s",&str1);
             
-      // This keeps having buffer overflow issues
-      while(read_serial(str1))
-      	printf("Command: %s\n",str1);
-
-      // This has a larger buffer
-      while(read_rx_fifo(str1))
-      	printf("Command: %s\n",str1);
+      /* // This keeps having buffer overflow issues */
+      /* while(read_serial(str1)) */
+      /* 	printf("Command: %s\n",str1); */
 
       for(chan = 0; chan < N_CHAN; chan++)
       	{
@@ -686,24 +709,24 @@ int main()
       /* 	switch_cal_hk(cal_type); */
 
       // Read from the RX line and send the appropriate I2C commands
-      nbytes = read_rx_fifo(str1);
-      // printf("Command(s) Received:\n%s\n",str1);
-      printf("Received: %d bytes\n",nbytes);
-
-      // Execute commands
-      printf("Execute %d commands\n",execute_cmd(str1,nbytes));
+      nbytes_total = 0;
+      ncmd_total = 0;
+      nbytes = 0;
+      nbytes_total = 0;
+      while(nbytes = read_rx_fifo(str1))
+	{
+	  // Execute commands
+	  printf("%s",str1);
+	  nbytes_total += nbytes;
+	  ncmd = execute_cmd(str1,nbytes);
+	  ncmd_total += ncmd;
+	}
+      printf("Received %d byte(s), Executed %d command(s)\n",nbytes_total,ncmd_total);
       
-      /* write_ltc2605(0x43,0,i2c_short); */
-      /* // i2c_short = 0x01 << i2c_pos; */
-      /* printf("i2c_short = %d\n",i2c_short); */
-      /* // i2c_pos = (i2c_pos + 1)%8; */
-
       // Wait for control loop to finish (give yourself 3 seconds every time)
       while(!loop_done);
       loop_done = 0;
-      printf("---------------------------------\n");
             
-      
     }
   return 0;
 }

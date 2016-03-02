@@ -11,27 +11,27 @@
    <SOPCModuleParameter>
     <C>2</C>
     <Name>DESIGN_HASH</Name>
-    <Value>efd0813021f161a87344</Value>
+    <Value>ce3c2220637a2a65b62a</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>3</C>
     <Name>NODE_COUNT</Name>
-    <Value>3</Value>
+    <Value>2</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>4</C>
     <Name>MAX_WIDTH</Name>
-    <Value>33</Value>
+    <Value>25</Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>5</C>
     <Name>SETTINGS</Name>
-    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance -1 ir_width 1 prefer_host { } psig f63706bb} {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 psig f63706bb} {fabric sld dir agent mfr_code 110 type_code 0 version 6 instance 0 ir_width 10 psig f63706bb} </Value>
+    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance -1 ir_width 1 prefer_host { } psig f63706bb} {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 psig f63706bb} </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>6</C>
     <Name>CLOCKS</Name>
-    <Value>{id {} } {id {} } {id {} } </Value>
+    <Value>{id {} } {id {} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>7</C>
@@ -41,7 +41,7 @@
    <SOPCModuleParameter>
     <C>8</C>
     <Name>EP_INFOS</Name>
-    <Value>{hpath {tmc_nios2:u0|tmc_nios2_jtag_uart_0:jtag_uart_0|alt_jtag_atlantic:tmc_nios2_jtag_uart_0_alt_jtag_atlantic|altera_sld_agent_endpoint:inst|altera_fabric_endpoint:ep} } {hpath {tmc_nios2:u0|tmc_nios2_nios2_gen2_0:nios2_gen2_0|tmc_nios2_nios2_gen2_0_cpu:cpu|tmc_nios2_nios2_gen2_0_cpu_nios2_oci:the_tmc_nios2_nios2_gen2_0_cpu_nios2_oci|tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper:the_tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper|sld_virtual_jtag_basic:tmc_nios2_nios2_gen2_0_cpu_debug_slave_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst} } {hpath {sld_signaltap:auto_signaltap_0} } </Value>
+    <Value>{hpath {tmc_nios2:u0|tmc_nios2_jtag_uart_0:jtag_uart_0|alt_jtag_atlantic:tmc_nios2_jtag_uart_0_alt_jtag_atlantic|altera_sld_agent_endpoint:inst|altera_fabric_endpoint:ep} } {hpath {tmc_nios2:u0|tmc_nios2_nios2_gen2_0:nios2_gen2_0|tmc_nios2_nios2_gen2_0_cpu:cpu|tmc_nios2_nios2_gen2_0_cpu_nios2_oci:the_tmc_nios2_nios2_gen2_0_cpu_nios2_oci|tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper:the_tmc_nios2_nios2_gen2_0_cpu_debug_slave_wrapper|sld_virtual_jtag_basic:tmc_nios2_nios2_gen2_0_cpu_debug_slave_phy|sld_virtual_jtag_impl:sld_virtual_jtag_impl_inst} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>9</C>
@@ -56,7 +56,7 @@
    <SOPCModuleParameter>
     <C>11</C>
     <Name>COMPOSED_SETTINGS</Name>
-    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance 0 ir_width 1 prefer_host {} } {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 prefer_host {} } {fabric sld dir agent mfr_code 110 type_code 0 version 6 instance 0 ir_width 10 prefer_host {} } </Value>
+    <Value>{fabric sld dir agent mfr_code 110 type_code 128 version 1 instance 0 ir_width 1 prefer_host {} } {fabric sld dir agent mfr_code 70 type_code 34 version 3 instance 0 ir_width 2 prefer_host {} } </Value>
    </SOPCModuleParameter>
    <SOPCModuleParameter>
     <C>12</C>
@@ -74,7 +74,7 @@
     <Value>Unknown</Value>
    </SOPCModuleParameter>
   </SOPCModule>
-  <SystemID>868635217</SystemID>
+  <SystemID>936311373</SystemID>
  </SOPCSystem>
  <SchemaVersion>schema_2013-01-18</SchemaVersion>
 </ProgramExecution>

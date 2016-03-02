@@ -134,7 +134,7 @@ module tmc_nios2_mm_interconnect_0_router
     // Figure out the number of bits to mask off for each slave span
     // during address decoding
     // -------------------------------------------------------
-    localparam PAD0 = log2ceil(64'h8000 - 64'h0); 
+    localparam PAD0 = log2ceil(64'h10000 - 64'h0); 
     localparam PAD1 = log2ceil(64'h40800 - 64'h40000); 
     localparam PAD2 = log2ceil(64'h40808 - 64'h40800); 
     localparam PAD3 = log2ceil(64'h40818 - 64'h40810); 
@@ -207,7 +207,7 @@ module tmc_nios2_mm_interconnect_0_router
         // Sets the channel and destination ID based on the address
         // --------------------------------------------------
 
-    // ( 0x0 .. 0x8000 )
+    // ( 0x0 .. 0x10000 )
     if ( {address[RG:PAD0],{PAD0{1'b0}}} == 20'h0   ) begin
             src_channel = 15'b000000001000000;
             src_data[PKT_DEST_ID_H:PKT_DEST_ID_L] = 5;

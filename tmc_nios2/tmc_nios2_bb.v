@@ -1,6 +1,8 @@
 
 module tmc_nios2 (
 	clk_clk,
+	i2c_opencores_0_export_scl_pad_io,
+	i2c_opencores_0_export_sda_pad_io,
 	pio_0_external_connection_export,
 	pio_1_external_connection_export,
 	reset_reset_n,
@@ -14,11 +16,11 @@ module tmc_nios2 (
 	uart_0_external_connection_rxd,
 	uart_0_external_connection_txd,
 	uart_0_external_connection_cts_n,
-	uart_0_external_connection_rts_n,
-	i2c_opencores_0_export_scl_pad_io,
-	i2c_opencores_0_export_sda_pad_io);	
+	uart_0_external_connection_rts_n);	
 
 	input		clk_clk;
+	inout		i2c_opencores_0_export_scl_pad_io;
+	inout		i2c_opencores_0_export_sda_pad_io;
 	input	[7:0]	pio_0_external_connection_export;
 	output	[7:0]	pio_1_external_connection_export;
 	input		reset_reset_n;
@@ -33,6 +35,4 @@ module tmc_nios2 (
 	output		uart_0_external_connection_txd;
 	input		uart_0_external_connection_cts_n;
 	output		uart_0_external_connection_rts_n;
-	inout		i2c_opencores_0_export_scl_pad_io;
-	inout		i2c_opencores_0_export_sda_pad_io;
 endmodule

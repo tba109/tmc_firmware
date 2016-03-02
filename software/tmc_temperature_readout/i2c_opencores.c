@@ -4,7 +4,7 @@
 #include "i2c_opencores.h"
 
 
-#define I2C_DEBUG
+// #define I2C_DEBUG
 #ifdef I2C_DEBUG
 #include <stdio.h>
 #endif

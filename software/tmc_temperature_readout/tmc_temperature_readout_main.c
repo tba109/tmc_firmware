@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 2
+#define MINOR_VERSION_NUMBER 3
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -267,7 +267,7 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
 // 
 unsigned char ad7124_gain_cal(unsigned char adc)
 {
-  unsigned char nbytes = 0;
+  // unsigned char nbytes = 0;
   unsigned int data = 0;
   
   // For debugging, read and print the values of the offset register and gain register
@@ -335,7 +335,7 @@ unsigned char ad7124_gain_cal(unsigned char adc)
 // 
 unsigned char ad7124_offset_cal(unsigned char adc)
 {
-  unsigned char nbytes = 0;
+  // unsigned char nbytes = 0;
   unsigned int data = 0;
   
   // For debugging, read and print the values of the offset register and gain register
@@ -456,48 +456,48 @@ unsigned char switch_cal_hk(unsigned char cal_type)
   return 0;
 }
 
-// Small C library doesn't give me this, and I need some way to read
-// from stdin. From example 6-12 of Nios-2 Software Developer's 
-// Handbook, which supposedly is taken from Kernighan and Ritchie's
-// "The C Programming Language, 2nd Ed"
-int my_getchar()
-{
-  char c = NULL;
-  return ( read ( 0, &c, 1 ) == 1 ) ? (unsigned char) c : NULL;
-}
+/* // Small C library doesn't give me this, and I need some way to read */
+/* // from stdin. From example 6-12 of Nios-2 Software Developer's  */
+/* // Handbook, which supposedly is taken from Kernighan and Ritchie's */
+/* // "The C Programming Language, 2nd Ed" */
+/* int my_getchar() */
+/* { */
+/*   char c = NULL; */
+/*   return ( read ( 0, &c, 1 ) == 1 ) ? (unsigned char) c : NULL; */
+/* } */
 
-// Fri Feb 26 10:33:36 EST 2016
-// Seems ridiculous that I have to write this, but I 
-// can't seem to get a way around it on the small development
-// kit without disabling the small c library option (i.e., using
-// the large, full C library, which doesn't fit on the device due
-// to limited on chip memory.) I could maybe execute out of 
-// flash instead of onchip RAM, but for now, I'll stick with 
-// this approach, and probably call the "normal" function once
-// I have the larger chip on the production board with the
-// normal c library. 
-// Fri Feb 26 15:39:46 EST 2016
-// TBA_NOTE: I ended up abandoning this method because I was having trouble with the QSYS
-// UART having only 64B, and I was overflowing it. 
-unsigned int read_serial(char * str1)
-{
-  unsigned int nbytes = 0;
-  char c;
-  str1[0] = NULL;
-  if( (c = my_getchar()) != 0x00)
-    {
-      str1[nbytes] = c;
-      nbytes++;
-      while((c = my_getchar()) != 0x0A) // Note: 0x0A is Linefeed character
-      {
-	str1[nbytes] = c;
-	nbytes++;
-	// printf("Got %c\n",c);
-      }
-    }
-  str1[nbytes] = NULL;
-  return nbytes;
-}
+/* // Fri Feb 26 10:33:36 EST 2016 */
+/* // Seems ridiculous that I have to write this, but I  */
+/* // can't seem to get a way around it on the small development */
+/* // kit without disabling the small c library option (i.e., using */
+/* // the large, full C library, which doesn't fit on the device due */
+/* // to limited on chip memory.) I could maybe execute out of  */
+/* // flash instead of onchip RAM, but for now, I'll stick with  */
+/* // this approach, and probably call the "normal" function once */
+/* // I have the larger chip on the production board with the */
+/* // normal c library.  */
+/* // Fri Feb 26 15:39:46 EST 2016 */
+/* // TBA_NOTE: I ended up abandoning this method because I was having trouble with the QSYS */
+/* // UART having only 64B, and I was overflowing it.  */
+/* unsigned int read_serial(char * str1) */
+/* { */
+/*   unsigned int nbytes = 0; */
+/*   char c; */
+/*   str1[0] = NULL; */
+/*   if( (c = my_getchar()) != 0x00) */
+/*     { */
+/*       str1[nbytes] = c; */
+/*       nbytes++; */
+/*       while((c = my_getchar()) != 0x0A) // Note: 0x0A is Linefeed character */
+/*       { */
+/* 	str1[nbytes] = c; */
+/* 	nbytes++; */
+/* 	// printf("Got %c\n",c); */
+/*       } */
+/*     } */
+/*   str1[nbytes] = NULL; */
+/*   return nbytes; */
+/* } */
 
 // Read a single character from the RX FIFO
 char read_rx_fifo_char()
@@ -514,12 +514,12 @@ char read_rx_fifo_char()
 unsigned int read_rx_fifo(char * str1)
 {
   unsigned int nbytes = 0;
-  str1[0] = NULL;
-  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check if receive fifo is not empty
+  str1[0] = '\0';
+  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check receive fifo not empty
     {
       while(1)
   	{
-	  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check if receive fifo is not empty
+	  if(!IORD_ALTERA_AVALON_PIO_DATA(RX_FIFO_EMPTY_BASE)) // Check receive fifo not empty
 	    {
 	      str1[nbytes] = read_rx_fifo_char();
 	      nbytes++;
@@ -530,18 +530,18 @@ unsigned int read_rx_fifo(char * str1)
 		}
 	      else if(str1[nbytes-1] == RX_EOC)
 		{
-		  str1[nbytes] = NULL;
+		  str1[nbytes] = '\0';
 		  return nbytes;
 		}
 	    }
 	  if(loop_done)
 	    {
-	      printf("ERROR::read_rx_fifo: Timeout\n");
+	      // printf("ERROR::read_rx_fifo: Timeout\n");
 	      return nbytes;
 	    }
 	}
     }
-  str1[nbytes] = NULL;
+  str1[nbytes] = '\0';
   return nbytes;
 }
 
@@ -628,9 +628,9 @@ int main()
   unsigned char cal_type = 0;
   int * ptr;
   char str1[RX_BUF_SIZE];
-    
+  ptr = NULL;
   loop_done = 0;
-
+  
   ////////////////////////////////////
   // Startup
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x)); // enable I/O interface
@@ -641,8 +641,6 @@ int main()
   // printf("ADC %d ID register has 0x%2X\n",0,data);
   
   // Enable to loop timer (3 second period, by default)
-  // STOP, CONTINUOUS, generate an IRQ 
-  // IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, (1<<3) | (1 << 1) |(1 << 0));  
   // STOP, generate IRQ
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, (1<<3) | (1 << 0));  
   // Clear the timemout bit
@@ -652,10 +650,8 @@ int main()
 		      handle_timer_interrupts,
 		      ptr,
 		      0x00);
-  // RUN, CONTINUOUS, generate IRQ
-  // IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
   // RUN, generate IRQ
-  IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 1) | (1 << 0) );
+  IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 0) );
 
   /* // Setup stdin for non-blocking input. */
   /* int flags = fcntl(0,F_GETFL,0); */
@@ -713,7 +709,7 @@ int main()
       ncmd_total = 0;
       nbytes = 0;
       nbytes_total = 0;
-      while(nbytes = read_rx_fifo(str1))
+      while((nbytes = read_rx_fifo(str1)))
 	{
 	  // Execute commands
 	  printf("%s",str1);
@@ -724,9 +720,14 @@ int main()
       printf("Received %d byte(s), Executed %d command(s)\n",nbytes_total,ncmd_total);
       
       // Wait for control loop to finish (give yourself 3 seconds every time)
-      while(!loop_done);
+      if(loop_done)
+	printf("WARNING: Exceeded control loop period.\n");
+      else
+	while(!loop_done);
+      
       loop_done = 0;
-            
+      // Run timer and generate IRQ
+      IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 0) );
     }
   return 0;
 }

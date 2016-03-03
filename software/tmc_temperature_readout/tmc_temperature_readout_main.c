@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 3
+#define MINOR_VERSION_NUMBER 4
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -361,6 +361,43 @@ unsigned char ad7124_offset_cal(unsigned char adc)
   return data;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
+// Calibrate the ADC
+unsigned char calibrate_ad7124_8(void)
+{
+  unsigned int data = 0;
+  unsigned char i = 0;
+  printf("        ");
+  printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
+  
+  for(i = 0; i < N_ADC; i++)
+  	{
+  	  ad7124_gain_cal(i);
+  	}
+  usleep(1000*1000);
+  for(i = 0; i < N_ADC; i++)
+  	{
+  	  ad7124_offset_cal(i);
+  	}
+  usleep(1000*1000);
+
+  printf("GAIN    ");
+  for(i = 0; i < N_ADC; i++)
+    {
+      ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3);
+      printf("  %8d",data & 0x00FFFFFF);
+    }          
+  printf("\nOFFS    ");
+  for(i = 0; i < N_ADC; i++)
+    {
+      ad7124_read_reg(i,AD7124_OFFS0_REG,&data,3);
+      printf("  %8d",data & 0x00FFFFFF);
+    }
+  printf("\n");
+  return 0;
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // This handles calibration and housekeeping
 // 
@@ -425,37 +462,39 @@ unsigned char switch_cal_hk(unsigned char cal_type)
     }
   else if(cal_type == CALIBRATE) // We're not doing this right now
     {
-      printf("        ");
-      printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
+      calibrate_ad7124_8();
       
+      /* printf("        "); */
+      /* printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n"); */
+      
+      /* /\* for(i = 0; i < N_ADC; i++) *\/ */
+      /* /\* 	{ *\/ */
+      /* /\* 	  ad7124_gain_cal(i); *\/ */
+      /* /\* 	} *\/ */
+      /* /\* usleep(1000*1000); *\/ */
+      /* /\* for(i = 0; i < N_ADC; i++) *\/ */
+      /* /\* 	{ *\/ */
+      /* /\* 	  ad7124_offset_cal(i); *\/ */
+      /* /\* 	} *\/ */
+      /* /\* usleep(1000*1000); *\/ */
+      /* printf("GAIN    "); */
       /* for(i = 0; i < N_ADC; i++) */
       /* 	{ */
-      /* 	  ad7124_gain_cal(i); */
-      /* 	} */
-      /* usleep(1000*1000); */
+      /* 	  ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3); */
+      /* 	  printf("  %8d",data & 0x00FFFFFF); */
+      /* 	}           */
+      /* printf("\nOFFS    "); */
       /* for(i = 0; i < N_ADC; i++) */
       /* 	{ */
-      /* 	  ad7124_offset_cal(i); */
+      /* 	  ad7124_read_reg(i,AD7124_OFFS0_REG,&data,3); */
+      /* 	  printf("  %8d",data & 0x00FFFFFF); */
       /* 	} */
-      /* usleep(1000*1000); */
-      printf("GAIN    ");
-      for(i = 0; i < N_ADC; i++)
-      	{
-      	  ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3);
-      	  printf("  %8d",data & 0x00FFFFFF);
-      	}          
-      printf("\nOFFS    ");
-      for(i = 0; i < N_ADC; i++)
-      	{
-      	  ad7124_read_reg(i,AD7124_OFFS0_REG,&data,3);
-      	  printf("  %8d",data & 0x00FFFFFF);
-      	}
     }
   
   printf("\n");
   return 0;
 }
-
+      
 /* // Small C library doesn't give me this, and I need some way to read */
 /* // from stdin. From example 6-12 of Nios-2 Software Developer's  */
 /* // Handbook, which supposedly is taken from Kernighan and Ritchie's */
@@ -503,10 +542,14 @@ unsigned char switch_cal_hk(unsigned char cal_type)
 char read_rx_fifo_char()
 {
   unsigned char x = 1;
+  char c;
   IOWR_ALTERA_AVALON_PIO_DATA(RX_FIFO_READ_BASE, (unsigned char)(x)); // set read signal (note: FPGA internally positive edge clocks this)
   x = 0;
   IOWR_ALTERA_AVALON_PIO_DATA(RX_FIFO_READ_BASE, (unsigned char)(x)); // clear read signal (note: FPGA internally positive edge clocks this)
-  return IORD_ALTERA_AVALON_PIO_DATA(RX_CHAR_BASE);
+  c = IORD_ALTERA_AVALON_PIO_DATA(RX_CHAR_BASE);
+  if( c == 'a')
+    calibrate_ad7124_8();
+  return c;
   // TBA_NOTE: was here!  
 }
 

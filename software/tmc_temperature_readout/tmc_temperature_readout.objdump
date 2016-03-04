@@ -1222,8 +1222,8 @@ Disassembly of section .text:
      cc8:	e0bffe03 	ldbu	r2,-8(fp)
      ccc:	10800330 	cmpltui	r2,r2,12
      cd0:	103ff71e 	bne	r2,zero,cb0 <calibrate_ad7124_8+0x38>
-     cd4:	010003f4 	movhi	r4,15
-     cd8:	21109004 	addi	r4,r4,16960
+     cd4:	01000bb4 	movhi	r4,46
+     cd8:	2131b004 	addi	r4,r4,-14656
      cdc:	0002c340 	call	2c34 <usleep>
      ce0:	e03ffe05 	stb	zero,-8(fp)
      ce4:	00000606 	br	d00 <calibrate_ad7124_8+0x88>
@@ -1236,8 +1236,8 @@ Disassembly of section .text:
      d00:	e0bffe03 	ldbu	r2,-8(fp)
      d04:	10800330 	cmpltui	r2,r2,12
      d08:	103ff71e 	bne	r2,zero,ce8 <calibrate_ad7124_8+0x70>
-     d0c:	010003f4 	movhi	r4,15
-     d10:	21109004 	addi	r4,r4,16960
+     d0c:	01000bb4 	movhi	r4,46
+     d10:	2131b004 	addi	r4,r4,-14656
      d14:	0002c340 	call	2c34 <usleep>
      d18:	01000034 	movhi	r4,0
      d1c:	2119d904 	addi	r4,r4,26468
@@ -1757,7 +1757,7 @@ Disassembly of section .text:
     14f4:	01000034 	movhi	r4,0
     14f8:	211a2904 	addi	r4,r4,26788
     14fc:	01400044 	movi	r5,1
-    1500:	01800104 	movi	r6,4
+    1500:	01800144 	movi	r6,5
     1504:	00019100 	call	1910 <printf>
     1508:	00c00244 	movi	r3,9
     150c:	00800134 	movhi	r2,4

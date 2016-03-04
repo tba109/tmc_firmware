@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 4
+#define MINOR_VERSION_NUMBER 5
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -374,12 +374,12 @@ unsigned char calibrate_ad7124_8(void)
   	{
   	  ad7124_gain_cal(i);
   	}
-  usleep(1000*1000);
+  usleep(3000*1000);
   for(i = 0; i < N_ADC; i++)
   	{
   	  ad7124_offset_cal(i);
   	}
-  usleep(1000*1000);
+  usleep(3000*1000);
 
   printf("GAIN    ");
   for(i = 0; i < N_ADC; i++)

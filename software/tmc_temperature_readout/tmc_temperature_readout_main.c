@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 6
+#define MINOR_VERSION_NUMBER 7
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -267,6 +267,71 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
 
   return 0;
 }
+
+// Tue Mar  8 13:27:56 EST 2016
+// For monitoring baseline. Do it on channel 1
+unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char nchan)
+{
+  unsigned int data = 0;
+
+  // Enable channel register 0, set positive and negative and
+  // map to setup 0
+  data = 
+    AD7124_CH_MAP_REG_CH_ENABLE |
+    AD7124_CH_MAP_REG_SETUP(1)  |
+    AD7124_CH_MAP_REG_AINP(pchan)  |
+    AD7124_CH_MAP_REG_AINM(nchan);
+  ad7124_write_reg(adc,AD7124_CH1_MAP_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
+  
+  // Configuration register: input and ref bufs enabled, 
+  // set the PGA for 4, bipolar mode
+  data = 
+    AD7124_CFG_REG_BIPOLAR |
+    AD7124_CFG_REG_REF_BUFP |
+    AD7124_CFG_REG_REF_BUFM |
+    AD7124_CFG_REG_AIN_BUFP |
+    AD7124_CFG_REG_AIN_BUFM |
+    AD7124_CFG_REG_PGA(1);
+  ad7124_write_reg(adc,AD7124_CFG1_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+  
+  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
+  data = 
+    AD7124_FILT_REG_FILTER(0) |
+    AD7124_FILT_REG_REJ60 |
+    AD7124_FILT_REG_POST_FILTER(3) |
+    AD7124_FILT_REG_FS(640);
+  ad7124_write_reg(adc,AD7124_FILT1_REG,data,3);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+
+  // Control register: full power mode, single acquisition
+  data = 
+    AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
+    AD7124_ADC_CTRL_REG_MODE(0x1);
+  
+  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
+
+  return 0;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // This handles ad7124 gain calibration
@@ -794,7 +859,25 @@ int main()
       	}
       print_table(data_arr_2n2222);
       // print_list(data_arr_2n2222);
+
+      ////////////////////////////////////////////////////////////////////////////////
+      // Tue Mar  8 13:25:04 EST 2016
+      // Monitor what the offset voltage. This requires setting up for a gain of 2
+      for(adc = 0; adc < N_ADC; adc++)
+	setup_baseline(adc,7,0);
       
+      // Wait for the conversions to complete (should take 133ms, wait 160ms)
+      usleep(USLEEP_160MS);
+      
+      // Read the data conversion register
+      for(adc = 0; adc < N_ADC; adc++)
+	{
+	  data = 0;
+	  ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
+	  printf("Baseline monitor: ADC%d baseline = %d\n",adc,data);
+	}
+      ////////////////////////////////////////////////////////////////////////////////
+
       // Do calibraiton and housekeeping incrementally
       switch_cal_hk(cal_type);
       cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;

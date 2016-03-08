@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 5
+#define MINOR_VERSION_NUMBER 6
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -246,7 +246,13 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
     AD7124_FILT_REG_REJ60 |
     AD7124_FILT_REG_POST_FILTER(3) |
     AD7124_FILT_REG_FS(640);
-  
+  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+
   // Control register: full power mode, single acquisition
   data = 
     AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
@@ -280,7 +286,7 @@ unsigned char ad7124_gain_cal(unsigned char adc)
   data = 
     AD7124_CH_MAP_REG_CH_ENABLE |
     AD7124_CH_MAP_REG_SETUP(0)  |
-    AD7124_CH_MAP_REG_AINP(12)  |
+    AD7124_CH_MAP_REG_AINP(8)  | // Tue Mar  8 11:26:19 EST 2016, changed from 12
     AD7124_CH_MAP_REG_AINM(7);
   ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
   // read it back
@@ -310,7 +316,13 @@ unsigned char ad7124_gain_cal(unsigned char adc)
     AD7124_FILT_REG_FILTER(0) |
     AD7124_FILT_REG_REJ60 |
     AD7124_FILT_REG_POST_FILTER(3) |
-    AD7124_FILT_REG_FS(640);
+    AD7124_FILT_REG_FS(2047); // Tue Mar  8 11:21:27 EST 2016 changed from 640
+  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
   
   // Write 0x800000 to the offset register
   data = 0x800000;
@@ -346,7 +358,51 @@ unsigned char ad7124_offset_cal(unsigned char adc)
   // data = 0x800001;
   // ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
 
+  // Enable channel register 0, set positive and negative and
+  // map to setup 0
+  // I'm going to setup for 
+  data = 
+    AD7124_CH_MAP_REG_CH_ENABLE |
+    AD7124_CH_MAP_REG_SETUP(0)  |
+    AD7124_CH_MAP_REG_AINP(8)  | // Tue Mar  8 11:26:19 EST 2016, changed from 12
+    AD7124_CH_MAP_REG_AINM(7);
+  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
   
+  // Configuration register: input and ref bufs enabled, 
+  // set the PGA for 4, bipolar mode
+  data = 
+    AD7124_CFG_REG_BIPOLAR |
+    AD7124_CFG_REG_REF_BUFP |
+    AD7124_CFG_REG_REF_BUFM |
+    AD7124_CFG_REG_AIN_BUFP |
+    AD7124_CFG_REG_AIN_BUFM |
+    AD7124_CFG_REG_PGA(2);
+  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+  
+  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
+  data = 
+    AD7124_FILT_REG_FILTER(0) |
+    AD7124_FILT_REG_REJ60 |
+    AD7124_FILT_REG_POST_FILTER(3) |
+    AD7124_FILT_REG_FS(2047); // Tue Mar  8 11:21:27 EST 2016 changed from 640
+  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
+  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+
+
   // Start a zero scale internal calibration
   // Set the power mode to mid (can't calibrate in full power mode)
   data = 
@@ -374,7 +430,7 @@ unsigned char calibrate_ad7124_8(void)
   	{
   	  ad7124_gain_cal(i);
   	}
-  usleep(3000*1000);
+  usleep(8000*1000);
   for(i = 0; i < N_ADC; i++)
   	{
   	  ad7124_offset_cal(i);

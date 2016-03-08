@@ -278,10 +278,10 @@ unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char
   // map to setup 0
   data = 
     AD7124_CH_MAP_REG_CH_ENABLE |
-    AD7124_CH_MAP_REG_SETUP(1)  |
+    AD7124_CH_MAP_REG_SETUP(0)  |
     AD7124_CH_MAP_REG_AINP(pchan)  |
     AD7124_CH_MAP_REG_AINM(nchan);
-  ad7124_write_reg(adc,AD7124_CH1_MAP_REG,data,2);
+  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
   // read it back
   data = 0;
   usleep(1000);
@@ -297,7 +297,7 @@ unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char
     AD7124_CFG_REG_AIN_BUFP |
     AD7124_CFG_REG_AIN_BUFM |
     AD7124_CFG_REG_PGA(1);
-  ad7124_write_reg(adc,AD7124_CFG1_REG,data,2);
+  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
   // read it back
   data = 0;
   usleep(1000);
@@ -310,7 +310,7 @@ unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char
     AD7124_FILT_REG_REJ60 |
     AD7124_FILT_REG_POST_FILTER(3) |
     AD7124_FILT_REG_FS(640);
-  ad7124_write_reg(adc,AD7124_FILT1_REG,data,3);
+  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
   // read it back
   data = 0;
   usleep(1000);

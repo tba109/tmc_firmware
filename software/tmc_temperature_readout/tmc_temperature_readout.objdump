@@ -1143,14 +1143,14 @@ Disassembly of section .text:
      b98:	e0bffe03 	ldbu	r2,-8(fp)
      b9c:	108007cc 	andi	r2,r2,31
      ba0:	1004917a 	slli	r2,r2,5
-     ba4:	10e40014 	ori	r3,r2,36864
+     ba4:	10e00014 	ori	r3,r2,32768
      ba8:	e0bfff03 	ldbu	r2,-4(fp)
      bac:	108007cc 	andi	r2,r2,31
      bb0:	1884b03a 	or	r2,r3,r2
      bb4:	e0bffc15 	stw	r2,-16(fp)
      bb8:	e0bffd03 	ldbu	r2,-12(fp)
      bbc:	1009883a 	mov	r4,r2
-     bc0:	01400284 	movi	r5,10
+     bc0:	01400244 	movi	r5,9
      bc4:	e1bffc17 	ldw	r6,-16(fp)
      bc8:	01c00084 	movi	r7,2
      bcc:	00005140 	call	514 <ad7124_write_reg>
@@ -1161,7 +1161,7 @@ Disassembly of section .text:
      be0:	e0bffc15 	stw	r2,-16(fp)
      be4:	e0bffd03 	ldbu	r2,-12(fp)
      be8:	1009883a 	mov	r4,r2
-     bec:	01400684 	movi	r5,26
+     bec:	01400644 	movi	r5,25
      bf0:	e1bffc17 	ldw	r6,-16(fp)
      bf4:	01c00084 	movi	r7,2
      bf8:	00005140 	call	514 <ad7124_write_reg>
@@ -1173,7 +1173,7 @@ Disassembly of section .text:
      c10:	e0bffc15 	stw	r2,-16(fp)
      c14:	e0bffd03 	ldbu	r2,-12(fp)
      c18:	1009883a 	mov	r4,r2
-     c1c:	01400884 	movi	r5,34
+     c1c:	01400844 	movi	r5,33
      c20:	e1bffc17 	ldw	r6,-16(fp)
      c24:	01c000c4 	movi	r7,3
      c28:	00005140 	call	514 <ad7124_write_reg>

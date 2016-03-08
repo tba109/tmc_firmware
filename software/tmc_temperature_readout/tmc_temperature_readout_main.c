@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 7
+#define MINOR_VERSION_NUMBER 8
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -870,12 +870,15 @@ int main()
       usleep(USLEEP_160MS);
       
       // Read the data conversion register
+      printf("BSLN:   ");
       for(adc = 0; adc < N_ADC; adc++)
 	{
 	  data = 0;
 	  ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-	  printf("Baseline monitor: ADC%d baseline = %d\n",adc,data);
+	  // printf("Baseline monitor: ADC%d baseline = %d\n",adc,data);
+	  printf("  %8d",data);
 	}
+      printf("\n");
       ////////////////////////////////////////////////////////////////////////////////
 
       // Do calibraiton and housekeeping incrementally

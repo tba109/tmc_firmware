@@ -17,13 +17,15 @@
 #include <string.h>
 #include "i2c_opencores.h"
 
+// #define DO_COMMANDS
+
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
 #define N_BRD 4 // 4 boards
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 9
+#define MINOR_VERSION_NUMBER 10
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -180,23 +182,24 @@ unsigned char print_status(unsigned char (*data_arr)[N_CHAN])
   unsigned char adc = 0;
   unsigned char chan = 0;
 
-  printf("\n"); // this one sends the one for the measurement loop to the screen
-  printf("---------------------------------\n");
+  // printf("\n"); // this one sends the one for the measurement loop to the screen
+  // printf("---------------------------------\n");
 
   // Here's the printing section
-  printf("        ");
-  for(adc=0; adc < N_ADC; adc++)
-    printf("    ADC_%02d",adc);
-  printf("\n");
+  // printf("        ");
+  // for(adc=0; adc < N_ADC; adc++)
+  //  printf("    ADC_%02d",adc);
+  // printf("\n");
   
   for(chan=0; chan < N_CHAN; chan++)
     {
       printf("STAT_%d  ",chan);
       for(adc=0; adc < N_ADC; adc++)
 	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
-	printf("  %8d",data_arr[adc][chan] & 0x000000FF);
+	printf("        %02X",data_arr[adc][chan] & 0x000000FF);
+      // printf("  %8d",data_arr[adc][chan] & 0x000000FF);
       
+
       // Do this in the ISR, let's you know the measurement loop is done
       printf("\n");
     }
@@ -205,45 +208,31 @@ unsigned char print_status(unsigned char (*data_arr)[N_CHAN])
 }
 
 
-unsigned char print_err(unsigned char (*data_arr)[N_CHAN])
+unsigned char print_err(unsigned int (*data_arr)[N_CHAN])
 {
   unsigned char adc = 0;
   unsigned char chan = 0;
 
-  printf("\n"); // this one sends the one for the measurement loop to the screen
-  printf("---------------------------------\n");
+  // printf("\n"); // this one sends the one for the measurement loop to the screen
+  // printf("---------------------------------\n");
 
   // Here's the printing section
-  printf("        ");
-  for(adc=0; adc < N_ADC; adc++)
-    printf("    ADC_%02d",adc);
-  printf("\n");
+  // printf("        ");
+  // for(adc=0; adc < N_ADC; adc++)
+  //  printf("    ADC_%02d",adc);
+  // printf("\n");
   
   for(chan=0; chan < N_CHAN; chan++)
     {
       printf("ERR_%d   ",chan);
       for(adc=0; adc < N_ADC; adc++)
 	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
-	printf("  %8d",data_arr[adc][chan] & 0x000000FF);
+	printf("  %08X",data_arr[adc][chan] & 0x00FFFFFF);
+	// printf("  %8d",data_arr[adc][chan] & 0x00FFFFFF);
       
       // Do this in the ISR, let's you know the measurement loop is done
       printf("\n");
     }
-
-  return 0;
-}
-
-
-unsigned char print_list(unsigned int(*data_arr)[N_CHAN])
-{
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-
-  // Here's the printing section
-  for(adc=0; adc < N_ADC; adc++)
-    for(chan=0; chan < N_CHAN; chan++)
-      printf("ADC_CHAN_%02d_%02d: %8d\n",adc,chan,data_arr[adc][chan] & 0x00FFFFFF);
 
   return 0;
 }
@@ -252,7 +241,7 @@ void flip_led()
 {
   static unsigned char x = 0xFF;
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
-  x ^= 1 << 7;    
+  x ^= 1 << 7;
 }
 
 void set_led()
@@ -267,7 +256,7 @@ void clear_led()
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
 }
 
-unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char nchan)
+unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nchan)
 {
   unsigned int data = 0;
 
@@ -316,11 +305,11 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
 
   // Wed Mar  9 13:25:48 EST 2016
   // For debugging purposes: enable error checking
-  data = 
+  data =
     AD7124_ERR_REG_ADC_CAL_ERR |
-    AD7124_ERR_REG_ADC_CONV_ERR | 
-    AD7124_ERR_REG_ADC_SAT_ERR | 
-    AD7124_ERR_REG_REF_DET_ERR | 
+    AD7124_ERR_REG_ADC_CONV_ERR |
+    AD7124_ERR_REG_ADC_SAT_ERR |
+    AD7124_ERR_REG_REF_DET_ERR |
     AD7124_ERR_REG_SPI_READ_ERR |
     AD7124_ERR_REG_SPI_WRITE_ERR;
   ad7124_write_reg(adc,AD7124_ERREN_REG,data,3);
@@ -330,7 +319,7 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
   // ad7124_read_reg(adc,AD7124_ERREN_REG,&data,3);
   // printf("ADC_%d CHAN_%d: error enable register has 0x%04X\n",adc,chan,data);
 
-  // Control register: full power mode, single acquisition
+  // Control register: full power mode, single conversion
   data = 
     AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
     AD7124_ADC_CTRL_REG_MODE(0x1);
@@ -342,11 +331,17 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
   // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
   // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
 
+  // Wed Mar  9 17:38:21 EST 2016
+  // DS-p65: the REF_DET_ERR flag may be set when exiting standby mode. 
+  // Therefore, read the error register after exiting standby mode in order
+  // to reset this flag to 0. 
+  ad7124_read_reg(adc,AD7124_ERR_REG,&data,3); 
+
   return 0;
 }
 
 // Tue Mar  8 13:27:56 EST 2016
-// For monitoring baseline. Do it on channel 1
+// For monitoring baseline.
 unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char nchan)
 {
   unsigned int data = 0;
@@ -584,7 +579,7 @@ unsigned char calibrate_ad7124_8(void)
     {
       ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3);
       printf("  %8d",data & 0x00FFFFFF);
-    }          
+    }
   printf("\nOFFS    ");
   for(i = 0; i < N_ADC; i++)
     {
@@ -609,8 +604,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
       for(i = 0; i < N_BRD; i++)
 	{
 	  // The only difference between a board temperature and a 2N2222 is the channel
-	  // So, we can just call setup_2n2222 with a bit of translation.  
-	  setup_2n2222(i*3,pchan_board_temp,nchan_board_temp);
+	  // So, we can just call setup_conv with a bit of translation.  
+	  setup_conv(i*3,pchan_board_temp,nchan_board_temp);
 	}  
       usleep(USLEEP_160MS);
       printf("\n               BD0       BD1       BD2       BD3\nTemp:   ");
@@ -625,8 +620,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
       for(i = 0; i < N_ADC; i++)
 	{
 	  // The only difference between a current and a 2N2222 is the channel
-	  // So, we can just call setup_2n2222 with a bit of translation.  
-	  setup_2n2222(i,pchan_adc_temp,nchan_adc_temp);
+	  // So, we can just call setup_conv with a bit of translation.  
+	  setup_conv(i,pchan_adc_temp,nchan_adc_temp);
 	}
       usleep(USLEEP_160MS);
       printf("        ");
@@ -644,8 +639,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
       for(i = 0; i < N_ADC; i++)
 	{
 	  // The only difference between a current and a 2N2222 is the channel
-	  // So, we can just call setup_2n2222 with a bit of translation.  
-	  setup_2n2222(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN]);
+	  // So, we can just call setup_conv with a bit of translation.  
+	  setup_conv(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN]);
 	}
       usleep(USLEEP_160MS);
       printf("        ");
@@ -657,85 +652,12 @@ unsigned char switch_cal_hk(unsigned char cal_type)
 	  ad7124_read_reg(i,AD7124_DATA_REG,&data,3);
 	  printf("  %8d",data & 0x00FFFFFF);
 	}
-    }
-  else if(cal_type == CALIBRATE) // We're not doing this right now
-    {
-      calibrate_ad7124_8();
-      
-      /* printf("        "); */
-      /* printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n"); */
-      
-      /* /\* for(i = 0; i < N_ADC; i++) *\/ */
-      /* /\* 	{ *\/ */
-      /* /\* 	  ad7124_gain_cal(i); *\/ */
-      /* /\* 	} *\/ */
-      /* /\* usleep(1000*1000); *\/ */
-      /* /\* for(i = 0; i < N_ADC; i++) *\/ */
-      /* /\* 	{ *\/ */
-      /* /\* 	  ad7124_offset_cal(i); *\/ */
-      /* /\* 	} *\/ */
-      /* /\* usleep(1000*1000); *\/ */
-      /* printf("GAIN    "); */
-      /* for(i = 0; i < N_ADC; i++) */
-      /* 	{ */
-      /* 	  ad7124_read_reg(i,AD7124_GAIN0_REG,&data,3); */
-      /* 	  printf("  %8d",data & 0x00FFFFFF); */
-      /* 	}           */
-      /* printf("\nOFFS    "); */
-      /* for(i = 0; i < N_ADC; i++) */
-      /* 	{ */
-      /* 	  ad7124_read_reg(i,AD7124_OFFS0_REG,&data,3); */
-      /* 	  printf("  %8d",data & 0x00FFFFFF); */
-      /* 	} */
-    }
-  
+    }  
   printf("\n");
   return 0;
 }
-      
-/* // Small C library doesn't give me this, and I need some way to read */
-/* // from stdin. From example 6-12 of Nios-2 Software Developer's  */
-/* // Handbook, which supposedly is taken from Kernighan and Ritchie's */
-/* // "The C Programming Language, 2nd Ed" */
-/* int my_getchar() */
-/* { */
-/*   char c = NULL; */
-/*   return ( read ( 0, &c, 1 ) == 1 ) ? (unsigned char) c : NULL; */
-/* } */
-
-/* // Fri Feb 26 10:33:36 EST 2016 */
-/* // Seems ridiculous that I have to write this, but I  */
-/* // can't seem to get a way around it on the small development */
-/* // kit without disabling the small c library option (i.e., using */
-/* // the large, full C library, which doesn't fit on the device due */
-/* // to limited on chip memory.) I could maybe execute out of  */
-/* // flash instead of onchip RAM, but for now, I'll stick with  */
-/* // this approach, and probably call the "normal" function once */
-/* // I have the larger chip on the production board with the */
-/* // normal c library.  */
-/* // Fri Feb 26 15:39:46 EST 2016 */
-/* // TBA_NOTE: I ended up abandoning this method because I was having trouble with the QSYS */
-/* // UART having only 64B, and I was overflowing it.  */
-/* unsigned int read_serial(char * str1) */
-/* { */
-/*   unsigned int nbytes = 0; */
-/*   char c; */
-/*   str1[0] = NULL; */
-/*   if( (c = my_getchar()) != 0x00) */
-/*     { */
-/*       str1[nbytes] = c; */
-/*       nbytes++; */
-/*       while((c = my_getchar()) != 0x0A) // Note: 0x0A is Linefeed character */
-/*       { */
-/* 	str1[nbytes] = c; */
-/* 	nbytes++; */
-/* 	// printf("Got %c\n",c); */
-/*       } */
-/*     } */
-/*   str1[nbytes] = NULL; */
-/*   return nbytes; */
-/* } */
-
+ 
+#ifdef DO_COMMANDS     
 // Read a single character from the RX FIFO
 char read_rx_fifo_char()
 {
@@ -748,7 +670,7 @@ char read_rx_fifo_char()
   if( c == 'a')
     calibrate_ad7124_8();
   return c;
-  // TBA_NOTE: was here!  
+  // TBA_NOTE: was here!
 }
 
 // Readout the rx fifo contents
@@ -787,8 +709,8 @@ unsigned int read_rx_fifo(char * str1)
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Write the DAC word to the I2C bus. 
-// 
+// Write the DAC word to the I2C bus.
+//
 unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned short data)
 {
   // printf("--Write the start\n");
@@ -812,12 +734,12 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
   unsigned short data = 0;
   char * token;
   char delim[2] = " "; // Command chunks and commands are separted by ' ' and '\n'
-  // 0: expect 'c', 
+  // 0: expect 'c',
   // 1: expect the board address
   // 2: expect the dac register address
   // 3: expect the data
 
-  unsigned char chunk_type = 0; 
+  unsigned char chunk_type = 0;
   unsigned int ncmds = 0;
   
   // http://www.tutorialspoint.com/c_standard_library/c_function_strtok.htm
@@ -854,6 +776,7 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
 
   return ncmds;
 }
+#endif
 
 int main()
 {
@@ -865,7 +788,7 @@ int main()
   unsigned int ncmd_total = 0;
   unsigned int data_arr_2n2222[N_ADC][N_CHAN];
   unsigned char stat_arr_2n2222[N_ADC][N_CHAN];
-  unsigned char err_arr_2n2222[N_ADC][N_CHAN];
+  unsigned int err_arr_2n2222[N_ADC][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;
@@ -896,53 +819,47 @@ int main()
   // RUN, generate IRQ
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 0) );
 
-  /* // Setup stdin for non-blocking input. */
-  /* int flags = fcntl(0,F_GETFL,0); */
-  /* flags |= O_NONBLOCK; */
-  /* fcntl(0,F_SETFL,flags); */
-
+#ifdef DO_COMMANDS
   // Setup the i2c_opencores interface
   I2C_init(I2C_OPENCORES_0_BASE,ALT_CPU_FREQ,I2C_SCL_SPEED);
   // printf("I2C initialized\n");
+#endif
 
   /////////////////////////////////////
   // Measurement loop
   while(1)
     {
       flip_led();
-
-      // This isn't available with the small c library
-      // scanf("%s",&str1);
-            
-      /* // This keeps having buffer overflow issues */
-      /* while(read_serial(str1)) */
-      /* 	printf("Command: %s\n",str1); */
-
       for(chan = 0; chan < N_CHAN; chan++)
       	{
-      	  // Setup the conversions for the 2N2222
-      	  for(adc = 0; adc < N_ADC; adc++)
-      	    setup_2n2222(adc,pchan_2n2222[chan],nchan_2n2222);
+	  for(adc = 0; adc < N_ADC; adc++)
+	    {
+	      // Setup the conversions for the 2N2222
+	      setup_conv(adc,pchan_2n2222[chan],nchan_2n2222);
+	      
+	    }
 	  
       	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
       	  usleep(USLEEP_160MS);
+	  // usleep(300*1000);
 	  
       	  // Read the data conversion register
       	  for(adc = 0; adc < N_ADC; adc++)
       	    {
       	      data = 0;
+	      
+	      ad7124_read_reg(adc,AD7124_STATUS_REG,&data,1);
+      	      // printf("ADC%d, CHAN%d status register has 0x%06X\n",adc,chan,stat_arr_2n2222[adc][chan]);
+      	      stat_arr_2n2222[adc][chan] = (unsigned char)data;
+	      
       	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
       	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
       	      data_arr_2n2222[adc][chan] = data;
 	      
-	      ad7124_read_reg(adc,AD7124_STATUS_REG,&data,1);
-      	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
-      	      stat_arr_2n2222[adc][chan] = (unsigned char)data;
-
-	      ad7124_read_reg(adc,AD7124_ERR_REG,&data,1);
-      	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
-      	      err_arr_2n2222[adc][chan] = (unsigned char)data;	      
-      	    }
+	      ad7124_read_reg(adc,AD7124_ERR_REG,&data,3);
+      	      // printf("ADC%d, CHAN%d error register has 0x%06X\n",adc,chan,data);
+      	      err_arr_2n2222[adc][chan] = (unsigned int)data;	      
+	    }
       	}
       print_table(data_arr_2n2222);
       // print_list(data_arr_2n2222);
@@ -980,20 +897,22 @@ int main()
       /* 	switch_cal_hk(cal_type); */
 
       // Read from the RX line and send the appropriate I2C commands
+#ifdef DO_COMMANDS
       nbytes_total = 0;
       ncmd_total = 0;
       nbytes = 0;
       nbytes_total = 0;
       while((nbytes = read_rx_fifo(str1)))
-	{
-	  // Execute commands
-	  printf("%s",str1);
-	  nbytes_total += nbytes;
-	  ncmd = execute_cmd(str1,nbytes);
-	  ncmd_total += ncmd;
-	}
+      	{
+      	  // Execute commands
+      	  printf("%s",str1);
+      	  nbytes_total += nbytes;
+      	  ncmd = execute_cmd(str1,nbytes);
+      	  ncmd_total += ncmd;
+      	}
       printf("Received %d byte(s), Executed %d command(s)\n",nbytes_total,ncmd_total);
-      
+#endif      
+
       // Wait for control loop to finish (give yourself 3 seconds every time)
       if(loop_done)
 	printf("WARNING: Exceeded control loop period.\n");

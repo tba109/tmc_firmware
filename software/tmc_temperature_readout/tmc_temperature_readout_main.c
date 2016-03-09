@@ -23,7 +23,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 8
+#define MINOR_VERSION_NUMBER 9
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -174,6 +174,67 @@ unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
   return 0;
 }
 
+
+unsigned char print_status(unsigned char (*data_arr)[N_CHAN])
+{
+  unsigned char adc = 0;
+  unsigned char chan = 0;
+
+  printf("\n"); // this one sends the one for the measurement loop to the screen
+  printf("---------------------------------\n");
+
+  // Here's the printing section
+  printf("        ");
+  for(adc=0; adc < N_ADC; adc++)
+    printf("    ADC_%02d",adc);
+  printf("\n");
+  
+  for(chan=0; chan < N_CHAN; chan++)
+    {
+      printf("STAT_%d  ",chan);
+      for(adc=0; adc < N_ADC; adc++)
+	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
+	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
+	printf("  %8d",data_arr[adc][chan] & 0x000000FF);
+      
+      // Do this in the ISR, let's you know the measurement loop is done
+      printf("\n");
+    }
+
+  return 0;
+}
+
+
+unsigned char print_err(unsigned char (*data_arr)[N_CHAN])
+{
+  unsigned char adc = 0;
+  unsigned char chan = 0;
+
+  printf("\n"); // this one sends the one for the measurement loop to the screen
+  printf("---------------------------------\n");
+
+  // Here's the printing section
+  printf("        ");
+  for(adc=0; adc < N_ADC; adc++)
+    printf("    ADC_%02d",adc);
+  printf("\n");
+  
+  for(chan=0; chan < N_CHAN; chan++)
+    {
+      printf("ERR_%d   ",chan);
+      for(adc=0; adc < N_ADC; adc++)
+	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
+	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
+	printf("  %8d",data_arr[adc][chan] & 0x000000FF);
+      
+      // Do this in the ISR, let's you know the measurement loop is done
+      printf("\n");
+    }
+
+  return 0;
+}
+
+
 unsigned char print_list(unsigned int(*data_arr)[N_CHAN])
 {
   unsigned char adc = 0;
@@ -252,6 +313,22 @@ unsigned char setup_2n2222(unsigned char adc,unsigned char pchan,unsigned char n
   usleep(1000);
   // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
   // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+
+  // Wed Mar  9 13:25:48 EST 2016
+  // For debugging purposes: enable error checking
+  data = 
+    AD7124_ERR_REG_ADC_CAL_ERR |
+    AD7124_ERR_REG_ADC_CONV_ERR | 
+    AD7124_ERR_REG_ADC_SAT_ERR | 
+    AD7124_ERR_REG_REF_DET_ERR | 
+    AD7124_ERR_REG_SPI_READ_ERR |
+    AD7124_ERR_REG_SPI_WRITE_ERR;
+  ad7124_write_reg(adc,AD7124_ERREN_REG,data,3);
+  // read it back
+  data = 0;
+  usleep(1000);
+  // ad7124_read_reg(adc,AD7124_ERREN_REG,&data,3);
+  // printf("ADC_%d CHAN_%d: error enable register has 0x%04X\n",adc,chan,data);
 
   // Control register: full power mode, single acquisition
   data = 
@@ -787,6 +864,8 @@ int main()
   unsigned int ncmd = 0;
   unsigned int ncmd_total = 0;
   unsigned int data_arr_2n2222[N_ADC][N_CHAN];
+  unsigned char stat_arr_2n2222[N_ADC][N_CHAN];
+  unsigned char err_arr_2n2222[N_ADC][N_CHAN];
   unsigned char adc = 0;
   unsigned char chan = 0;
   unsigned char cal_type = 0;
@@ -855,11 +934,19 @@ int main()
       	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
       	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
       	      data_arr_2n2222[adc][chan] = data;
+	      
+	      ad7124_read_reg(adc,AD7124_STATUS_REG,&data,1);
+      	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
+      	      stat_arr_2n2222[adc][chan] = (unsigned char)data;
+
+	      ad7124_read_reg(adc,AD7124_ERR_REG,&data,1);
+      	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
+      	      err_arr_2n2222[adc][chan] = (unsigned char)data;	      
       	    }
       	}
       print_table(data_arr_2n2222);
       // print_list(data_arr_2n2222);
-
+      
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar  8 13:25:04 EST 2016
       // Monitor what the offset voltage. This requires setting up for a gain of 2
@@ -879,8 +966,11 @@ int main()
 	  printf("  %8d",data);
 	}
       printf("\n");
-      ////////////////////////////////////////////////////////////////////////////////
+      
+      print_status(stat_arr_2n2222);
+      print_err(err_arr_2n2222);
 
+      ////////////////////////////////////////////////////////////////////////////////
       // Do calibraiton and housekeeping incrementally
       switch_cal_hk(cal_type);
       cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;

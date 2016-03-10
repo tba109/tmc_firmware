@@ -25,7 +25,7 @@
 
 #define MAJOR_VERSION_NUMBER 1
 
-#define MINOR_VERSION_NUMBER 10
+#define MINOR_VERSION_NUMBER 11
 
 // Number of calibration and housekeeping operations to perform
 #define N_CAL_HK 8
@@ -256,7 +256,7 @@ void clear_led()
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
 }
 
-unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nchan)
+unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nchan, unsigned char pga, unsigned short fs, unsigned char pmode, unsigned char mode, unsigned char init_offs)
 {
   unsigned int data = 0;
 
@@ -269,8 +269,8 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
     AD7124_CH_MAP_REG_AINM(nchan);
   ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
   // read it back
-  data = 0;
-  usleep(1000);
+  // data = 0;
+  // usleep(1000);
   // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
   // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
   
@@ -282,11 +282,11 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
     AD7124_CFG_REG_REF_BUFM |
     AD7124_CFG_REG_AIN_BUFP |
     AD7124_CFG_REG_AIN_BUFM |
-    AD7124_CFG_REG_PGA(2);
+    AD7124_CFG_REG_PGA(pga);
   ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
   // read it back
-  data = 0;
-  usleep(1000);
+  // data = 0;
+  // usleep(1000);
   // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
   // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
   
@@ -295,13 +295,20 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
     AD7124_FILT_REG_FILTER(0) |
     AD7124_FILT_REG_REJ60 |
     AD7124_FILT_REG_POST_FILTER(3) |
-    AD7124_FILT_REG_FS(640);
+    AD7124_FILT_REG_FS(fs);
   ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
   // read it back
-  data = 0;
-  usleep(1000);
+  // data = 0;
+  // usleep(1000);
   // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
   // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
+
+  if(init_offs)
+    {
+      // Write 0x800000 to the offset register
+      data = 0x800000;
+      ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
+    }
 
   // Wed Mar  9 13:25:48 EST 2016
   // For debugging purposes: enable error checking
@@ -314,20 +321,19 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
     AD7124_ERR_REG_SPI_WRITE_ERR;
   ad7124_write_reg(adc,AD7124_ERREN_REG,data,3);
   // read it back
-  data = 0;
-  usleep(1000);
+  // data = 0;
+  // usleep(1000);
   // ad7124_read_reg(adc,AD7124_ERREN_REG,&data,3);
   // printf("ADC_%d CHAN_%d: error enable register has 0x%04X\n",adc,chan,data);
 
   // Control register: full power mode, single conversion
   data = 
-    AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
-    AD7124_ADC_CTRL_REG_MODE(0x1);
-  
+    AD7124_ADC_CTRL_REG_POWER_MODE(pmode) | 
+    AD7124_ADC_CTRL_REG_MODE(mode);
   ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
   // read it back
-  data = 0;
-  usleep(1000);
+  // data = 0;
+  // usleep(1000);
   // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
   // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
 
@@ -338,220 +344,6 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
   ad7124_read_reg(adc,AD7124_ERR_REG,&data,3); 
 
   return 0;
-}
-
-// Tue Mar  8 13:27:56 EST 2016
-// For monitoring baseline.
-unsigned char setup_baseline(unsigned char adc,unsigned char pchan,unsigned char nchan)
-{
-  unsigned int data = 0;
-
-  // Enable channel register 0, set positive and negative and
-  // map to setup 0
-  data = 
-    AD7124_CH_MAP_REG_CH_ENABLE |
-    AD7124_CH_MAP_REG_SETUP(0)  |
-    AD7124_CH_MAP_REG_AINP(pchan)  |
-    AD7124_CH_MAP_REG_AINM(nchan);
-  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
-  
-  // Configuration register: input and ref bufs enabled, 
-  // set the PGA for 4, bipolar mode
-  data = 
-    AD7124_CFG_REG_BIPOLAR |
-    AD7124_CFG_REG_REF_BUFP |
-    AD7124_CFG_REG_REF_BUFM |
-    AD7124_CFG_REG_AIN_BUFP |
-    AD7124_CFG_REG_AIN_BUFM |
-    AD7124_CFG_REG_PGA(1);
-  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-  
-  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
-  data = 
-    AD7124_FILT_REG_FILTER(0) |
-    AD7124_FILT_REG_REJ60 |
-    AD7124_FILT_REG_POST_FILTER(3) |
-    AD7124_FILT_REG_FS(640);
-  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-
-  // Control register: full power mode, single acquisition
-  data = 
-    AD7124_ADC_CTRL_REG_POWER_MODE(0x3) | 
-    AD7124_ADC_CTRL_REG_MODE(0x1);
-  
-  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_ADC_CTRL_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: control register has 0x%04X\n",adc,chan,data); 
-
-  return 0;
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-// This handles ad7124 gain calibration
-// 
-unsigned char ad7124_gain_cal(unsigned char adc)
-{
-  // unsigned char nbytes = 0;
-  unsigned int data = 0;
-  
-  // For debugging, read and print the values of the offset register and gain register
-  // nbytes = ad7124_read_reg(adc,AD7124_GAIN0_REG,&data,3);
-  // printf("ADC_GAIN_%02d: %8d\n",adc,data);
-   
-  // Enable channel register 0, set positive and negative and
-  // map to setup 0
-  // I'm going to setup for 
-  data = 
-    AD7124_CH_MAP_REG_CH_ENABLE |
-    AD7124_CH_MAP_REG_SETUP(0)  |
-    AD7124_CH_MAP_REG_AINP(8)  | // Tue Mar  8 11:26:19 EST 2016, changed from 12
-    AD7124_CH_MAP_REG_AINM(7);
-  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
-  
-  // Configuration register: input and ref bufs enabled, 
-  // set the PGA for 4, bipolar mode
-  data = 
-    AD7124_CFG_REG_BIPOLAR |
-    AD7124_CFG_REG_REF_BUFP |
-    AD7124_CFG_REG_REF_BUFM |
-    AD7124_CFG_REG_AIN_BUFP |
-    AD7124_CFG_REG_AIN_BUFM |
-    AD7124_CFG_REG_PGA(2);
-  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-  
-  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
-  data = 
-    AD7124_FILT_REG_FILTER(0) |
-    AD7124_FILT_REG_REJ60 |
-    AD7124_FILT_REG_POST_FILTER(3) |
-    AD7124_FILT_REG_FS(2047); // Tue Mar  8 11:21:27 EST 2016 changed from 640
-  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-  
-  // Write 0x800000 to the offset register
-  data = 0x800000;
-  ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
- 
-  // Start a full scale internal calibration
-  // Set the power mode to mid (can't calibrate in full power mode)
-  data = 
-    AD7124_ADC_CTRL_REG_POWER_MODE(0x1) | 
-    AD7124_ADC_CTRL_REG_MODE(0x6);
-  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
-  
-  // For debugging, read and print the values of the offset register and gain register
-  // nbytes = ad7124_read_reg(adc,AD7124_GAIN0_REG,&data,3);
-  // printf("ADC_GAIN_%02d: %8d\n",adc,data);
-  
-  return data;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////
-// This handles ad7124 offset calibration
-// 
-unsigned char ad7124_offset_cal(unsigned char adc)
-{
-  // unsigned char nbytes = 0;
-  unsigned int data = 0;
-  
-  // For debugging, read and print the values of the offset register and gain register
-  // nbytes = ad7124_read_reg(adc,AD7124_OFFS0_REG,&data,3);
-  // printf("ADC_OFFS_%02d: %8d\n",adc,data);
-
-  // Write 0x800001 to the offset register (debugging, assure it's actually changing!)
-  // data = 0x800001;
-  // ad7124_write_reg(adc,AD7124_OFFS0_REG,data,3);
-
-  // Enable channel register 0, set positive and negative and
-  // map to setup 0
-  // I'm going to setup for 
-  data = 
-    AD7124_CH_MAP_REG_CH_ENABLE |
-    AD7124_CH_MAP_REG_SETUP(0)  |
-    AD7124_CH_MAP_REG_AINP(8)  | // Tue Mar  8 11:26:19 EST 2016, changed from 12
-    AD7124_CH_MAP_REG_AINM(7);
-  ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CH0_MAP_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: channel register has 0x%04X\n",adc,chan,data);
-  
-  // Configuration register: input and ref bufs enabled, 
-  // set the PGA for 4, bipolar mode
-  data = 
-    AD7124_CFG_REG_BIPOLAR |
-    AD7124_CFG_REG_REF_BUFP |
-    AD7124_CFG_REG_REF_BUFM |
-    AD7124_CFG_REG_AIN_BUFP |
-    AD7124_CFG_REG_AIN_BUFM |
-    AD7124_CFG_REG_PGA(2);
-  ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-  
-  // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
-  data = 
-    AD7124_FILT_REG_FILTER(0) |
-    AD7124_FILT_REG_REJ60 |
-    AD7124_FILT_REG_POST_FILTER(3) |
-    AD7124_FILT_REG_FS(2047); // Tue Mar  8 11:21:27 EST 2016 changed from 640
-  ad7124_write_reg(adc,AD7124_FILT0_REG,data,3);
-  // read it back
-  data = 0;
-  usleep(1000);
-  // ad7124_read_reg(adc,AD7124_FILT0_REG,&data,3);
-  // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-
-
-  // Start a zero scale internal calibration
-  // Set the power mode to mid (can't calibrate in full power mode)
-  data = 
-    AD7124_ADC_CTRL_REG_POWER_MODE(0x1) | 
-    AD7124_ADC_CTRL_REG_MODE(0x5);
-  ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
-  
-  // For debugging, read and print the values of the offset register and gain register
-  // nbytes = ad7124_read_reg(adc,AD7124_OFFS0_REG,&data,3);
-  // printf("ADC_OFFS_%02d: %8d\n",adc,data);
-
-  return data;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -565,12 +357,14 @@ unsigned char calibrate_ad7124_8(void)
   
   for(i = 0; i < N_ADC; i++)
   	{
-  	  ad7124_gain_cal(i);
+  	  // AIN8 and 7, PGA=2 (x4), FS = 2047, mid-power, gain cal, init offset  
+	  setup_conv(i,8,7,2,2047,0x1,0x6,1);
   	}
   usleep(8000*1000);
   for(i = 0; i < N_ADC; i++)
   	{
-  	  ad7124_offset_cal(i);
+	  // AIN8 and 7, PGA=2 (x4), FS = 2047, mid-power, offset cal  
+	  setup_conv(i,8,7,2,2047,0x1,0x5,0);
   	}
   usleep(3000*1000);
 
@@ -603,9 +397,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
     {
       for(i = 0; i < N_BRD; i++)
 	{
-	  // The only difference between a board temperature and a 2N2222 is the channel
-	  // So, we can just call setup_conv with a bit of translation.  
-	  setup_conv(i*3,pchan_board_temp,nchan_board_temp);
+	  // PGA=2 (x4), FS = 2047, full-power, single conv  
+	  setup_conv(i*3,pchan_board_temp,nchan_board_temp,2,640,0x3,0x1,0);
 	}  
       usleep(USLEEP_160MS);
       printf("\n               BD0       BD1       BD2       BD3\nTemp:   ");
@@ -619,9 +412,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
     {
       for(i = 0; i < N_ADC; i++)
 	{
-	  // The only difference between a current and a 2N2222 is the channel
-	  // So, we can just call setup_conv with a bit of translation.  
-	  setup_conv(i,pchan_adc_temp,nchan_adc_temp);
+	  // PGA=2 (x4), FS = 2047, full-power, single conv  
+	  setup_conv(i,pchan_adc_temp,nchan_adc_temp,2,640,0x3,0x1,0);
 	}
       usleep(USLEEP_160MS);
       printf("        ");
@@ -638,9 +430,8 @@ unsigned char switch_cal_hk(unsigned char cal_type)
     {
       for(i = 0; i < N_ADC; i++)
 	{
-	  // The only difference between a current and a 2N2222 is the channel
-	  // So, we can just call setup_conv with a bit of translation.  
-	  setup_conv(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN]);
+	  // PGA=2 (x4), FS = 2047, full-power, single conv  
+	  setup_conv(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN],2,640,0x3,0x1,0);
 	}
       usleep(USLEEP_160MS);
       printf("        ");
@@ -811,12 +602,13 @@ int main()
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE, (1<<3) | (1 << 0));  
   // Clear the timemout bit
   IOWR_ALTERA_AVALON_TIMER_STATUS(TIMER_0_BASE,0);
+  // Setup the ISR
   alt_ic_isr_register(TIMER_0_IRQ_INTERRUPT_CONTROLLER_ID,
 		      TIMER_0_IRQ,
 		      handle_timer_interrupts,
 		      ptr,
 		      0x00);
-  // RUN, generate IRQ
+  // RUN, generate IRQ on timeout
   IOWR_ALTERA_AVALON_TIMER_CONTROL(TIMER_0_BASE,(1<<2) | (1 << 0) );
 
 #ifdef DO_COMMANDS
@@ -835,13 +627,12 @@ int main()
 	  for(adc = 0; adc < N_ADC; adc++)
 	    {
 	      // Setup the conversions for the 2N2222
-	      setup_conv(adc,pchan_2n2222[chan],nchan_2n2222);
-	      
-	    }
-	  
+	      // PGA=2 (x4), FS = 2047, full-power, single conv  
+	      setup_conv(adc,pchan_2n2222[chan],nchan_2n2222,2,640,0x3,0x1,0);
+	    }	  
+
       	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
       	  usleep(USLEEP_160MS);
-	  // usleep(300*1000);
 	  
       	  // Read the data conversion register
       	  for(adc = 0; adc < N_ADC; adc++)
@@ -849,27 +640,26 @@ int main()
       	      data = 0;
 	      
 	      ad7124_read_reg(adc,AD7124_STATUS_REG,&data,1);
-      	      // printf("ADC%d, CHAN%d status register has 0x%06X\n",adc,chan,stat_arr_2n2222[adc][chan]);
       	      stat_arr_2n2222[adc][chan] = (unsigned char)data;
 	      
       	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-      	      // printf("ADC%d, CHAN%d conversion register has 0x%06X\n",adc,chan,data);
       	      data_arr_2n2222[adc][chan] = data;
 	      
 	      ad7124_read_reg(adc,AD7124_ERR_REG,&data,3);
-      	      // printf("ADC%d, CHAN%d error register has 0x%06X\n",adc,chan,data);
       	      err_arr_2n2222[adc][chan] = (unsigned int)data;	      
 	    }
       	}
       print_table(data_arr_2n2222);
-      // print_list(data_arr_2n2222);
-      
+            
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar  8 13:25:04 EST 2016
       // Monitor what the offset voltage. This requires setting up for a gain of 2
       for(adc = 0; adc < N_ADC; adc++)
-	setup_baseline(adc,7,0);
-      
+	{
+	  // PGA=2 (x4), FS = 2047, full-power, single conv  
+	  setup_conv(adc,7,0,1,640,0x3,0x1,0);
+	}
+
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);
       
@@ -879,7 +669,6 @@ int main()
 	{
 	  data = 0;
 	  ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-	  // printf("Baseline monitor: ADC%d baseline = %d\n",adc,data);
 	  printf("  %8d",data);
 	}
       printf("\n");

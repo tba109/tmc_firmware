@@ -17,31 +17,14 @@
 #include <string.h>
 #include "i2c_opencores.h"
 
-// #define DO_COMMANDS
+#define DO_COMMANDS
+#define DO_CALIBRATION
+#define MAJOR_VERSION_NUMBER 1
+#define MINOR_VERSION_NUMBER 12
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
 #define N_BRD 4 // 4 boards
-
-#define MAJOR_VERSION_NUMBER 1
-
-#define MINOR_VERSION_NUMBER 11
-
-// Number of calibration and housekeeping operations to perform
-#define N_CAL_HK 8
-
-// Board temperature
-#define HK_BD_TEMP 0
-
-// ADC on-chip temperature sensor
-#define HK_ADC_TEMP 1
-
-// Currents 
-#define HK_CURRENT_MIN 2
-#define HK_CURRENT_MAX 7
-
-// Calibration 
-#define CALIBRATE 8
 
 // For the RX FIFO
 #define RX_EOC 0x0A // RX end of command
@@ -66,7 +49,7 @@ const unsigned char nchan_adc_temp = 0x11; // VSS
 volatile unsigned char loop_done;
 
 // 160us wait
-#define USLEEP_160MS 115*1000  // oddly, this seems to give the ~160ms delay
+#define USLEEP_160MS 160*1000  // oddly, this seems to give the ~160ms delay
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Handle timer interrupts
@@ -147,93 +130,20 @@ unsigned char ad7124_read_reg(unsigned char adc, unsigned char reg, unsigned int
   return ret_val;
 }
 
-unsigned char print_table(unsigned int (*data_arr)[N_CHAN])
+unsigned char read_chan(unsigned int reg,unsigned char nbytes,unsigned char print_hex)
 {
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-
-  printf("\n"); // this one sends the one for the measurement loop to the screen
-  printf("---------------------------------\n");
-
-  // Here's the printing section
-  printf("        ");
-  for(adc=0; adc < N_ADC; adc++)
-    printf("    ADC_%02d",adc);
+  unsigned char i = 0;
+  unsigned int data = 0;
+  for(i = 0; i<N_ADC; i++)
+    {
+      data = 0;
+      ad7124_read_reg(i,reg,&data,nbytes);
+      if(print_hex)
+	printf("    %6X",data & 0x00FFFFFF);
+      else
+	printf("  %8d",data & 0x00FFFFFF);
+    }
   printf("\n");
-  
-  for(chan=0; chan < N_CHAN; chan++)
-    {
-      printf("CHAN_%d  ",chan);
-      for(adc=0; adc < N_ADC; adc++)
-	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	// printf("  %08X",data_arr[adc][chan] & 0xFFFFFFFF);
-	printf("  %8d",data_arr[adc][chan] & 0x00FFFFFF);
-      
-      // Do this in the ISR, let's you know the measurement loop is done
-      printf("\n");
-    }
-
-  return 0;
-}
-
-
-unsigned char print_status(unsigned char (*data_arr)[N_CHAN])
-{
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-
-  // printf("\n"); // this one sends the one for the measurement loop to the screen
-  // printf("---------------------------------\n");
-
-  // Here's the printing section
-  // printf("        ");
-  // for(adc=0; adc < N_ADC; adc++)
-  //  printf("    ADC_%02d",adc);
-  // printf("\n");
-  
-  for(chan=0; chan < N_CHAN; chan++)
-    {
-      printf("STAT_%d  ",chan);
-      for(adc=0; adc < N_ADC; adc++)
-	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	printf("        %02X",data_arr[adc][chan] & 0x000000FF);
-      // printf("  %8d",data_arr[adc][chan] & 0x000000FF);
-      
-
-      // Do this in the ISR, let's you know the measurement loop is done
-      printf("\n");
-    }
-
-  return 0;
-}
-
-
-unsigned char print_err(unsigned int (*data_arr)[N_CHAN])
-{
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-
-  // printf("\n"); // this one sends the one for the measurement loop to the screen
-  // printf("---------------------------------\n");
-
-  // Here's the printing section
-  // printf("        ");
-  // for(adc=0; adc < N_ADC; adc++)
-  //  printf("    ADC_%02d",adc);
-  // printf("\n");
-  
-  for(chan=0; chan < N_CHAN; chan++)
-    {
-      printf("ERR_%d   ",chan);
-      for(adc=0; adc < N_ADC; adc++)
-	// printf("  0x%06X",data_arr[adc][chan] & 0x00FFFFFF);
-	printf("  %08X",data_arr[adc][chan] & 0x00FFFFFF);
-	// printf("  %8d",data_arr[adc][chan] & 0x00FFFFFF);
-      
-      // Do this in the ISR, let's you know the measurement loop is done
-      printf("\n");
-    }
-
   return 0;
 }
 
@@ -256,7 +166,14 @@ void clear_led()
   IOWR_ALTERA_AVALON_PIO_DATA(PIO_1_BASE, (unsigned char)(x));
 }
 
-unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nchan, unsigned char pga, unsigned short fs, unsigned char pmode, unsigned char mode, unsigned char init_offs)
+unsigned char setup_conv(unsigned char adc,
+			 unsigned char pchan,
+			 unsigned char nchan, 
+			 unsigned char pga, 
+			 unsigned short fs, 
+			 unsigned char pmode, 
+			 unsigned char mode, 
+			 unsigned char init_offs)
 {
   unsigned int data = 0;
 
@@ -346,6 +263,7 @@ unsigned char setup_conv(unsigned char adc,unsigned char pchan,unsigned char nch
   return 0;
 }
 
+#ifdef DO_CALIBRATION
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Calibrate the ADC
 unsigned char calibrate_ad7124_8(void)
@@ -383,70 +301,7 @@ unsigned char calibrate_ad7124_8(void)
   printf("\n");
   return 0;
 }
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-// This handles calibration and housekeeping
-// 
-unsigned char switch_cal_hk(unsigned char cal_type)
-{
-  unsigned int data = 0;
-  unsigned char i = 0;
-  
-  if(cal_type == HK_BD_TEMP)
-    {
-      for(i = 0; i < N_BRD; i++)
-	{
-	  // PGA=2 (x4), FS = 2047, full-power, single conv  
-	  setup_conv(i*3,pchan_board_temp,nchan_board_temp,2,640,0x3,0x1,0);
-	}  
-      usleep(USLEEP_160MS);
-      printf("\n               BD0       BD1       BD2       BD3\nTemp:   ");
-      for(i = 0; i < N_BRD; i++)
-	{
-	  ad7124_read_reg(i*3,AD7124_DATA_REG,&data,3);
-	  printf("  %8d",data);
-	}
-    }
-  else if(cal_type == HK_ADC_TEMP)
-    {
-      for(i = 0; i < N_ADC; i++)
-	{
-	  // PGA=2 (x4), FS = 2047, full-power, single conv  
-	  setup_conv(i,pchan_adc_temp,nchan_adc_temp,2,640,0x3,0x1,0);
-	}
-      usleep(USLEEP_160MS);
-      printf("        ");
-      printf("\n            ADC_00    ADC_01    ADC_02    ADC_03    ADC_04    ADC_05    ADC_06    ADC_07    ADC_08    ADC_09    ADC_10    ADC_11\n");
-      printf("Temp:   ");
-      for(i = 0; i<N_ADC; i++)
-	{
-	  data = 0;
-	  ad7124_read_reg(i,AD7124_DATA_REG,&data,3);
-	  printf("  %8d",data & 0x00FFFFFF);
-	}
-    }
-  else if(cal_type >= HK_CURRENT_MIN && cal_type <= HK_CURRENT_MAX)
-    {
-      for(i = 0; i < N_ADC; i++)
-	{
-	  // PGA=2 (x4), FS = 2047, full-power, single conv  
-	  setup_conv(i,pchan_current[cal_type-HK_CURRENT_MIN],nchan_current[cal_type-HK_CURRENT_MIN],2,640,0x3,0x1,0);
-	}
-      usleep(USLEEP_160MS);
-      printf("        ");
-      printf("\n            CUR_00    CUR_01    CUR_02    CUR_03    CUR_04    CUR_05    CUR_06    CUR_07    CUR_08    CUR_09    CUR_10    CUR_11\n");
-      printf("CHAN_%d  ",cal_type-HK_CURRENT_MIN);
-      for(i = 0; i<N_ADC; i++)
-	{
-	  data = 0;
-	  ad7124_read_reg(i,AD7124_DATA_REG,&data,3);
-	  printf("  %8d",data & 0x00FFFFFF);
-	}
-    }  
-  printf("\n");
-  return 0;
-}
+#endif
  
 #ifdef DO_COMMANDS     
 // Read a single character from the RX FIFO
@@ -458,8 +313,10 @@ char read_rx_fifo_char()
   x = 0;
   IOWR_ALTERA_AVALON_PIO_DATA(RX_FIFO_READ_BASE, (unsigned char)(x)); // clear read signal (note: FPGA internally positive edge clocks this)
   c = IORD_ALTERA_AVALON_PIO_DATA(RX_CHAR_BASE);
+#ifdef DO_CALIBRATION
   if( c == 'a')
     calibrate_ad7124_8();
+#endif
   return c;
   // TBA_NOTE: was here!
 }
@@ -572,19 +429,16 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
 int main()
 {
   unsigned char x = 0xFF;
-  unsigned int data = 0;
+  unsigned char adc = 0;
+  unsigned char chan = 0;
+  int *ptr;
+#ifdef DO_COMMANDS
   unsigned int nbytes = 0;
   unsigned int nbytes_total = 0;
   unsigned int ncmd = 0;
   unsigned int ncmd_total = 0;
-  unsigned int data_arr_2n2222[N_ADC][N_CHAN];
-  unsigned char stat_arr_2n2222[N_ADC][N_CHAN];
-  unsigned int err_arr_2n2222[N_ADC][N_CHAN];
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-  unsigned char cal_type = 0;
-  int * ptr;
-  char str1[RX_BUF_SIZE];
+  char str1[RX_BUF_SIZE];  
+#endif
   ptr = NULL;
   loop_done = 0;
   
@@ -594,6 +448,7 @@ int main()
   printf("-----------------------------------------------------\n");
   printf("TMC firmware version %d.%d\n",MAJOR_VERSION_NUMBER,MINOR_VERSION_NUMBER);
 
+  // This can be used to see if an ADC is connected
   // nbytes = ad7124_read_reg(0,AD7124_ID_REG,&data,1);
   // printf("ADC %d ID register has 0x%2X\n",0,data);
   
@@ -621,71 +476,129 @@ int main()
   // Measurement loop
   while(1)
     {
+      // This let's you know that your are measuring
       flip_led();
-      for(chan = 0; chan < N_CHAN; chan++)
-      	{
-	  for(adc = 0; adc < N_ADC; adc++)
-	    {
-	      // Setup the conversions for the 2N2222
-	      // PGA=2 (x4), FS = 2047, full-power, single conv  
-	      setup_conv(adc,pchan_2n2222[chan],nchan_2n2222,2,640,0x3,0x1,0);
-	    }	  
+      
+      // Print the header
+      printf("\n");
+      printf("---------------------------------\n");
+      printf("        ");
+      for(adc=0; adc < N_ADC; adc++)
+	printf("    ADC_%02d",adc);
+      printf("\n");
 
-      	  // Wait for the conversions to complete (should take 133ms, wait 160ms)
-      	  usleep(USLEEP_160MS);
-	  
-      	  // Read the data conversion register
-      	  for(adc = 0; adc < N_ADC; adc++)
-      	    {
-      	      data = 0;
-	      
-	      ad7124_read_reg(adc,AD7124_STATUS_REG,&data,1);
-      	      stat_arr_2n2222[adc][chan] = (unsigned char)data;
-	      
-      	      ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-      	      data_arr_2n2222[adc][chan] = data;
-	      
-	      ad7124_read_reg(adc,AD7124_ERR_REG,&data,3);
-      	      err_arr_2n2222[adc][chan] = (unsigned int)data;	      
-	    }
-      	}
-      print_table(data_arr_2n2222);
-            
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar  8 13:25:04 EST 2016
-      // Monitor what the offset voltage. This requires setting up for a gain of 2
+      // Monitor the baseline voltage. This requires setting up for a gain of 2.
+      for(adc = 0; adc < N_ADC; adc++)
+	{
+	  // PGA=1 (x2), FS = 2047, full-power, single conv  
+	  setup_conv(adc,7,0,1,640,0x3,0x1,0);
+	}
+      // Wait for the conversions to complete (should take 133ms, wait 160ms)
+      usleep(USLEEP_160MS);
+      printf("BSLN    ");
+      read_chan(AD7124_DATA_REG,3,0);
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Tue Mar 15 10:37:43 EDT 2016
+      // Monitor the zero scale voltage. This requires setting up for a gain of 4.
       for(adc = 0; adc < N_ADC; adc++)
 	{
 	  // PGA=2 (x4), FS = 2047, full-power, single conv  
-	  setup_conv(adc,7,0,1,640,0x3,0x1,0);
+	  setup_conv(adc,7,7,2,640,0x3,0x1,0);
 	}
-
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);
-      
-      // Read the data conversion register
-      printf("BSLN:   ");
-      for(adc = 0; adc < N_ADC; adc++)
-	{
-	  data = 0;
-	  ad7124_read_reg(adc,AD7124_DATA_REG,&data,3);
-	  printf("  %8d",data);
-	}
+      printf("ZERO    ");
+      read_chan(AD7124_DATA_REG,3,0);
+
       printf("\n");
-      
-      print_status(stat_arr_2n2222);
-      print_err(err_arr_2n2222);
 
       ////////////////////////////////////////////////////////////////////////////////
-      // Do calibraiton and housekeeping incrementally
-      switch_cal_hk(cal_type);
-      cal_type = (cal_type+1 >= N_CAL_HK) ? 0 : cal_type+1;
-      
-      // This does full housekeeping
-      /* for(cal_type = 0; cal_type < N_CAL_HK; cal_type++) */
-      /* 	switch_cal_hk(cal_type); */
+      // Tue Mar 15 10:37:43 EDT 2016
+      // Monitor the 2n2222 voltage and currents. Read out the status and error regs.
+      for(chan = 0; chan < N_CHAN; chan++)
+      	{
+      	  // Excitation current
+	  for(adc = 0; adc < N_ADC; adc++)
+	    {
+	      // PGA=2 (x4), FS = 640, full-power, single conv
+	      setup_conv(adc,
+			 pchan_current[chan],
+			 nchan_current[chan],
+			 2,
+			 640,
+			 0x3,
+			 0x1,
+			 0);
+	    }
+	  usleep(USLEEP_160MS);
+  	  printf("CURR%d   ",chan);
+	  read_chan(AD7124_DATA_REG,3,0);
+	  
+	  // 2N2222 voltage
+	  for(adc = 0; adc < N_ADC; adc++)
+	    {
+	      // Setup the conversions for the 2N2222
+	      // PGA=2 (x4), FS = 640, full-power, single conv  
+	      setup_conv(adc,
+			 pchan_2n2222[chan],
+			 nchan_2n2222,
+			 2,
+			 640,
+			 0x3,
+			 0x1,
+			 0);
+	    }
+	  usleep(USLEEP_160MS);
+	  printf("STAT%d   ",chan);
+	  read_chan(AD7124_STATUS_REG,1,1);
+	  printf("CHAN%d   ",chan);
+	  read_chan(AD7124_DATA_REG,3,0);
+	  printf("ERRO%d   ",chan);
+	  read_chan(AD7124_ERR_REG,3,1);
+	  printf("\n");
+      	}
 
-      // Read from the RX line and send the appropriate I2C commands
+      ////////////////////////////////////////////////////////////////////////////////
+      // Tue Mar 15 13:31:04 EDT 2016
+      // Read out the ADC temperatures
+      for(adc = 0; adc < N_ADC; adc++)
+	{
+	  // PGA=2 (x4), FS = 640, full-power, single conv
+	  setup_conv(adc,
+		     pchan_adc_temp,
+		     nchan_adc_temp,
+		     2,
+		     640,
+		     0x3,
+		     0x1,
+		     0);
+	}
+      usleep(USLEEP_160MS);
+      printf("ATEMP   ");
+      read_chan(AD7124_DATA_REG,3,0);
+
+      ////////////////////////////////////////////////////////////////////////////////
+      // Tue Mar 15 13:36:18 EDT 2016
+      // Read out the board temperatures
+      for(adc = 0; adc < N_BRD; adc++)
+	{
+	  // PGA=2 (x4), FS = 640, full-power, single conv
+	  setup_conv(adc,
+		     pchan_board_temp,
+		     nchan_board_temp,
+		     2,
+		     640,
+		     0x3,
+		     0x1,
+		     0);
+	}
+      usleep(USLEEP_160MS);
+      printf("BTEMP   ");
+      read_chan(AD7124_DATA_REG,3,0);
+
 #ifdef DO_COMMANDS
       nbytes_total = 0;
       ncmd_total = 0;

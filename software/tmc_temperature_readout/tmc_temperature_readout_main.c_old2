@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 13
+#define MINOR_VERSION_NUMBER 12
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -130,7 +130,7 @@ unsigned char ad7124_read_reg(unsigned char adc, unsigned char reg, unsigned int
   return ret_val;
 }
 
-unsigned char read_chan(unsigned int *data_arr, unsigned int reg,unsigned char nbytes)
+unsigned char read_chan(unsigned int reg,unsigned char nbytes,unsigned char print_hex)
 {
   unsigned char i = 0;
   unsigned int data = 0;
@@ -138,8 +138,12 @@ unsigned char read_chan(unsigned int *data_arr, unsigned int reg,unsigned char n
     {
       data = 0;
       ad7124_read_reg(i,reg,&data,nbytes);
-      data_arr[i] = data;
+      if(print_hex)
+	printf("    %6X",data & 0x00FFFFFF);
+      else
+	printf("  %8d",data & 0x00FFFFFF);
     }
+  printf("\n");
   return 0;
 }
 
@@ -422,96 +426,12 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
 }
 #endif
 
-unsigned char print_table(unsigned int* bsln, 
-			  unsigned int* zero, 
-			  unsigned int (*stat)[N_ADC],
-			  unsigned int (*erro)[N_ADC],
-			  unsigned int (*curr)[N_ADC],
-			  unsigned int (*tsig)[N_ADC],
-			  unsigned int* atemp,
-			  unsigned int* btemp)
-{
-  unsigned char adc = 0;
-  unsigned char chan = 0;
-
-  // Print the header
-  printf("\n");
-  printf("---------------------------------\n");
-  printf("        ");
-  for(adc=0; adc < N_ADC; adc++)
-    printf("    ADC_%02d",adc);
-  printf("\n");
-  
-  printf("BSLN    ");
-  for(adc = 0; adc < N_ADC; adc++)
-    printf("  %8d",bsln[adc] & 0x00FFFFFF);
-  printf("\n");
-
-  printf("ZERO    ");
-  for(adc = 0; adc < N_ADC; adc++)
-    printf("  %8d",zero[adc] & 0x00FFFFFF);
-  printf("\n");
-
-  for(chan = 0; chan < N_CHAN; chan++)
-    {
-      printf("CURR%d   ",chan);
-      for(adc = 0; adc < N_ADC; adc++)
-	printf("  %8d",curr[chan][adc] & 0x00FFFFFF);
-      printf("\n");
-    }
-
-  for(chan = 0; chan < N_CHAN; chan++)
-    {
-      printf("STAT%d   ",chan);
-      for(adc = 0; adc < N_ADC; adc++)
-	printf("    %06X",stat[chan][adc] & 0x00FFFFFF);
-      printf("\n");
-    }
-
-  for(chan = 0; chan < N_CHAN; chan++)
-    {
-      printf("TSIG%d   ",chan);
-      for(adc = 0; adc < N_ADC; adc++)
-	printf("  %8d",tsig[chan][adc] & 0x00FFFFFF);
-      printf("\n");
-    }
-  
-  for(chan = 0; chan < N_CHAN; chan++)
-    {
-      printf("ERRO%d   ",chan);
-      for(adc = 0; adc < N_ADC; adc++)
-	printf("    %06X",erro[chan][adc] & 0x00FFFFFF);
-      printf("\n");
-    }
-
-  printf("ATEMP   ");
-  for(adc = 0; adc < N_ADC; adc++)
-    printf("  %8d",atemp[adc] & 0x00FFFFFF);
-  printf("\n");
-
-  printf("BTEMP   ");
-  for(adc = 0; adc < N_ADC; adc++)
-    printf("  %8d",btemp[adc] & 0x00FFFFFF);
-  printf("\n");
-  
-  return 0;
-}
-
 int main()
 {
   unsigned char x = 0xFF;
   unsigned char adc = 0;
   unsigned char chan = 0;
   int *ptr;
-  unsigned int bsln[N_ADC];
-  unsigned int zero[N_ADC];
-  unsigned int stat[N_CHAN][N_ADC];
-  unsigned int erro[N_CHAN][N_ADC];
-  unsigned int curr[N_CHAN][N_ADC];
-  unsigned int tsig[N_CHAN][N_ADC];
-  unsigned int atemp[N_ADC];
-  unsigned int btemp[N_ADC];
-
 #ifdef DO_COMMANDS
   unsigned int nbytes = 0;
   unsigned int nbytes_total = 0;
@@ -559,6 +479,14 @@ int main()
       // This let's you know that your are measuring
       flip_led();
       
+      // Print the header
+      printf("\n");
+      printf("---------------------------------\n");
+      printf("        ");
+      for(adc=0; adc < N_ADC; adc++)
+	printf("    ADC_%02d",adc);
+      printf("\n");
+
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar  8 13:25:04 EST 2016
       // Monitor the baseline voltage. This requires setting up for a gain of 2.
@@ -569,7 +497,8 @@ int main()
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);
-      read_chan(bsln,AD7124_DATA_REG,3);
+      printf("BSLN    ");
+      read_chan(AD7124_DATA_REG,3,0);
       
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar 15 10:37:43 EDT 2016
@@ -580,8 +509,11 @@ int main()
 	  setup_conv(adc,7,7,2,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
-      usleep(USLEEP_160MS);      
-      read_chan(zero,AD7124_DATA_REG,3);
+      usleep(USLEEP_160MS);
+      printf("ZERO    ");
+      read_chan(AD7124_DATA_REG,3,0);
+
+      printf("\n");
 
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar 15 10:37:43 EDT 2016
@@ -602,7 +534,8 @@ int main()
 			 0);
 	    }
 	  usleep(USLEEP_160MS);
-	  read_chan(curr[chan],AD7124_DATA_REG,3);
+  	  printf("CURR%d   ",chan);
+	  read_chan(AD7124_DATA_REG,3,0);
 	  
 	  // 2N2222 voltage
 	  for(adc = 0; adc < N_ADC; adc++)
@@ -619,10 +552,14 @@ int main()
 			 0);
 	    }
 	  usleep(USLEEP_160MS);
-	  read_chan(stat[chan],AD7124_STATUS_REG,1);
-	  read_chan(tsig[chan],AD7124_DATA_REG,3);
-	  read_chan(erro[chan],AD7124_ERR_REG,3);
-	}
+	  printf("STAT%d   ",chan);
+	  read_chan(AD7124_STATUS_REG,1,1);
+	  printf("CHAN%d   ",chan);
+	  read_chan(AD7124_DATA_REG,3,0);
+	  printf("ERRO%d   ",chan);
+	  read_chan(AD7124_ERR_REG,3,1);
+	  printf("\n");
+      	}
 
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar 15 13:31:04 EDT 2016
@@ -640,7 +577,8 @@ int main()
 		     0);
 	}
       usleep(USLEEP_160MS);
-      read_chan(atemp,AD7124_DATA_REG,3);
+      printf("ATEMP   ");
+      read_chan(AD7124_DATA_REG,3,0);
 
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar 15 13:36:18 EDT 2016
@@ -658,16 +596,8 @@ int main()
 		     0);
 	}
       usleep(USLEEP_160MS);
-      read_chan(btemp,AD7124_DATA_REG,3);
-
-      print_table(bsln, 
-		  zero, 
-		  stat,
-		  erro,
-		  curr,
-		  tsig,
-		  atemp,
-		  btemp);
+      printf("BTEMP   ");
+      read_chan(AD7124_DATA_REG,3,0);
 
 #ifdef DO_COMMANDS
       nbytes_total = 0;

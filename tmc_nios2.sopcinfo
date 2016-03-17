@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="tmc_nios2" kind="tmc_nios2" version="1.0" fabric="QSYS">
  <!-- Format version 15.1 193 (Future versions may contain additional information.) -->
- <!-- 2016.03.15.13:41:48 -->
+ <!-- 2016.03.17.13:05:28 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1458063708</value>
+  <value>1458234328</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -12175,7 +12175,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.TIMESTAMP</name>
-   <value>1458063708</value>
+   <value>1458234328</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.compatible</name>
@@ -12195,7 +12195,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.dts.params.timestamp</name>
-   <value>1458063708</value>
+   <value>1458234328</value>
   </assignment>
   <assignment>
    <name>embeddedsw.dts.vendor</name>
@@ -12211,7 +12211,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="timestamp">
    <type>int</type>
-   <value>1458063708</value>
+   <value>1458234328</value>
    <derived>true</derived>
    <enabled>false</enabled>
    <visible>false</visible>
@@ -12707,7 +12707,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.LOAD_VALUE</name>
-   <value>249999999</value>
+   <value>299999999</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.MULT</name>
@@ -12715,7 +12715,7 @@ the requested settings for a module instance. -->
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.PERIOD</name>
-   <value>5</value>
+   <value>6</value>
   </assignment>
   <assignment>
    <name>embeddedsw.CMacro.PERIOD_UNITS</name>
@@ -12783,7 +12783,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="period">
    <type>java.lang.String</type>
-   <value>5</value>
+   <value>6</value>
    <derived>false</derived>
    <enabled>true</enabled>
    <visible>true</visible>
@@ -12865,7 +12865,7 @@ the requested settings for a module instance. -->
   </parameter>
   <parameter name="loadValue">
    <type>java.lang.String</type>
-   <value>249999999</value>
+   <value>299999999</value>
    <derived>true</derived>
    <enabled>true</enabled>
    <visible>false</visible>

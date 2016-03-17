@@ -4,7 +4,7 @@
  * Machine generated for CPU 'nios2_gen2_0' in SOPC Builder design 'tmc_nios2'
  * SOPC Builder design path: ../../tmc_nios2.sopcinfo
  *
- * Generated: Tue Mar 15 13:49:32 EDT 2016
+ * Generated: Thu Mar 17 13:11:52 EDT 2016
  */
 
 /*
@@ -493,7 +493,7 @@
 #define SYSID_QSYS_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_QSYS_0_NAME "/dev/sysid_qsys_0"
 #define SYSID_QSYS_0_SPAN 8
-#define SYSID_QSYS_0_TIMESTAMP 1458063708
+#define SYSID_QSYS_0_TIMESTAMP 1458234328
 #define SYSID_QSYS_0_TYPE "altera_avalon_sysid_qsys"
 
 
@@ -510,10 +510,10 @@
 #define TIMER_0_FREQ 50000000
 #define TIMER_0_IRQ 3
 #define TIMER_0_IRQ_INTERRUPT_CONTROLLER_ID 0
-#define TIMER_0_LOAD_VALUE 249999999
+#define TIMER_0_LOAD_VALUE 299999999
 #define TIMER_0_MULT 1.0
 #define TIMER_0_NAME "/dev/timer_0"
-#define TIMER_0_PERIOD 5
+#define TIMER_0_PERIOD 6
 #define TIMER_0_PERIOD_UNITS "s"
 #define TIMER_0_RESET_OUTPUT 0
 #define TIMER_0_SNAPSHOT 1

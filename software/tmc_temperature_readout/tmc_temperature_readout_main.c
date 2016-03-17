@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 14
+#define MINOR_VERSION_NUMBER 15
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -49,7 +49,8 @@ const unsigned char nchan_adc_temp = 0x11; // VSS
 volatile unsigned char loop_done;
 
 // 160us wait
-#define USLEEP_160MS 160*1000  // oddly, this seems to give the ~160ms delay
+#define USLEEP_160MS 115*1000  // oddly, this seems to give the ~160ms delay
+#define USLEEP_20MS 20*1000
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Handle timer interrupts
@@ -412,6 +413,7 @@ unsigned int execute_cmd(char * str1,unsigned int nbytes)
 	{
 	  data = atoi(token);
 	  write_ltc2605(board,dac,data);
+	  // printf("execute\n");
 	  ncmds++;
 	  chunk_type = 0;
 	}
@@ -452,6 +454,8 @@ unsigned char print_table(unsigned int* bsln,
     printf("  %8d",zero[adc] & 0x00FFFFFF);
   printf("\n");
 
+  // usleep(USLEEP_20MS);
+
   for(chan = 0; chan < N_CHAN; chan++)
     {
       printf("CURR%d   ",chan);
@@ -460,13 +464,16 @@ unsigned char print_table(unsigned int* bsln,
       printf("\n");
     }
 
+  // usleep(USLEEP_20MS);
+
   for(chan = 0; chan < N_CHAN; chan++)
     {
       printf("STAT%d   ",chan);
       for(adc = 0; adc < N_ADC; adc++)
-	printf("    %06X",stat[chan][adc] & 0x00FFFFFF);
+  	printf("    %06X",stat[chan][adc] & 0x00FFFFFF);
       printf("\n");
     }
+  // usleep(USLEEP_20MS);
 
   for(chan = 0; chan < N_CHAN; chan++)
     {
@@ -476,13 +483,17 @@ unsigned char print_table(unsigned int* bsln,
       printf("\n");
     }
   
+  // usleep(USLEEP_20MS);
+
   for(chan = 0; chan < N_CHAN; chan++)
     {
       printf("ERRO%d   ",chan);
       for(adc = 0; adc < N_ADC; adc++)
-	printf("    %06X",erro[chan][adc] & 0x00FFFFFF);
+  	printf("    %06X",erro[chan][adc] & 0x00FFFFFF);
       printf("\n");
     }
+
+  // usleep(USLEEP_20MS);
 
   printf("ATEMP   ");
   for(adc = 0; adc < N_ADC; adc++)
@@ -494,6 +505,8 @@ unsigned char print_table(unsigned int* bsln,
     printf("  %8d",btemp[adc] & 0x00FFFFFF);
   printf("\n");
   
+  // usleep(USLEEP_20MS);
+
   return 0;
 }
 

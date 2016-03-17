@@ -76,7 +76,7 @@ module tmc_nios2_timer_0 (
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
-          internal_counter <= 32'hEE6B27F;
+          internal_counter <= 32'h11E1A2FF;
       else if (counter_is_running || force_reload)
           if (counter_is_zero    || force_reload)
               internal_counter <= counter_load_value;
@@ -162,7 +162,7 @@ module tmc_nios2_timer_0 (
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
-          period_l_register <= 45695;
+          period_l_register <= 41727;
       else if (period_l_wr_strobe)
           period_l_register <= writedata;
     end
@@ -171,7 +171,7 @@ module tmc_nios2_timer_0 (
   always @(posedge clk or negedge reset_n)
     begin
       if (reset_n == 0)
-          period_h_register <= 3814;
+          period_h_register <= 4577;
       else if (period_h_wr_strobe)
           period_h_register <= writedata;
     end

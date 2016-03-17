@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 13
+#define MINOR_VERSION_NUMBER 14
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -645,7 +645,7 @@ int main()
       ////////////////////////////////////////////////////////////////////////////////
       // Tue Mar 15 13:36:18 EDT 2016
       // Read out the board temperatures
-      for(adc = 0; adc < N_BRD; adc++)
+      for(adc = 0; adc < N_ADC; adc++)
 	{
 	  // PGA=2 (x4), FS = 640, full-power, single conv
 	  setup_conv(adc,

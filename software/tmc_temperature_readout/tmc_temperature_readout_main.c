@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 15
+#define MINOR_VERSION_NUMBER 16
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -190,8 +190,10 @@ unsigned char setup_conv(unsigned char adc,
   
   // Configuration register: input and ref bufs enabled, 
   // set the PGA for 4, bipolar mode
-  data = 
-    AD7124_CFG_REG_BIPOLAR |
+  data =
+    // Fri Nov 11 14:34:22 EST 2016
+    // TBA_NOTE: Change from bipolar to unipolar operator
+    // AD7124_CFG_REG_BIPOLAR |
     AD7124_CFG_REG_REF_BUFP |
     AD7124_CFG_REG_REF_BUFM |
     AD7124_CFG_REG_AIN_BUFP |
@@ -438,7 +440,10 @@ unsigned char print_table(unsigned int* bsln,
 
   // Print the header
   printf("\n");
-  printf("---------------------------------\n");
+  // printf("---------------------------------\n");
+  // Fri Nov 11 15:01:50 EST 2016
+  // TBA_NOTE: This allows me to make sure we are using the right revision
+  printf("---------------------------------V%d.%d\n",MAJOR_VERSION_NUMBER,MINOR_VERSION_NUMBER);
   printf("        ");
   for(adc=0; adc < N_ADC; adc++)
     printf("    ADC_%02d",adc);
@@ -590,7 +595,11 @@ int main()
       for(adc = 0; adc < N_ADC; adc++)
 	{
 	  // PGA=2 (x4), FS = 2047, full-power, single conv  
-	  setup_conv(adc,7,7,2,640,0x3,0x1,0);
+	  // setup_conv(adc,7,7,2,640,0x3,0x1,0);
+	  // Fri Nov 11 14:26:04 EST 2016
+	  // TBA_NOTE: I want to try doing everything with PGA=1 (x2), note that we are
+	  // in unipolar mode here
+	  setup_conv(adc,7,7,1,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);      
@@ -604,11 +613,22 @@ int main()
       	  // Excitation current
 	  for(adc = 0; adc < N_ADC; adc++)
 	    {
-	      // PGA=2 (x4), FS = 640, full-power, single conv
+	      /* // PGA=2 (x4), FS = 640, full-power, single conv */
+	      /* setup_conv(adc, */
+	      /* 		 pchan_current[chan], */
+	      /* 		 nchan_current[chan], */
+	      /* 		 2, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	     
+	      // Fri Nov 11 14:43:59 EST 2016
+	      // TBA_NOTE: Change over to PGA=1 (gain of 2)
 	      setup_conv(adc,
 			 pchan_current[chan],
 			 nchan_current[chan],
-			 2,
+			 1,
 			 640,
 			 0x3,
 			 0x1,
@@ -622,10 +642,21 @@ int main()
 	    {
 	      // Setup the conversions for the 2N2222
 	      // PGA=2 (x4), FS = 640, full-power, single conv  
+	      /* setup_conv(adc, */
+	      /* 		 pchan_2n2222[chan], */
+	      /* 		 nchan_2n2222, */
+	      /* 		 2, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	      // Fri Nov 11 14:45:42 EST 2016
+	      // TBA_NOTE: Use PGA = 1 (x2)
+	      // Also change over the nchan to 0 (grounded)
 	      setup_conv(adc,
 			 pchan_2n2222[chan],
-			 nchan_2n2222,
-			 2,
+			 0,
+			 1,
 			 640,
 			 0x3,
 			 0x1,

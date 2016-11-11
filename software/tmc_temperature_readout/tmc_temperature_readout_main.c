@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 16
+#define MINOR_VERSION_NUMBER 17
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -193,7 +193,9 @@ unsigned char setup_conv(unsigned char adc,
   data =
     // Fri Nov 11 14:34:22 EST 2016
     // TBA_NOTE: Change from bipolar to unipolar operator
-    // AD7124_CFG_REG_BIPOLAR |
+    // Fri Nov 11 16:28:48 EST 2016
+    // TBA_NOTE: I was getting lots of zeros which seem weird, so change it back to bipolar
+    AD7124_CFG_REG_BIPOLAR |
     AD7124_CFG_REG_REF_BUFP |
     AD7124_CFG_REG_REF_BUFM |
     AD7124_CFG_REG_AIN_BUFP |
@@ -583,7 +585,10 @@ int main()
       for(adc = 0; adc < N_ADC; adc++)
 	{
 	  // PGA=1 (x2), FS = 2047, full-power, single conv  
-	  setup_conv(adc,7,0,1,640,0x3,0x1,0);
+	  // setup_conv(adc,7,0,1,640,0x3,0x1,0);
+	  // Fri Nov 11 16:30:22 EST 2016
+	  // TBA_NOTE: Try with PGA = 0, x1
+	  setup_conv(adc,7,0,0,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);
@@ -599,7 +604,10 @@ int main()
 	  // Fri Nov 11 14:26:04 EST 2016
 	  // TBA_NOTE: I want to try doing everything with PGA=1 (x2), note that we are
 	  // in unipolar mode here
-	  setup_conv(adc,7,7,1,640,0x3,0x1,0);
+	  // setup_conv(adc,7,7,1,640,0x3,0x1,0);
+	  // Fri Nov 11 16:30:56 EST 2016
+	  // TBA_NOTE: try with PGA = 0 (x1)
+	  setup_conv(adc,7,7,0,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);      
@@ -625,14 +633,25 @@ int main()
 	     
 	      // Fri Nov 11 14:43:59 EST 2016
 	      // TBA_NOTE: Change over to PGA=1 (gain of 2)
+	      /* setup_conv(adc, */
+	      /* 		 pchan_current[chan], */
+	      /* 		 nchan_current[chan], */
+	      /* 		 1, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	      // Fri Nov 11 16:32:14 EST 2016
+	      // TBA_NOTE: Change over to PGA=0 (gain of 1)
 	      setup_conv(adc,
 			 pchan_current[chan],
 			 nchan_current[chan],
-			 1,
+			 0,
 			 640,
 			 0x3,
 			 0x1,
 			 0);
+
 	    }
 	  usleep(USLEEP_160MS);
 	  read_chan(curr[chan],AD7124_DATA_REG,3);
@@ -653,10 +672,20 @@ int main()
 	      // Fri Nov 11 14:45:42 EST 2016
 	      // TBA_NOTE: Use PGA = 1 (x2)
 	      // Also change over the nchan to 0 (grounded)
+	      /* setup_conv(adc, */
+	      /* 		 pchan_2n2222[chan], */
+	      /* 		 0, */
+	      /* 		 1, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	      // TBA_NOTE: Use PGA = 0 (x1)
+	      // Also change over the nchan to 0 (grounded)
 	      setup_conv(adc,
 			 pchan_2n2222[chan],
 			 0,
-			 1,
+			 0,
 			 640,
 			 0x3,
 			 0x1,

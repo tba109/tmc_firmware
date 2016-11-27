@@ -37,41 +37,41 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  11 .debug_abbrev 00004720  00000000  00000000  000166c2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_line   00005271  00000000  00000000  0001ade2  2**0
+ 12 .debug_line   00005273  00000000  00000000  0001ade2  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_frame  000013d8  00000000  00000000  00020054  2**2
+ 13 .debug_frame  000013d8  00000000  00000000  00020058  2**2
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_str    00002aa5  00000000  00000000  0002142c  2**0
+ 14 .debug_str    00002aa5  00000000  00000000  00021430  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_loc    00001f9c  00000000  00000000  00023ed1  2**0
+ 15 .debug_loc    00001f9c  00000000  00000000  00023ed5  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_alt_sim_info 00000040  00000000  00000000  00025e70  2**2
+ 16 .debug_alt_sim_info 00000040  00000000  00000000  00025e74  2**2
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_ranges 00000348  00000000  00000000  00025eb0  2**3
+ 17 .debug_ranges 00000348  00000000  00000000  00025eb8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 18 .thread_model 00000003  00000000  00000000  000286db  2**0
+ 18 .thread_model 00000003  00000000  00000000  000286e3  2**0
                   CONTENTS, READONLY
- 19 .cpu          0000000c  00000000  00000000  000286de  2**0
+ 19 .cpu          0000000c  00000000  00000000  000286e6  2**0
                   CONTENTS, READONLY
- 20 .qsys         00000001  00000000  00000000  000286ea  2**0
+ 20 .qsys         00000001  00000000  00000000  000286f2  2**0
                   CONTENTS, READONLY
- 21 .simulation_enabled 00000001  00000000  00000000  000286eb  2**0
+ 21 .simulation_enabled 00000001  00000000  00000000  000286f3  2**0
                   CONTENTS, READONLY
- 22 .sysid_hash   00000004  00000000  00000000  000286ec  2**0
+ 22 .sysid_hash   00000004  00000000  00000000  000286f4  2**0
                   CONTENTS, READONLY
- 23 .sysid_base   00000004  00000000  00000000  000286f0  2**0
+ 23 .sysid_base   00000004  00000000  00000000  000286f8  2**0
                   CONTENTS, READONLY
- 24 .sysid_time   00000004  00000000  00000000  000286f4  2**0
+ 24 .sysid_time   00000004  00000000  00000000  000286fc  2**0
                   CONTENTS, READONLY
- 25 .stderr_dev   00000006  00000000  00000000  000286f8  2**0
+ 25 .stderr_dev   00000006  00000000  00000000  00028700  2**0
                   CONTENTS, READONLY
- 26 .stdin_dev    00000006  00000000  00000000  000286fe  2**0
+ 26 .stdin_dev    00000006  00000000  00000000  00028706  2**0
                   CONTENTS, READONLY
- 27 .stdout_dev   00000006  00000000  00000000  00028704  2**0
+ 27 .stdout_dev   00000006  00000000  00000000  0002870c  2**0
                   CONTENTS, READONLY
- 28 .sopc_system_name 00000009  00000000  00000000  0002870a  2**0
+ 28 .sopc_system_name 00000009  00000000  00000000  00028712  2**0
                   CONTENTS, READONLY
- 29 .sopcinfo     0007291c  00000000  00000000  00028713  2**0
+ 29 .sopcinfo     0007291c  00000000  00000000  0002871b  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 00080000 l    d  .entry	00000000 .entry
@@ -1413,7 +1413,7 @@ Disassembly of section .text:
     1020:	01000034 	movhi	r4,0
     1024:	21164a04 	addi	r4,r4,22824
     1028:	01400044 	movi	r5,1
-    102c:	01800444 	movi	r6,17
+    102c:	01800484 	movi	r6,18
     1030:	0001bf80 	call	1bf8 <printf>
     1034:	01000034 	movhi	r4,0
     1038:	21161504 	addi	r4,r4,22612
@@ -1742,7 +1742,7 @@ Disassembly of section .text:
     153c:	01000034 	movhi	r4,0
     1540:	21168204 	addi	r4,r4,23048
     1544:	01400044 	movi	r5,1
-    1548:	01800444 	movi	r6,17
+    1548:	01800484 	movi	r6,18
     154c:	0001bf80 	call	1bf8 <printf>
     1550:	00c00244 	movi	r3,9
     1554:	00800134 	movhi	r2,4
@@ -1784,7 +1784,7 @@ Disassembly of section .text:
     15e4:	1809883a 	mov	r4,r3
     15e8:	014001c4 	movi	r5,7
     15ec:	000d883a 	mov	r6,zero
-    15f0:	000f883a 	mov	r7,zero
+    15f0:	01c00044 	movi	r7,1
     15f4:	00008f00 	call	8f0 <setup_conv>
     15f8:	e0bda803 	ldbu	r2,-2400(fp)
     15fc:	10800044 	addi	r2,r2,1
@@ -1813,7 +1813,7 @@ Disassembly of section .text:
     1658:	1809883a 	mov	r4,r3
     165c:	014001c4 	movi	r5,7
     1660:	018001c4 	movi	r6,7
-    1664:	000f883a 	mov	r7,zero
+    1664:	01c00044 	movi	r7,1
     1668:	00008f00 	call	8f0 <setup_conv>
     166c:	e0bda803 	ldbu	r2,-2400(fp)
     1670:	10800044 	addi	r2,r2,1
@@ -1852,7 +1852,7 @@ Disassembly of section .text:
     16f4:	d8800215 	stw	r2,8(sp)
     16f8:	d8000315 	stw	zero,12(sp)
     16fc:	180d883a 	mov	r6,r3
-    1700:	000f883a 	mov	r7,zero
+    1700:	01c00044 	movi	r7,1
     1704:	00008f00 	call	8f0 <setup_conv>
     1708:	e0bda803 	ldbu	r2,-2400(fp)
     170c:	10800044 	addi	r2,r2,1
@@ -1890,7 +1890,7 @@ Disassembly of section .text:
     178c:	d8000315 	stw	zero,12(sp)
     1790:	180b883a 	mov	r5,r3
     1794:	000d883a 	mov	r6,zero
-    1798:	000f883a 	mov	r7,zero
+    1798:	01c00044 	movi	r7,1
     179c:	00008f00 	call	8f0 <setup_conv>
     17a0:	e0bda803 	ldbu	r2,-2400(fp)
     17a4:	10800044 	addi	r2,r2,1

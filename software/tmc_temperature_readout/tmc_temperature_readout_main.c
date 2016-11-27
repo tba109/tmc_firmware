@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 17
+#define MINOR_VERSION_NUMBER 18
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -588,7 +588,10 @@ int main()
 	  // setup_conv(adc,7,0,1,640,0x3,0x1,0);
 	  // Fri Nov 11 16:30:22 EST 2016
 	  // TBA_NOTE: Try with PGA = 0, x1
-	  setup_conv(adc,7,0,0,640,0x3,0x1,0);
+	  // setup_conv(adc,7,0,0,640,0x3,0x1,0);
+	  // Sun Nov 27 12:21:58 EST 2016
+	  // TBA_NOTE: Try with PGA = 1, x2
+	  setup_conv(adc,7,0,1,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);
@@ -607,7 +610,10 @@ int main()
 	  // setup_conv(adc,7,7,1,640,0x3,0x1,0);
 	  // Fri Nov 11 16:30:56 EST 2016
 	  // TBA_NOTE: try with PGA = 0 (x1)
-	  setup_conv(adc,7,7,0,640,0x3,0x1,0);
+	  // setup_conv(adc,7,7,0,640,0x3,0x1,0);
+	  // Sun Nov 27 12:23:16 EST 2016
+	  // TBA_NOTE: try with PGA = 1 (x2)
+	  setup_conv(adc,7,7,1,640,0x3,0x1,0);
 	}
       // Wait for the conversions to complete (should take 133ms, wait 160ms)
       usleep(USLEEP_160MS);      
@@ -643,14 +649,25 @@ int main()
 	      /* 		 0); */
 	      // Fri Nov 11 16:32:14 EST 2016
 	      // TBA_NOTE: Change over to PGA=0 (gain of 1)
+	      /* setup_conv(adc, */
+	      /* 		 pchan_current[chan], */
+	      /* 		 nchan_current[chan], */
+	      /* 		 0, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	      // Sun Nov 27 12:24:10 EST 2016
+	      // TBA_NOTE: Change over to PGA=1 (gain of 2)
 	      setup_conv(adc,
 			 pchan_current[chan],
 			 nchan_current[chan],
-			 0,
+			 1,
 			 640,
 			 0x3,
 			 0x1,
 			 0);
+
 
 	    }
 	  usleep(USLEEP_160MS);
@@ -682,14 +699,25 @@ int main()
 	      /* 		 0); */
 	      // TBA_NOTE: Use PGA = 0 (x1)
 	      // Also change over the nchan to 0 (grounded)
+	      /* setup_conv(adc, */
+	      /* 		 pchan_2n2222[chan], */
+	      /* 		 0, */
+	      /* 		 0, */
+	      /* 		 640, */
+	      /* 		 0x3, */
+	      /* 		 0x1, */
+	      /* 		 0); */
+	      // Sun Nov 27 12:25:51 EST 2016
+	      // TBA_NOTE: Use PGA = 1 (x2)
+	      // Also change over the nchan to 0 (grounded)
 	      setup_conv(adc,
-			 pchan_2n2222[chan],
-			 0,
-			 0,
-			 640,
-			 0x3,
-			 0x1,
-			 0);
+	      		 pchan_2n2222[chan],
+	      		 0,
+	      		 1,
+	      		 640,
+	      		 0x3,
+	      		 0x1,
+	      		 0);	      
 	    }
 	  usleep(USLEEP_160MS);
 	  read_chan(stat[chan],AD7124_STATUS_REG,1);

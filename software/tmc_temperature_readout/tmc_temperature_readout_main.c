@@ -20,7 +20,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 18
+#define MINOR_VERSION_NUMBER 19
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -182,6 +182,7 @@ unsigned char setup_conv(unsigned char adc,
     AD7124_CH_MAP_REG_AINP(pchan)  |
     AD7124_CH_MAP_REG_AINM(nchan);
   ad7124_write_reg(adc,AD7124_CH0_MAP_REG,data,2);
+  
   // read it back
   // data = 0;
   // usleep(1000);
@@ -195,11 +196,20 @@ unsigned char setup_conv(unsigned char adc,
     // TBA_NOTE: Change from bipolar to unipolar operator
     // Fri Nov 11 16:28:48 EST 2016
     // TBA_NOTE: I was getting lots of zeros which seem weird, so change it back to bipolar
+    /* AD7124_CFG_REG_BIPOLAR | */
+    /* AD7124_CFG_REG_REF_BUFP | */
+    /* AD7124_CFG_REG_REF_BUFM | */
+    /* AD7124_CFG_REG_AIN_BUFP | */
+    /* AD7124_CFG_REG_AIN_BUFM | */
+    /* AD7124_CFG_REG_PGA(pga); */
+    // Wed Dec 21 10:17:54 EST 2016
+    // TBA_NOTE: Change this to the internal reference. Want to see how it does. 
     AD7124_CFG_REG_BIPOLAR |
     AD7124_CFG_REG_REF_BUFP |
     AD7124_CFG_REG_REF_BUFM |
     AD7124_CFG_REG_AIN_BUFP |
     AD7124_CFG_REG_AIN_BUFM |
+    AD7124_CFG_REG_REF_SEL(0x2) |
     AD7124_CFG_REG_PGA(pga);
   ad7124_write_reg(adc,AD7124_CFG0_REG,data,2);
   // read it back
@@ -207,7 +217,6 @@ unsigned char setup_conv(unsigned char adc,
   // usleep(1000);
   // ad7124_read_reg(adc,AD7124_CFG0_REG,&data,2);
   // printf("ADC_%d CHAN_%d: filter register has 0x%04X\n",adc,chan,data);
-  
   // Filter register: select defaults, except go for a 7.5Hz zero lantency measurement. 
   data = 
     AD7124_FILT_REG_FILTER(0) |
@@ -247,7 +256,11 @@ unsigned char setup_conv(unsigned char adc,
   // Control register: full power mode, single conversion
   data = 
     AD7124_ADC_CTRL_REG_POWER_MODE(pmode) | 
-    AD7124_ADC_CTRL_REG_MODE(mode);
+    AD7124_ADC_CTRL_REG_MODE(mode) | 
+    // Wed Dec 21 11:01:32 EST 2016
+    // TBA_NOTE: This is necessary if you are using the internal reference
+    AD7124_ADC_CTRL_REG_REF_EN
+    ;
   ad7124_write_reg(adc,AD7124_ADC_CTRL_REG,data,2);
   // read it back
   // data = 0;

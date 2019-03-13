@@ -1,0 +1,26 @@
+!SESSION 2019-03-12 20:42:39.744 -----------------------------------------------
+eclipse.buildId=4.3.2.M20140221-1700
+java.version=1.8.0_05
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -pluginCustomization /home/tyler/altera_lite/15.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+Command-line arguments:  -data /home/tyler/tmc_firmware/workspace -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product -pluginCustomization /home/tyler/altera_lite/15.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+
+!ENTRY org.eclipse.ui 2 0 2019-03-12 20:42:42.886
+!MESSAGE Warnings while parsing the commands from the 'org.eclipse.ui.commands' and 'org.eclipse.ui.actionDefinitions' extension points.
+!SUBENTRY 1 org.eclipse.ui 2 0 2019-03-12 20:42:42.887
+!MESSAGE Commands should really have a category: plug-in='org.eclipse.linuxtools.systemtap.ui.graphing', id='org.eclipse.linuxtools.systemtap.ui.graphing.commands.SaveGraphImage', categoryId='org.eclipse.linuxtools.systemtap.ui.graphing.category.file'
+
+!ENTRY org.eclipse.ui 2 0 2019-03-12 20:42:43.921
+!MESSAGE Warnings while parsing the commands from the 'org.eclipse.ui.commands' and 'org.eclipse.ui.actionDefinitions' extension points.
+!SUBENTRY 1 org.eclipse.ui 2 0 2019-03-12 20:42:43.921
+!MESSAGE Commands should really have a category: plug-in='org.eclipse.linuxtools.systemtap.ui.graphing', id='org.eclipse.linuxtools.systemtap.ui.graphing.commands.SaveGraphImage', categoryId='org.eclipse.linuxtools.systemtap.ui.graphing.category.file'
+
+!ENTRY org.eclipse.cdt.core 1 0 2019-03-12 20:43:22.091
+!MESSAGE Indexed 'tmc_temperature_readout' (2 sources, 3 headers) in 1.73 sec: 134 declarations; 645 references; 14 unresolved inclusions; 0 syntax errors; 55 unresolved names (6.59%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2019-03-12 20:47:52.123
+!MESSAGE Indexed 'nios2_sw_bsp' (90 sources, 170 headers) in 5.15 sec: 5,615 declarations; 10,183 references; 11 unresolved inclusions; 2 syntax errors; 46 unresolved names (0.29%)
+
+!ENTRY org.eclipse.cdt.core 1 0 2019-03-12 20:53:17.316
+!MESSAGE Indexed 'nios2_sw_bsp' (90 sources, 169 headers) in 3.45 sec: 5,609 declarations; 10,048 references; 42 unresolved inclusions; 3 syntax errors; 95 unresolved names (0.60%)

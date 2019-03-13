@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+newBspWizardPage.defaultLocation=/home/tyler/tmc_firmware/software/nios2_sw_bsp
+newBspWizardPage.sopcinfoFile=/home/tyler/tmc_firmware/tmc_nios2.sopcinfo

@@ -1,0 +1,31 @@
+!SESSION 2019-03-12 20:33:43.659 -----------------------------------------------
+eclipse.buildId=4.3.2.M20140221-1700
+java.version=1.8.0_05
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.cpp.product -pluginCustomization /home/tyler/altera_lite/15.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.cpp.product -pluginCustomization /home/tyler/altera_lite/15.1/nios2eds/bin/eclipse_nios2/plugin_customization.ini
+
+!ENTRY org.eclipse.ui 2 0 2019-03-12 20:34:43.128
+!MESSAGE Warnings while parsing the commands from the 'org.eclipse.ui.commands' and 'org.eclipse.ui.actionDefinitions' extension points.
+!SUBENTRY 1 org.eclipse.ui 2 0 2019-03-12 20:34:43.128
+!MESSAGE Commands should really have a category: plug-in='org.eclipse.linuxtools.systemtap.ui.graphing', id='org.eclipse.linuxtools.systemtap.ui.graphing.commands.SaveGraphImage', categoryId='org.eclipse.linuxtools.systemtap.ui.graphing.category.file'
+
+!ENTRY org.eclipse.ui 2 0 2019-03-12 20:34:43.997
+!MESSAGE Warnings while parsing the commands from the 'org.eclipse.ui.commands' and 'org.eclipse.ui.actionDefinitions' extension points.
+!SUBENTRY 1 org.eclipse.ui 2 0 2019-03-12 20:34:43.997
+!MESSAGE Commands should really have a category: plug-in='org.eclipse.linuxtools.systemtap.ui.graphing', id='org.eclipse.linuxtools.systemtap.ui.graphing.commands.SaveGraphImage', categoryId='org.eclipse.linuxtools.systemtap.ui.graphing.category.file'
+
+!ENTRY org.eclipse.core.resources 4 77 2019-03-12 20:36:29.206
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2019-03-12 20:36:29.206
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2019-03-12 20:36:29.206
+!MESSAGE /home/tyler/tmc_firmware/software/tmc_temperature_readout overlaps the workspace location: /home/tyler/tmc_firmware/software/tmc_temperature_readout
+
+!ENTRY org.eclipse.core.resources 4 77 2019-03-12 20:37:11.309
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2019-03-12 20:37:11.309
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2019-03-12 20:37:11.310
+!MESSAGE /home/tyler/tmc_firmware/software/tmc_temperature_readout overlaps the workspace location: /home/tyler/tmc_firmware/software/tmc_temperature_readout

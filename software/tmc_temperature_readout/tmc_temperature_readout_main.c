@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////
 // Tyler Anderson Sat Feb  6 11:13:15 EST 2016
 //
-// The goal here is to read data from 1 channel
 ////////////////////////////////////////////////////////////////////////////////////////
 #include <stdio.h>
 #include <unistd.h>
@@ -17,10 +16,32 @@
 #include <string.h>
 #include "i2c_opencores.h"
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Tue Mar 12 14:33:06 EDT 2019
+// For NEID, per emails from Paul Robertson starting February 19, 2019:
+// The cold finger on the detector has the ability to cool it to dangerous levels. The 
+// idea here is to use a warmup heater on the detector in order to make sure this can't 
+// happen. 
+#define DO_NEID_EMERGENCY_CHECK
+
+// 1.) If the temperature reading goes **above** 15053189 (because temperature is 
+//     negatively correlated to voltage), we enter the emergency state. ADC = 1 and 
+//     CH = 4. 
+#define NEID_EMERGENCY_ADC_LEVEL 15053189
+#define NEID_EMERGENCY_ADC 1
+#define NEID_EMERGENCY_CH 4
+// 2.) Any time the temperature is below this value, we set DAC=3,4,5, BRD=3 to max 
+//     heat, 65535 for the 16b ADC. 
+#define NEID_EMERGENCY_HEATER_BRD 3
+#define NEID_EMERGENCY_HEATER_CH0 3
+#define NEID_EMERGENCY_HEATER_CH1 4
+#define NEID_EMERGENCY_HEATER_CH2 5
+///////////////////////////////////////////////////////////////////////////////////////
+
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 18
+#define MINOR_VERSION_NUMBER 20
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -360,6 +381,7 @@ unsigned int read_rx_fifo(char * str1)
 //////////////////////////////////////////////////////////////////////////////////////////
 // Write the DAC word to the I2C bus.
 //
+volatile unsigned char emergency_state; 
 unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned short data)
 {
   // printf("--Write the start\n");
@@ -370,6 +392,15 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00)>>8,0);
   // printf("--write third byte\n");
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0x00FF),1);
+  if(
+     (board == NEID_EMERGENCY_HEATER_BRD) && 
+     (
+      (dac == NEID_EMERGENCY_HEATER_CH0) || 
+      (dac == NEID_EMERGENCY_HEATER_CH1) || 
+      (dac == NEID_EMERGENCY_HEATER_CH2)
+      )
+     )
+    emergency_state = 0; 
   return 0;
 }
 
@@ -531,6 +562,7 @@ int main()
   unsigned int tsig[N_CHAN][N_ADC];
   unsigned int atemp[N_ADC];
   unsigned int btemp[N_ADC];
+  emergency_state = 0; 
 
 #ifdef DO_COMMANDS
   unsigned int nbytes = 0;
@@ -785,6 +817,19 @@ int main()
       	}
       printf("Received %d byte(s), Executed %d command(s)\n",nbytes_total,ncmd_total);
 #endif      
+
+      // Tue Mar 12 15:54:27 EDT 2019
+      // This is where we do the emergency check
+#ifdef DO_NEID_EMERGENCY_CHECK
+      if((tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL) || 
+	 emergency_state)
+	{
+	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH0,65535); 
+	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH1,65535); 
+	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH2,65535); 
+	  emergency_state = 1; 
+	}
+#endif
 
       // Wait for control loop to finish (give yourself 3 seconds every time)
       if(loop_done)

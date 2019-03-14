@@ -23,16 +23,16 @@
 // idea here is to use a warmup heater on the detector in order to make sure this can't 
 // happen. 
 #define DO_NEID_EMERGENCY_CHECK
-
 // 1.) If the temperature reading goes **above** 15053189 (because temperature is 
 //     negatively correlated to voltage), we enter the emergency state. ADC = 1 and 
 //     CH = 4. 
 #define NEID_EMERGENCY_ADC_LEVEL 15053189
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
-// 2.) Any time the temperature is below this value, we set DAC=3,4,5, BRD=3 to max 
+// 2.) Any time the temperature is below this value, we set DAC=3,4,5, 
+//     CADX0 = +5V, CADX1 = +5V, CADX2 = Float (LTC2605 DS: board = 0x51, 81)
 //     heat, 65535 for the 16b ADC. 
-#define NEID_EMERGENCY_HEATER_BRD 3
+#define NEID_EMERGENCY_HEATER_BRD 81
 #define NEID_EMERGENCY_HEATER_CH0 3
 #define NEID_EMERGENCY_HEATER_CH1 4
 #define NEID_EMERGENCY_HEATER_CH2 5
@@ -392,6 +392,8 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00)>>8,0);
   // printf("--write third byte\n");
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0x00FF),1);
+  // Thu Mar 14 15:14:30 EDT 2019
+#ifdef DO_NEID_EMERGENCY_CHECK
   if(
      (board == NEID_EMERGENCY_HEATER_BRD) && 
      (
@@ -401,6 +403,8 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
       )
      )
     emergency_state = 0; 
+#endif
+
   return 0;
 }
 
@@ -815,7 +819,7 @@ int main()
       	  ncmd = execute_cmd(str1,nbytes);
       	  ncmd_total += ncmd;
       	}
-      printf("Received %d byte(s), Executed %d command(s)\n",nbytes_total,ncmd_total);
+      printf("Received %d byte(s), Executed %d command(s), emergency_state = %d\n",nbytes_total,ncmd_total,emergency_state);
 #endif      
 
       // Tue Mar 12 15:54:27 EDT 2019

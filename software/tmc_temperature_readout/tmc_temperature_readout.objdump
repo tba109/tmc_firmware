@@ -1319,7 +1319,7 @@ Disassembly of section .text:
      e90:	01800044 	movi	r6,1
      e94:	00004300 	call	430 <I2C_write>
      e98:	e0bffd03 	ldbu	r2,-12(fp)
-     e9c:	10801458 	cmpnei	r2,r2,81
+     e9c:	108004d8 	cmpnei	r2,r2,19
      ea0:	10000a1e 	bne	r2,zero,ecc <write_ltc2605+0xd0>
      ea4:	e0bffe03 	ldbu	r2,-8(fp)
      ea8:	108000e0 	cmpeqi	r2,r2,3
@@ -1436,7 +1436,7 @@ Disassembly of section .text:
     1054:	01000034 	movhi	r4,0
     1058:	21171c04 	addi	r4,r4,23664
     105c:	01400044 	movi	r5,1
-    1060:	01800504 	movi	r6,20
+    1060:	01800544 	movi	r6,21
     1064:	0001c900 	call	1c90 <printf>
     1068:	01000034 	movhi	r4,0
     106c:	2116e704 	addi	r4,r4,23452
@@ -1766,7 +1766,7 @@ Disassembly of section .text:
     1574:	01000034 	movhi	r4,0
     1578:	21175404 	addi	r4,r4,23888
     157c:	01400044 	movi	r5,1
-    1580:	01800504 	movi	r6,20
+    1580:	01800544 	movi	r6,21
     1584:	0001c900 	call	1c90 <printf>
     1588:	00c00244 	movi	r3,9
     158c:	00800134 	movhi	r2,4
@@ -2081,15 +2081,15 @@ Disassembly of section .text:
     1a60:	d0a01743 	ldbu	r2,-32675(gp)
     1a64:	10803fcc 	andi	r2,r2,255
     1a68:	10000e26 	beq	r2,zero,1aa4 <main+0x58c>
-    1a6c:	01001444 	movi	r4,81
+    1a6c:	010004c4 	movi	r4,19
     1a70:	014000c4 	movi	r5,3
     1a74:	01bfffd4 	movui	r6,65535
     1a78:	0000dfc0 	call	dfc <write_ltc2605>
-    1a7c:	01001444 	movi	r4,81
+    1a7c:	010004c4 	movi	r4,19
     1a80:	01400104 	movi	r5,4
     1a84:	01bfffd4 	movui	r6,65535
     1a88:	0000dfc0 	call	dfc <write_ltc2605>
-    1a8c:	01001444 	movi	r4,81
+    1a8c:	010004c4 	movi	r4,19
     1a90:	01400144 	movi	r5,5
     1a94:	01bfffd4 	movui	r6,65535
     1a98:	0000dfc0 	call	dfc <write_ltc2605>

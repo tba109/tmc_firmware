@@ -30,9 +30,9 @@
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
 // 2.) Any time the temperature is below this value, we set DAC=3,4,5, 
-//     CADX0 = +5V, CADX1 = +5V, CADX2 = Float (LTC2605 DS: board = 0x51, 81)
+//     CADX0 = GND, CADX1 = Float, CADX2 = GND (LTC2605 DS: board = 0x13, 19)
 //     heat, 65535 for the 16b ADC. 
-#define NEID_EMERGENCY_HEATER_BRD 81
+#define NEID_EMERGENCY_HEATER_BRD 19
 #define NEID_EMERGENCY_HEATER_CH0 3
 #define NEID_EMERGENCY_HEATER_CH1 4
 #define NEID_EMERGENCY_HEATER_CH2 5
@@ -41,7 +41,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 20
+#define MINOR_VERSION_NUMBER 21
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board

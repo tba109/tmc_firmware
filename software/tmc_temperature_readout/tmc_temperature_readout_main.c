@@ -41,7 +41,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 21
+#define MINOR_VERSION_NUMBER 23
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -394,15 +394,15 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
   I2C_write(I2C_OPENCORES_0_BASE,(data & 0x00FF),1);
   // Thu Mar 14 15:14:30 EDT 2019
 #ifdef DO_NEID_EMERGENCY_CHECK
-  if(
-     (board == NEID_EMERGENCY_HEATER_BRD) && 
-     (
-      (dac == NEID_EMERGENCY_HEATER_CH0) || 
-      (dac == NEID_EMERGENCY_HEATER_CH1) || 
-      (dac == NEID_EMERGENCY_HEATER_CH2)
-      )
-     )
-    emergency_state = 0; 
+  if(board == NEID_EMERGENCY_HEATER_BRD)
+    { 
+      if(dac == NEID_EMERGENCY_HEATER_CH0)
+	emergency_state = emergency_state & 0xfe; 
+      if(dac == NEID_EMERGENCY_HEATER_CH1) 
+	emergency_state = emergency_state & 0xfd; 
+      if(dac == NEID_EMERGENCY_HEATER_CH2)
+	emergency_state = emergency_state & 0xfb; 
+    }     
 #endif
 
   return 0;
@@ -825,13 +825,12 @@ int main()
       // Tue Mar 12 15:54:27 EDT 2019
       // This is where we do the emergency check
 #ifdef DO_NEID_EMERGENCY_CHECK
-      if((tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL) || 
-	 emergency_state)
+      if(tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL)
 	{
 	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH0,65535); 
 	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH1,65535); 
 	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH2,65535); 
-	  emergency_state = 1; 
+	  emergency_state = 7; 
 	}
 #endif
 

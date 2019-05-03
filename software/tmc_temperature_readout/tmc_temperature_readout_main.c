@@ -29,19 +29,17 @@
 #define NEID_EMERGENCY_ADC_LEVEL 15053189
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
-// 2.) Any time the temperature is below this value, we set DAC=3,4,5, 
+// 2.) Any time the temperature is below this value, we set DAC=6, 
 //     CADX0 = GND, CADX1 = Float, CADX2 = GND (LTC2605 DS: board = 0x13, 19)
 //     heat, 65535 for the 16b ADC. 
 #define NEID_EMERGENCY_HEATER_BRD 19
-#define NEID_EMERGENCY_HEATER_CH0 3
-#define NEID_EMERGENCY_HEATER_CH1 4
-#define NEID_EMERGENCY_HEATER_CH2 5
+#define NEID_EMERGENCY_HEATER_CH 6
 ///////////////////////////////////////////////////////////////////////////////////////
 
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 23
+#define MINOR_VERSION_NUMBER 24
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -396,12 +394,8 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
 #ifdef DO_NEID_EMERGENCY_CHECK
   if(board == NEID_EMERGENCY_HEATER_BRD)
     { 
-      if(dac == NEID_EMERGENCY_HEATER_CH0)
-	emergency_state = emergency_state & 0xfe; 
-      if(dac == NEID_EMERGENCY_HEATER_CH1) 
-	emergency_state = emergency_state & 0xfd; 
-      if(dac == NEID_EMERGENCY_HEATER_CH2)
-	emergency_state = emergency_state & 0xfb; 
+      if(dac == NEID_EMERGENCY_HEATER_CH)
+	emergency_state = 0;  
     }     
 #endif
 
@@ -827,10 +821,8 @@ int main()
 #ifdef DO_NEID_EMERGENCY_CHECK
       if(tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL)
 	{
-	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH0,65535); 
-	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH1,65535); 
-	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH2,65535); 
-	  emergency_state = 7; 
+	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH,65535); 
+	  emergency_state = 1; 
 	}
 #endif
 

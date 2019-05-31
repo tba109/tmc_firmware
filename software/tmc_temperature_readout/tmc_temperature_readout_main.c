@@ -17,21 +17,38 @@
 #include "i2c_opencores.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////
-// Tue Mar 12 14:33:06 EDT 2019
-// For NEID, per emails from Paul Robertson starting February 19, 2019:
+// Thu May 30 14:53:42 EDT 2019
 // The cold finger on the detector has the ability to cool it to dangerous levels. The 
 // idea here is to use a warmup heater on the detector in order to make sure this can't 
 // happen. 
 #define DO_NEID_EMERGENCY_CHECK
-// 1.) If the temperature reading goes **above** 15053189 (because temperature is 
-//     negatively correlated to voltage), we enter the emergency state. ADC = 1 and 
-//     CH = 4. 
-#define NEID_EMERGENCY_ADC_LEVEL 15053189
+// 
+// Per email from T. Anderson, 5/29/19, Subject: NEID emergency heater update 
+// The TMC firmware maintains a variable emergency_state. The system is initialized with 
+// emergency_state = 0 and with the emergency heater at it's default level. The value of 
+// emergency_state is updated on each TMC loop (6 seconds) and appended to the last line
+// of stdout. 
+//
+// On each TMC firmware loop: 
+//    If: emergency_state < 10: 
+//            If: ADC reading from the 2N2222 sensor on ADC1 CH4 exceeds 15278004
+//                (sensor temperature less than 120K) and does not equal 16777215
+//                (the open circuit condition, indicates cable or sensor fault)
+//                then emergency_state is incremented
+//            Else: emergency_state is set to 0. 
+#define NEID_EMERGENCY_ADC_OC    16777215
+#define NEID_EMERGENCY_ADC_LEVEL 19441975 // this can't be right! It's beyond the 120K scale!!!
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
-// 2.) Any time the temperature is below this value, we set DAC=6, 
-//     CADX0 = GND, CADX1 = Float, CADX2 = GND (LTC2605 DS: board = 0x13, 19)
-//     heat, 65535 for the 16b ADC. 
+//    If: emergency_state is 10
+//        If: ADC reading from the 2N2222 sensor on ADC1 CH4 is below 14831059
+//            (temperature reading greater than 150K), then
+//            emergency_state is set to 0
+//            CH6 of the heater board with I2C address of 19 is set to 0 (emergency heater
+//            is off)
+//        Else: CH6 of the heater board with I2C address of 19 is set to maximum drive 
+//              (emergency heater is on)
+#define NEID_EMERGENCY_SAFE_LEVEL 14831059
 #define NEID_EMERGENCY_HEATER_BRD 19
 #define NEID_EMERGENCY_HEATER_CH 6
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +56,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 24
+#define MINOR_VERSION_NUMBER 25
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -402,6 +419,20 @@ unsigned char write_ltc2605(unsigned char board, unsigned char dac, unsigned sho
   return 0;
 }
 
+unsigned char write_ltc2605_internal(unsigned char board, unsigned char dac, unsigned short data)
+{
+  // printf("--Write the start\n");
+  I2C_start(I2C_OPENCORES_0_BASE,board,0);
+  // printf("--Write first byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(0x03 << 4) | (dac & 0x0F),0); // write/update register
+  // printf("--Write second byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(data & 0xFF00)>>8,0);
+  // printf("--write third byte\n");
+  I2C_write(I2C_OPENCORES_0_BASE,(data & 0x00FF),1);
+  // Thu Mar 14 15:14:30 EDT 2019
+
+  return 0;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Execute charaters commands on the I2C bus
@@ -819,10 +850,28 @@ int main()
       // Tue Mar 12 15:54:27 EDT 2019
       // This is where we do the emergency check
 #ifdef DO_NEID_EMERGENCY_CHECK
-      if(tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL)
+      if( 
+	 (emergency_state < 10)
+	 &&
+	 (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL) 
+	 &&
+	 (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] != NEID_EMERGENCY_ADC_OC) 
+	  )
 	{
-	  write_ltc2605(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH,65535); 
-	  emergency_state = 1; 
+	  emergency_state = emergency_state + 1; 
+	}
+      else if(emergency_state == 10)
+	{
+	  if(
+	     (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] < NEID_EMERGENCY_SAFE_LEVEL) ||
+	     (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] == NEID_EMERGENCY_ADC_OC)
+	     )
+	    {
+	      emergency_state = 0; 
+	      write_ltc2605_internal(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH,0);
+	    }
+	  else
+	    write_ltc2605_internal(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH,65535);
 	}
 #endif
 

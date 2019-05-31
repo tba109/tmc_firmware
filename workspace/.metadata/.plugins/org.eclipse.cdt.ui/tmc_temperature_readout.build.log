@@ -1,4 +1,4 @@
-19:41:19 **** Build of configuration Nios II for project tmc_temperature_readout ****
+12:52:54 **** Build of configuration Nios II for project tmc_temperature_readout ****
 make mem_init_generate 
 Info: Building ../nios2_sw_bsp/
 make --no-print-directory -C ../nios2_sw_bsp/
@@ -25,5 +25,5 @@ nios2-elf-nm -n tmc_temperature_readout.elf > mem_init/hdl_sim/onchip_flash_0.sy
 Post-processing to create mem_init/hdl_sim/tmc_nios2_onchip_memory2_0.sym...
 nios2-elf-nm -n tmc_temperature_readout.elf > mem_init/hdl_sim/tmc_nios2_onchip_memory2_0.sym
 
-19:41:21 Build Finished (took 2s.631ms)
+12:52:57 Build Finished (took 2s.647ms)
 

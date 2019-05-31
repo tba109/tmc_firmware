@@ -1,4 +1,4 @@
-19:41:19 **** Build of configuration Nios II for project tmc_temperature_readout ****
+12:52:54 **** Build of configuration Nios II for project tmc_temperature_readout ****
 make mem_init_generate 
 Info: Building ../nios2_sw_bsp/
 make --no-print-directory -C ../nios2_sw_bsp/

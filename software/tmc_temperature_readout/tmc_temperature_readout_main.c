@@ -31,13 +31,15 @@
 //
 // On each TMC firmware loop: 
 //    If: emergency_state < 10: 
-//            If: ADC reading from the 2N2222 sensor on ADC1 CH4 exceeds 15278004
+//            If: ADC reading from the 2N2222 sensor on ADC1 CH4 is 16777215, set
+//                emergency_state to 0. 
+//            Else If: ADC reading from the 2N2222 sensor on ADC1 CH4 exceeds 15278004
 //                (sensor temperature less than 120K) and does not equal 16777215
 //                (the open circuit condition, indicates cable or sensor fault)
 //                then emergency_state is incremented
 //            Else: emergency_state is set to 0. 
 #define NEID_EMERGENCY_ADC_OC    16777215
-#define NEID_EMERGENCY_ADC_LEVEL 19441975 // this can't be right! It's beyond the 120K scale!!!
+#define NEID_EMERGENCY_ADC_LEVEL 15278004
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
 //    If: emergency_state is 10
@@ -56,7 +58,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 25
+#define MINOR_VERSION_NUMBER 30
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board
@@ -850,15 +852,15 @@ int main()
       // Tue Mar 12 15:54:27 EDT 2019
       // This is where we do the emergency check
 #ifdef DO_NEID_EMERGENCY_CHECK
-      if( 
-	 (emergency_state < 10)
-	 &&
-	 (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL) 
-	 &&
-	 (tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] != NEID_EMERGENCY_ADC_OC) 
-	  )
+      if(emergency_state < 10)
 	{
-	  emergency_state = emergency_state + 1; 
+	  write_ltc2605_internal(NEID_EMERGENCY_HEATER_BRD,NEID_EMERGENCY_HEATER_CH,0);
+	  if(tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] == NEID_EMERGENCY_ADC_OC) 
+	    emergency_state = 0; 
+	  else if(tsig[NEID_EMERGENCY_CH][NEID_EMERGENCY_ADC] > NEID_EMERGENCY_ADC_LEVEL) 
+	    emergency_state = emergency_state + 1; 
+	  else
+	    emergency_state = 0; 
 	}
       else if(emergency_state == 10)
 	{

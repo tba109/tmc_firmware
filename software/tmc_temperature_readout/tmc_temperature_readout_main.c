@@ -39,7 +39,10 @@
 //                then emergency_state is incremented
 //            Else: emergency_state is set to 0. 
 #define NEID_EMERGENCY_ADC_OC    16777215
-#define NEID_EMERGENCY_ADC_LEVEL 15278004
+// Old value from Paul....doesn't seem to be right
+// #define NEID_EMERGENCY_ADC_LEVEL 15278004
+// Thu Jun  6 17:46:49 EDT 2019, new value measured in field
+#define NEID_EMERGENCY_ADC_LEVEL 14665000
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
 //    If: emergency_state is 10
@@ -50,7 +53,8 @@
 //            is off)
 //        Else: CH6 of the heater board with I2C address of 19 is set to maximum drive 
 //              (emergency heater is on)
-#define NEID_EMERGENCY_SAFE_LEVEL 14831059
+// #define NEID_EMERGENCY_SAFE_LEVEL 14831059
+#define NEID_EMERGENCY_SAFE_LEVEL 14257211
 #define NEID_EMERGENCY_HEATER_BRD 19
 #define NEID_EMERGENCY_HEATER_CH 6
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +62,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 30
+#define MINOR_VERSION_NUMBER 32
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board

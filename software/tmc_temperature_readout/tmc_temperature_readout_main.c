@@ -42,7 +42,9 @@
 // Old value from Paul....doesn't seem to be right
 // #define NEID_EMERGENCY_ADC_LEVEL 15278004
 // Thu Jun  6 17:46:49 EDT 2019, new value measured in field
-#define NEID_EMERGENCY_ADC_LEVEL 14665000
+// #define NEID_EMERGENCY_ADC_LEVEL 14665000
+// Tue Jul  9 10:56:44 EDT 2019, new value specified for 125C by Paul,  Chad
+#define NEID_EMERGENCY_ADC_LEVEL 14607396
 #define NEID_EMERGENCY_ADC 1
 #define NEID_EMERGENCY_CH 4
 //    If: emergency_state is 10
@@ -62,7 +64,7 @@
 #define DO_COMMANDS
 #define DO_CALIBRATION
 #define MAJOR_VERSION_NUMBER 1
-#define MINOR_VERSION_NUMBER 32
+#define MINOR_VERSION_NUMBER 33
 
 #define N_ADC 12 // 3 ADC/board x 4 boards
 #define N_CHAN 6 // 6 channels/board

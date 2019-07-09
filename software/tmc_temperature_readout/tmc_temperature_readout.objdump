@@ -1478,7 +1478,7 @@ Disassembly of section .text:
     10f0:	01000034 	movhi	r4,0
     10f4:	21175c04 	addi	r4,r4,23920
     10f8:	01400044 	movi	r5,1
-    10fc:	01800804 	movi	r6,32
+    10fc:	01800844 	movi	r6,33
     1100:	0001d900 	call	1d90 <printf>
     1104:	01000034 	movhi	r4,0
     1108:	21172704 	addi	r4,r4,23708
@@ -1808,7 +1808,7 @@ Disassembly of section .text:
     1610:	01000034 	movhi	r4,0
     1614:	21179404 	addi	r4,r4,24144
     1618:	01400044 	movi	r5,1
-    161c:	01800804 	movi	r6,32
+    161c:	01800844 	movi	r6,33
     1620:	0001d900 	call	1d90 <printf>
     1624:	00c00244 	movi	r3,9
     1628:	00800134 	movhi	r2,4
@@ -2131,8 +2131,8 @@ Disassembly of section .text:
     1b1c:	d0201745 	stb	zero,-32675(gp)
     1b20:	00002006 	br	1ba4 <main+0x5f0>
     1b24:	e0fed017 	ldw	r3,-1216(fp)
-    1b28:	00803834 	movhi	r2,224
-    1b2c:	10b14a04 	addi	r2,r2,-15064
+    1b28:	008037f4 	movhi	r2,223
+    1b2c:	10b90904 	addi	r2,r2,-7132
     1b30:	10c0042e 	bgeu	r2,r3,1b44 <main+0x590>
     1b34:	d0a01743 	ldbu	r2,-32675(gp)
     1b38:	10800044 	addi	r2,r2,1
